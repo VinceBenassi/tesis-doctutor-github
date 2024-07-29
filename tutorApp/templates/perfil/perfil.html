@@ -1,0 +1,134 @@
+{% extends "plantillas/admin_dashboard.html" %}
+
+{% load static %}
+
+{% block titulo %}Perfil{% endblock %}
+
+{% block contenido %}
+<main class="container">
+    <h1 class="text-center text-white mb-4">Perfil de {{ nombre_usuario }}</h1>
+
+    {% if messages %}
+        <div class="alert alert-success" role="alert">
+            {% for message in messages %}
+                {{ message }}
+            {% endfor %}
+        </div>
+    {% endif %}
+    
+    <article class="row">
+        <section class="col-md-4">
+            <div class="card">
+                <div class="card-body text-center">
+                    {% if foto_perfil_url %}
+                        <img src="{{ foto_perfil_url }}" alt="Foto de perfil" class="img-fluid rounded-circle mb-3" style="max-width: 150px;">
+                    {% else %}
+                        <img src="{% static 'img/user.png' %}" alt="Foto de perfil por defecto" class="img-fluid rounded-circle mb-3" style="max-width: 150px;">
+                    {% endif %}
+                    
+                    <h5 class="card-title">{{ perfil.nombre_completo }}</h5>
+                    <p class="card-text">{{ user.email }}</p>
+                </div>
+            </div>
+        </section>
+
+
+        <section class="col-md-8">
+            <div class="card card-info">
+                <div class="card-header">
+                    <h5 class="card-title">Información de perfil</h5>
+                </div>
+
+                <div class="card-body">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <label class="mb-3 mr-3">
+                            <h6>Nombre:</h6>
+                            {{ form.nombre }}
+                        </label>
+
+                        <label class="mb-3">
+                            <h6>Apellido:</h6>
+                            {{ form.apellido }}
+                        </label>
+
+                        <h6>Seleccionar foto de perfil:</h6>
+
+                        <div class="mb-3">
+                            {{ form.foto_perfil }}
+                        </div>
+                        
+                        <h6>Subir nueva foto:</h6>
+                        
+                        <div class="mb-3">
+                            {{ form.nueva_foto }}
+                        </div>
+                        
+                        <button type="submit" class="btn btn-success">Actualizar perfil</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+       
+        
+        <section class="col-md-12 mt-4">
+            <div class="card card-info">
+                <div class="card-header">
+                    <h5 class="card-title">Estadísticas de Aprendizaje</h5>
+                </div>
+                
+                <div class="card-body">
+                    <p>Cuestionarios completados: {{ cuestionarios_completados }}</p>
+                    <p>Promedio general: {{ promedio_general|floatformat:1 }}</p>
+                    
+                    <h6>Progreso de aprendizaje:</h6>
+                    <div class="progress mb-4">
+                        <div class="progress-bar" role="progressbar" style="width: {{ progreso }}%;" aria-valuenow="{{ progreso }}" aria-valuemin="0" aria-valuemax="100">{{ progreso }}%</div>
+                    </div>
+                    
+                    <h6>Promedios por materia:</h6>
+                    <ul class="mb-2">
+                        {% for categoria, promedio in promedios_por_categoria.items %}
+                            <li>{{ categoria|title }}: {{ promedio|floatformat:1 }}</li>
+                        {% endfor %}
+                    </ul>
+                    
+                    <h6>Resultados recientes:</h6>
+                    <ul>
+                        {% for resultado in resultados_recientes %}
+                            <li>{{ resultado.categoria|title }}: {{ resultado.puntaje|floatformat:1 }} ({{ resultado.fecha|date:"d/m/Y H:i" }})</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+
+        <section class="col-md-12 mt-4">
+            <div class="card card-info">
+                <div class="card-header">
+                    <h5 class="card-title">Galería de Fotos</h5>
+                </div>
+
+                <div class="card-body">
+                    <div class="row">
+                        {% for foto in perfil.fotos_perfil.all %}
+                            <div class="col-md-3 mb-3">
+                                <div class="card">
+                                    <img src="{{ foto.imagen.url }}" class="card-img-top" alt="Foto de perfil">
+                                    <div class="card-body">
+                                        <form method="post" action="{% url 'eliminar_foto' foto.id %}">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </section>
+    </article>
+</main>
+{% endblock %}

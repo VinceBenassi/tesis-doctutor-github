@@ -1,0 +1,613 @@
+{
+    "medicina": [
+        {
+            "fuente": "https://www.unbosque.edu.co/blog-universidad-el-bosque/que-es-la-medicina",
+            "preguntas": [
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "¿Es verdadera la siguiente afirmación?: Alrededor de la medicina hay múltiples mitos y verdades sobre esta carrera, conócelos y aclara todas tus dudas para que puedas sumergirte en el mágico mundo de la salud.",
+                    "respuesta_correcta": true,
+                    "explicacion": "La afirmación es verdadera. Alrededor de la medicina hay múltiples mitos y verdades sobre esta carrera, conócelos y aclara todas tus dudas para que puedas sumergirte en el mágico mundo de la salud."
+                },
+                {
+                    "tipo": "alternativas",
+                    "pregunta": "¿Cuál de las siguientes opciones es correcta según el texto?",
+                    "opciones": [
+                        ":",
+                        "adolescencia: se hacen seguimientos periódicos que permitan tener una vida saludable, también",
+                        "descubrir",
+                        "hacen"
+                    ],
+                    "respuesta_correcta": "adolescencia: se hacen seguimientos periódicos que permitan tener una vida saludable, también",
+                    "explicacion": "La respuesta correcta es 'adolescencia: se hacen seguimientos periódicos que permitan tener una vida saludable, también' porque Durante la infancia y adolescencia: se hacen seguimientos periódicos que permitan tener una vida saludable, también se pueden descubrir enfermedades genéticas y tratarlas a tiempo."
+                },
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "¿Es verdadera la siguiente afirmación?: Por eso , conocerás sobre la Medicina y su importancia : El término medicina proviene del latín medicina y hace referencia a la ciencia NO que permite prevenir y curar las enfermedades del cuerpo humano .",
+                    "respuesta_correcta": false,
+                    "explicacion": "La afirmación es falsa. La versión correcta es: Por eso, conocerás sobre la Medicina y su importancia: El término medicina proviene del latín medicina y hace referencia a la ciencia que permite prevenir y curar las enfermedades del cuerpo humano."
+                },
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "¿Es verdadera la siguiente afirmación?: Al crecer: los niños, desde su nacimiento y hasta los 6 años, son atendidos por médicos pediatras, quienes explican cómo alimentarlos, cuidarlos y controlar y chequear su salud.",
+                    "respuesta_correcta": true,
+                    "explicacion": "La afirmación es verdadera. Al crecer: los niños, desde su nacimiento y hasta los 6 años, son atendidos por médicos pediatras, quienes explican cómo alimentarlos, cuidarlos y controlar y chequear su salud."
+                },
+                {
+                    "tipo": "alternativas",
+                    "pregunta": "¿Cuál de las siguientes opciones es correcta según el texto?",
+                    "opciones": [
+                        ",",
+                        "medicamentum), que es la sustancia que permite prevenir",
+                        ".",
+                        "("
+                    ],
+                    "respuesta_correcta": "medicamentum), que es la sustancia que permite prevenir",
+                    "explicacion": "La respuesta correcta es 'medicamentum), que es la sustancia que permite prevenir' porque Medicina también se utiliza como sinónimo de medicamento (del latín medicamentum), que es la sustancia que permite prevenir, aliviar o curar las enfermedades o sus secuelas."
+                },
+                {
+                    "tipo": "abierta",
+                    "pregunta": "¿que está presente a lo largo de la vida y estudia los orígenes?",
+                    "respuesta_correcta": "Como puedes ver, la medicina es una ciencia que está presente a lo largo de la vida y estudia los orígenes de las enfermedades de forma que puedan atenderse efectivamente a través del diagnóstico, prevención y tratamiento de las enfermedades que presenta el cuerpo humano.",
+                    "explicacion": "La respuesta está relacionada con: Como puedes ver, la medicina es una ciencia que está presente a lo largo de la vida y estudia los orígenes de las enfermedades de forma que puedan atenderse efectivamente a través del diagnóstico, prevención y tratamiento de las enfermedades que presenta el cuerpo humano."
+                },
+                {
+                    "tipo": "abierta",
+                    "pregunta": "¿concepción: en?",
+                    "respuesta_correcta": "En la concepción: en el caso de una pareja con esterilidad, la medicina les ofrece a ambos la oportunidad de tener hijos propios.",
+                    "explicacion": "La respuesta está relacionada con: En la concepción: en el caso de una pareja con esterilidad, la medicina les ofrece a ambos la oportunidad de tener hijos propios."
+                },
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "¿Es verdadera la siguiente afirmación?: Por eso , conocerás sobre la NO Medicina y su importancia : El término medicina proviene del latín medicina y hace referencia a la ciencia que permite prevenir y curar las enfermedades del cuerpo humano .",
+                    "respuesta_correcta": false,
+                    "explicacion": "La afirmación es falsa. La versión correcta es: Por eso, conocerás sobre la Medicina y su importancia: El término medicina proviene del latín medicina y hace referencia a la ciencia que permite prevenir y curar las enfermedades del cuerpo humano."
+                },
+                {
+                    "tipo": "abierta",
+                    "pregunta": "¿muerte: para identificar causas y brindar también prevención de?",
+                    "respuesta_correcta": "En la muerte: para identificar causas y brindar también prevención de la enfermedad a su familia.",
+                    "explicacion": "La respuesta está relacionada con: En la muerte: para identificar causas y brindar también prevención de la enfermedad a su familia."
+                },
+                {
+                    "tipo": "abierta",
+                    "pregunta": "¿, vamos desarrollándola?",
+                    "respuesta_correcta": "La vocación viene con nosotros desde que llegamos al mundo y, con el paso de los años, vamos desarrollándola cada vez más.",
+                    "explicacion": "La respuesta está relacionada con: La vocación viene con nosotros desde que llegamos al mundo y, con el paso de los años, vamos desarrollándola cada vez más."
+                }
+            ]
+        },
+        {
+            "fuente": "https://www.hopkinsmedicine.org/health/treatment-tests-and-therapies/types-of-surgery",
+            "preguntas": [
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "¿Es verdadera la siguiente afirmación?: La cirugía de emergencia se realiza inmediatamente para salvar la vida del paciente, como en el caso de un trauma grave o una apendicitis aguda.",
+                    "respuesta_correcta": true,
+                    "explicacion": "La afirmación es verdadera. La cirugía de emergencia se realiza inmediatamente para salvar la vida del paciente, como en el caso de un trauma grave o una apendicitis aguda."
+                },
+                {
+                    "tipo": "abierta",
+                    "pregunta": "¿que implica pequeñas incisiones y el uso de una cámara para guiar?",
+                    "respuesta_correcta": "La cirugía puede ser mínimamente invasiva, utilizando técnicas como la laparoscopia, que implica pequeñas incisiones y el uso de una cámara para guiar el procedimiento, lo que reduce el tiempo de recuperación y el riesgo de complicaciones.",
+                    "explicacion": "La respuesta está relacionada con: La cirugía puede ser mínimamente invasiva, utilizando técnicas como la laparoscopia, que implica pequeñas incisiones y el uso de una cámara para guiar el procedimiento, lo que reduce el tiempo de recuperación y el riesgo de complicaciones."
+                },
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "¿Es verdadera la siguiente afirmación?: La cirugía electiva, por otro lado, se planifica con antelación y no es de urgencia, como una cirugía estética o una reparación de hernia.",
+                    "respuesta_correcta": true,
+                    "explicacion": "La afirmación es verdadera. La cirugía electiva, por otro lado, se planifica con antelación y no es de urgencia, como una cirugía estética o una reparación de hernia."
+                },
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "¿Es verdadera la siguiente afirmación?: La cirugía es una especialidad médica que NO implica la intervención física para diagnosticar , tratar o prevenir enfermedades y condiciones .",
+                    "respuesta_correcta": false,
+                    "explicacion": "La afirmación es falsa. La versión correcta es: La cirugía es una especialidad médica que implica la intervención física para diagnosticar, tratar o prevenir enfermedades y condiciones."
+                },
+                {
+                    "tipo": "abierta",
+                    "pregunta": "¿una evolución de la cirugía mínimamente invasiva?",
+                    "respuesta_correcta": "La cirugía robótica es una evolución de la cirugía mínimamente invasiva, donde los cirujanos utilizan brazos robóticos controlados por computadora para realizar procedimientos con alta precisión.",
+                    "explicacion": "La respuesta está relacionada con: La cirugía robótica es una evolución de la cirugía mínimamente invasiva, donde los cirujanos utilizan brazos robóticos controlados por computadora para realizar procedimientos con alta precisión."
+                },
+                {
+                    "tipo": "alternativas",
+                    "pregunta": "¿Cuál de las siguientes opciones es correcta según el texto?",
+                    "opciones": [
+                        "tratar",
+                        "condiciones",
+                        "especialidad",
+                        "una especialidad médica que implica la intervención física para diagnosticar"
+                    ],
+                    "respuesta_correcta": "una especialidad médica que implica la intervención física para diagnosticar",
+                    "explicacion": "La respuesta correcta es 'una especialidad médica que implica la intervención física para diagnosticar' porque La cirugía es una especialidad médica que implica la intervención física para diagnosticar, tratar o prevenir enfermedades y condiciones."
+                },
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "¿Es verdadera la siguiente afirmación?: La cirugía de emergencia se realiza inmediatamente para salvar la vida del paciente, como en el caso de un trauma grave o una apendicitis aguda.",
+                    "respuesta_correcta": true,
+                    "explicacion": "La afirmación es verdadera. La cirugía de emergencia se realiza inmediatamente para salvar la vida del paciente, como en el caso de un trauma grave o una apendicitis aguda."
+                },
+                {
+                    "tipo": "alternativas",
+                    "pregunta": "¿Cuál de las siguientes opciones es correcta según el texto?",
+                    "opciones": [
+                        "residencia",
+                        ", los médicos",
+                        ".",
+                        ","
+                    ],
+                    "respuesta_correcta": ", los médicos",
+                    "explicacion": "La respuesta correcta es ', los médicos' porque Durante la residencia, los médicos reciben capacitación intensiva en técnicas quirúrgicas, cuidados pre y postoperatorios, y manejo de complicaciones."
+                },
+                {
+                    "tipo": "alternativas",
+                    "pregunta": "¿Cuál de las siguientes opciones es correcta según el texto?",
+                    "opciones": [
+                        "salvar",
+                        ", como",
+                        "inmediatamente",
+                        "trauma"
+                    ],
+                    "respuesta_correcta": ", como",
+                    "explicacion": "La respuesta correcta es ', como' porque La cirugía de emergencia se realiza inmediatamente para salvar la vida del paciente, como en el caso de un trauma grave o una apendicitis aguda."
+                },
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "¿Es verdadera la siguiente afirmación?: Después de completar la carrera de medicina, los futuros cirujanos deben realizar una residencia en cirugía, que puede durar entre cinco y siete años.",
+                    "respuesta_correcta": true,
+                    "explicacion": "La afirmación es verdadera. Después de completar la carrera de medicina, los futuros cirujanos deben realizar una residencia en cirugía, que puede durar entre cinco y siete años."
+                }
+            ]
+        }
+    ],
+    "pedagogía en inglés": [
+        {
+            "fuente": "https://educacion.udp.cl/carreras/pedagogia-en-ingles/",
+            "preguntas": [
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "¿Es verdadera la siguiente afirmación?: Formación Profesional y Práctica : La carrera desarrolla NO competencias para la formación práctica a través de toda la carrera .",
+                    "respuesta_correcta": false,
+                    "explicacion": "La afirmación es falsa. La versión correcta es: Formación Profesional y Práctica: La carrera desarrolla competencias para la formación práctica a través de toda la carrera."
+                },
+                {
+                    "tipo": "abierta",
+                    "pregunta": "¿duración de?",
+                    "respuesta_correcta": "Esta línea de aprendizaje tiene una duración de nueve semestres de la carrera y también incluye asignaturas de fundamentos léxicos y gramaticales de la lengua, lingüística y cultura de los países angloparlantes.",
+                    "explicacion": "La respuesta está relacionada con: Esta línea de aprendizaje tiene una duración de nueve semestres de la carrera y también incluye asignaturas de fundamentos léxicos y gramaticales de la lengua, lingüística y cultura de los países angloparlantes."
+                },
+                {
+                    "tipo": "alternativas",
+                    "pregunta": "¿Cuál de las siguientes opciones es correcta según el texto?",
+                    "opciones": [
+                        "formar profesionales integrales, versátiles y comprometidos, para promover",
+                        ",",
+                        "Inglés",
+                        "niños/as"
+                    ],
+                    "respuesta_correcta": "formar profesionales integrales, versátiles y comprometidos, para promover",
+                    "explicacion": "La respuesta correcta es 'formar profesionales integrales, versátiles y comprometidos, para promover' porque La carrera de Pedagogía en Inglés tiene como propósito formar profesionales integrales, versátiles y comprometidos, para promover el aprendizaje de niños/as y jóvenes a través del idioma inglés."
+                },
+                {
+                    "tipo": "alternativas",
+                    "pregunta": "¿Cuál de las siguientes opciones es correcta según el texto?",
+                    "opciones": [
+                        "se pueden ocupar las tecnologías de la información en",
+                        "futuro",
+                        "tecnologías",
+                        "información"
+                    ],
+                    "respuesta_correcta": "se pueden ocupar las tecnologías de la información en",
+                    "explicacion": "La respuesta correcta es 'se pueden ocupar las tecnologías de la información en' porque ¿Cómo se pueden ocupar las tecnologías de la información en mi labor docente en el futuro?"
+                },
+                {
+                    "tipo": "abierta",
+                    "pregunta": "¿Profesional y Práctica?",
+                    "respuesta_correcta": "Formación Profesional y Práctica: La carrera desarrolla competencias para la formación práctica a través de toda la carrera.",
+                    "explicacion": "La respuesta está relacionada con: Formación Profesional y Práctica: La carrera desarrolla competencias para la formación práctica a través de toda la carrera."
+                },
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "¿Es verdadera la siguiente afirmación?: ¿Cómo integrar inglés al quehacer escolar?",
+                    "respuesta_correcta": true,
+                    "explicacion": "La afirmación es verdadera. ¿Cómo integrar inglés al quehacer escolar?"
+                },
+                {
+                    "tipo": "abierta",
+                    "pregunta": "¿Framework of Reference for Language (CEF),?",
+                    "respuesta_correcta": "Ámbitos de dominio y certificación de competencias Dominio del inglés equivalente al estándar C1 del Common European Framework of Reference for Language (CEF), demostrado a través de exámenes internacionales en el noveno semestre y mediante aplicación de mediciones referenciales intermedias durante la carrera.",
+                    "explicacion": "La respuesta está relacionada con: Ámbitos de dominio y certificación de competencias Dominio del inglés equivalente al estándar C1 del Common European Framework of Reference for Language (CEF), demostrado a través de exámenes internacionales en el noveno semestre y mediante aplicación de mediciones referenciales intermedias durante la carrera."
+                },
+                {
+                    "tipo": "alternativas",
+                    "pregunta": "¿Cuál de las siguientes opciones es correcta según el texto?",
+                    "opciones": [
+                        "desarrollo de la enseñanza y aprendizaje del inglés en Chile y en otros países",
+                        "aprendizaje",
+                        "vez",
+                        "formativa"
+                    ],
+                    "respuesta_correcta": "desarrollo de la enseñanza y aprendizaje del inglés en Chile y en otros países",
+                    "explicacion": "La respuesta correcta es 'desarrollo de la enseñanza y aprendizaje del inglés en Chile y en otros países' porque A la vez, esta línea formativa incluye el aprendizaje de las políticas públicas en educación para analizar cómo estas inciden en el desarrollo de la enseñanza y aprendizaje del inglés en Chile y en otros países."
+                },
+                {
+                    "tipo": "abierta",
+                    "pregunta": "¿, participación?",
+                    "respuesta_correcta": "Se fomenta la exposición permanente a la lengua inglesa tanto en clases formales como en lectura de bibliografía en inglés, ayudantías, medios audiovisuales, programas en internet, participación en actividades con profesores invitados extranjeros, presentaciones y congresos de interés para los estudiantes, entre otros.",
+                    "explicacion": "La respuesta está relacionada con: Se fomenta la exposición permanente a la lengua inglesa tanto en clases formales como en lectura de bibliografía en inglés, ayudantías, medios audiovisuales, programas en internet, participación en actividades con profesores invitados extranjeros, presentaciones y congresos de interés para los estudiantes, entre otros."
+                },
+                {
+                    "tipo": "alternativas",
+                    "pregunta": "¿Cuál de las siguientes opciones es correcta según el texto?",
+                    "opciones": [
+                        "práctica",
+                        "oportunidades",
+                        "teoría",
+                        "enseñar, logrando sinergia e integración entre teoría y práctica"
+                    ],
+                    "respuesta_correcta": "enseñar, logrando sinergia e integración entre teoría y práctica",
+                    "explicacion": "La respuesta correcta es 'enseñar, logrando sinergia e integración entre teoría y práctica' porque Esto tiene como propósito ofrecer variadas oportunidades, algunas desarrolladas en la universidad y otras en los centros escolares, que permitirán al estudiante aprender a enseñar, logrando sinergia e integración entre teoría y práctica a través de la evaluación y planificación de unidades de aprendizaje en inglés."
+                }
+            ]
+        },
+        {
+            "fuente": "https://www.teachingenglish.org.uk/article/digital-literacy",
+            "preguntas": [
+                {
+                    "tipo": "abierta",
+                    "pregunta": "¿tabletas y teléfonos inteligentes, para enseñar?",
+                    "respuesta_correcta": "La alfabetización digital en la enseñanza del inglés como lengua extranjera se refiere al uso de tecnologías digitales, como computadoras, tabletas y teléfonos inteligentes, para enseñar y aprender inglés.",
+                    "explicacion": "La respuesta está relacionada con: La alfabetización digital en la enseñanza del inglés como lengua extranjera se refiere al uso de tecnologías digitales, como computadoras, tabletas y teléfonos inteligentes, para enseñar y aprender inglés."
+                },
+                {
+                    "tipo": "abierta",
+                    "pregunta": "¿tabletas y teléfonos inteligentes, para enseñar?",
+                    "respuesta_correcta": "La alfabetización digital en la enseñanza del inglés como lengua extranjera se refiere al uso de tecnologías digitales, como computadoras, tabletas y teléfonos inteligentes, para enseñar y aprender inglés.",
+                    "explicacion": "La respuesta está relacionada con: La alfabetización digital en la enseñanza del inglés como lengua extranjera se refiere al uso de tecnologías digitales, como computadoras, tabletas y teléfonos inteligentes, para enseñar y aprender inglés."
+                },
+                {
+                    "tipo": "alternativas",
+                    "pregunta": "¿Cuál de las siguientes opciones es correcta según el texto?",
+                    "opciones": [
+                        "comunicación",
+                        "incluir",
+                        "colaboración",
+                        "línea y la"
+                    ],
+                    "respuesta_correcta": "línea y la",
+                    "explicacion": "La respuesta correcta es 'línea y la' porque Esto puede incluir la creación de contenido digital, la colaboración en línea y la comunicación a través de redes sociales."
+                },
+                {
+                    "tipo": "abierta",
+                    "pregunta": "¿línea y la?",
+                    "respuesta_correcta": "Esto puede incluir la creación de contenido digital, la colaboración en línea y la comunicación a través de redes sociales.",
+                    "explicacion": "La respuesta está relacionada con: Esto puede incluir la creación de contenido digital, la colaboración en línea y la comunicación a través de redes sociales."
+                },
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "¿Es verdadera la siguiente afirmación?: La alfabetización digital en la enseñanza del inglés como lengua extranjera se refiere al uso de tecnologías digitales, como computadoras, tabletas y teléfonos inteligentes, para enseñar y aprender inglés.",
+                    "respuesta_correcta": true,
+                    "explicacion": "La afirmación es verdadera. La alfabetización digital en la enseñanza del inglés como lengua extranjera se refiere al uso de tecnologías digitales, como computadoras, tabletas y teléfonos inteligentes, para enseñar y aprender inglés."
+                },
+                {
+                    "tipo": "abierta",
+                    "pregunta": "¿tabletas y teléfonos inteligentes, para enseñar?",
+                    "respuesta_correcta": "La alfabetización digital en la enseñanza del inglés como lengua extranjera se refiere al uso de tecnologías digitales, como computadoras, tabletas y teléfonos inteligentes, para enseñar y aprender inglés.",
+                    "explicacion": "La respuesta está relacionada con: La alfabetización digital en la enseñanza del inglés como lengua extranjera se refiere al uso de tecnologías digitales, como computadoras, tabletas y teléfonos inteligentes, para enseñar y aprender inglés."
+                },
+                {
+                    "tipo": "abierta",
+                    "pregunta": "¿tabletas y teléfonos inteligentes, para enseñar?",
+                    "respuesta_correcta": "La alfabetización digital en la enseñanza del inglés como lengua extranjera se refiere al uso de tecnologías digitales, como computadoras, tabletas y teléfonos inteligentes, para enseñar y aprender inglés.",
+                    "explicacion": "La respuesta está relacionada con: La alfabetización digital en la enseñanza del inglés como lengua extranjera se refiere al uso de tecnologías digitales, como computadoras, tabletas y teléfonos inteligentes, para enseñar y aprender inglés."
+                },
+                {
+                    "tipo": "abierta",
+                    "pregunta": "¿tabletas y teléfonos inteligentes, para enseñar?",
+                    "respuesta_correcta": "La alfabetización digital en la enseñanza del inglés como lengua extranjera se refiere al uso de tecnologías digitales, como computadoras, tabletas y teléfonos inteligentes, para enseñar y aprender inglés.",
+                    "explicacion": "La respuesta está relacionada con: La alfabetización digital en la enseñanza del inglés como lengua extranjera se refiere al uso de tecnologías digitales, como computadoras, tabletas y teléfonos inteligentes, para enseñar y aprender inglés."
+                },
+                {
+                    "tipo": "alternativas",
+                    "pregunta": "¿Cuál de las siguientes opciones es correcta según el texto?",
+                    "opciones": [
+                        "línea y la",
+                        ".",
+                        ",",
+                        "colaboración"
+                    ],
+                    "respuesta_correcta": "línea y la",
+                    "explicacion": "La respuesta correcta es 'línea y la' porque Esto puede incluir la creación de contenido digital, la colaboración en línea y la comunicación a través de redes sociales."
+                },
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "¿Es verdadera la siguiente afirmación?: Esto puede incluir la creación de contenido digital NO , la colaboración en línea y la comunicación a través de redes sociales .",
+                    "respuesta_correcta": false,
+                    "explicacion": "La afirmación es falsa. La versión correcta es: Esto puede incluir la creación de contenido digital, la colaboración en línea y la comunicación a través de redes sociales."
+                }
+            ]
+        }
+    ],
+    "programación": [
+        {
+            "fuente": "https://planderecuperacion.gob.es/noticias/que-es-inteligencia-artificial-ia-prtr#:~:text=La%20inteligencia%20artificial%20(IA)%20es,el%20razonamiento%20y%20la%20percepci%C3%B3n.",
+            "preguntas": [
+                {
+                    "tipo": "alternativas",
+                    "pregunta": "¿Cuál de las siguientes opciones es correcta según el texto?",
+                    "opciones": [
+                        "humano",
+                        "idiomas",
+                        "comprendan e interpreten el lenguaje humano,",
+                        "lenguaje"
+                    ],
+                    "respuesta_correcta": "comprendan e interpreten el lenguaje humano,",
+                    "explicacion": "La respuesta correcta es 'comprendan e interpreten el lenguaje humano,' porque El procesamiento del lenguaje natural permite que las máquinas comprendan e interpreten el lenguaje humano, lo que permite aplicaciones como asistentes virtuales y traducción de idiomas."
+                },
+                {
+                    "tipo": "alternativas",
+                    "pregunta": "¿Cuál de las siguientes opciones es correcta según el texto?",
+                    "opciones": [
+                        "se centran en cuestiones como el sesgo en",
+                        "discusiones",
+                        "IA",
+                        "sociedad"
+                    ],
+                    "respuesta_correcta": "se centran en cuestiones como el sesgo en",
+                    "explicacion": "La respuesta correcta es 'se centran en cuestiones como el sesgo en' porque Las discusiones sobre la ética de la IA se centran en cuestiones como el sesgo en los algoritmos, las preocupaciones de privacidad, el desplazamiento laboral y el impacto general de la IA en la sociedad."
+                },
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "¿Es verdadera la siguiente afirmación?: El procesamiento del lenguaje natural permite que las máquinas comprendan e interpreten el lenguaje humano , lo que permite NO aplicaciones como asistentes virtuales y traducción de idiomas .",
+                    "respuesta_correcta": false,
+                    "explicacion": "La afirmación es falsa. La versión correcta es: El procesamiento del lenguaje natural permite que las máquinas comprendan e interpreten el lenguaje humano, lo que permite aplicaciones como asistentes virtuales y traducción de idiomas."
+                },
+                {
+                    "tipo": "alternativas",
+                    "pregunta": "¿Cuál de las siguientes opciones es correcta según el texto?",
+                    "opciones": [
+                        "Siri",
+                        "Siri y Alexa ayudan con",
+                        "chatbots",
+                        "mejoran"
+                    ],
+                    "respuesta_correcta": "Siri y Alexa ayudan con",
+                    "explicacion": "La respuesta correcta es 'Siri y Alexa ayudan con' porque Los chatbots y sistemas de recomendación impulsados por IA mejoran las experiencias de los clientes, mientras que los asistentes virtuales como Siri y Alexa ayudan con las tareas diarias."
+                },
+                {
+                    "tipo": "abierta",
+                    "pregunta": "¿se centran en cuestiones como el sesgo en?",
+                    "respuesta_correcta": "Las discusiones sobre la ética de la IA se centran en cuestiones como el sesgo en los algoritmos, las preocupaciones de privacidad, el desplazamiento laboral y el impacto general de la IA en la sociedad.",
+                    "explicacion": "La respuesta está relacionada con: Las discusiones sobre la ética de la IA se centran en cuestiones como el sesgo en los algoritmos, las preocupaciones de privacidad, el desplazamiento laboral y el impacto general de la IA en la sociedad."
+                },
+                {
+                    "tipo": "alternativas",
+                    "pregunta": "¿Cuál de las siguientes opciones es correcta según el texto?",
+                    "opciones": [
+                        "componente",
+                        "explícita",
+                        "computadoras",
+                        "algoritmos"
+                    ],
+                    "respuesta_correcta": "componente",
+                    "explicacion": "La respuesta correcta es 'componente' porque El aprendizaje automático es un componente clave de la IA, donde los algoritmos permiten a las computadoras aprender de los datos y mejorar su rendimiento con el tiempo sin programación explícita."
+                },
+                {
+                    "tipo": "alternativas",
+                    "pregunta": "¿Cuál de las siguientes opciones es correcta según el texto?",
+                    "opciones": [
+                        "subcampos",
+                        "automático",
+                        "La IA abarca varios subcampos,",
+                        ","
+                    ],
+                    "respuesta_correcta": "La IA abarca varios subcampos,",
+                    "explicacion": "La respuesta correcta es 'La IA abarca varios subcampos,' porque La IA abarca varios subcampos, incluyendo el aprendizaje automático, el procesamiento del lenguaje natural, la visión por computadora y la robótica."
+                },
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "¿Es verdadera la siguiente afirmación?: En la salud, la IA se utiliza para el diagnóstico médico, el descubrimiento de medicamentos y los planes de tratamiento personalizados.",
+                    "respuesta_correcta": true,
+                    "explicacion": "La afirmación es verdadera. En la salud, la IA se utiliza para el diagnóstico médico, el descubrimiento de medicamentos y los planes de tratamiento personalizados."
+                },
+                {
+                    "tipo": "alternativas",
+                    "pregunta": "¿Cuál de las siguientes opciones es correcta según el texto?",
+                    "opciones": [
+                        ",",
+                        "fabricación",
+                        "salud, las finanzas",
+                        "entretenimiento"
+                    ],
+                    "respuesta_correcta": "salud, las finanzas",
+                    "explicacion": "La respuesta correcta es 'salud, las finanzas' porque La IA ha encontrado aplicaciones en numerosos dominios, incluyendo la salud, las finanzas, el transporte, la fabricación y el entretenimiento."
+                },
+                {
+                    "tipo": "alternativas",
+                    "pregunta": "¿Cuál de las siguientes opciones es correcta según el texto?",
+                    "opciones": [
+                        "estudio",
+                        "estudio y tecnología",
+                        "tecnología",
+                        "humanas"
+                    ],
+                    "respuesta_correcta": "estudio y tecnología",
+                    "explicacion": "La respuesta correcta es 'estudio y tecnología' porque La Inteligencia Artificial (IA) es un campo de estudio y tecnología que se enfoca en crear máquinas inteligentes que puedan simular habilidades cognitivas humanas."
+                }
+            ]
+        },
+        {
+            "fuente": "https://www.ibm.com/cloud/learn/machine-learning",
+            "preguntas": [
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "¿Es verdadera la siguiente afirmación?: El aprendizaje automático tiene una amplia gama de NO aplicaciones , desde la detección de fraudes en finanzas hasta el reconocimiento de imágenes en visión por computadora , pasando por el diagnóstico médico y la recomendación de contenido en plataformas de streaming .",
+                    "respuesta_correcta": false,
+                    "explicacion": "La afirmación es falsa. La versión correcta es: El aprendizaje automático tiene una amplia gama de aplicaciones, desde la detección de fraudes en finanzas hasta el reconocimiento de imágenes en visión por computadora, pasando por el diagnóstico médico y la recomendación de contenido en plataformas de streaming."
+                },
+                {
+                    "tipo": "alternativas",
+                    "pregunta": "¿Cuál de las siguientes opciones es correcta según el texto?",
+                    "opciones": [
+                        ".",
+                        "útil",
+                        "dimensionalidad",
+                        "agrupación"
+                    ],
+                    "respuesta_correcta": "agrupación",
+                    "explicacion": "La respuesta correcta es 'agrupación' porque Esto es útil para tareas como la agrupación (clustering) y la reducción de dimensionalidad."
+                },
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "¿Es verdadera la siguiente afirmación?: El aprendizaje automático se puede dividir en tres tipos principales: aprendizaje supervisado, aprendizaje no supervisado y aprendizaje por refuerzo.",
+                    "respuesta_correcta": true,
+                    "explicacion": "La afirmación es verdadera. El aprendizaje automático se puede dividir en tres tipos principales: aprendizaje supervisado, aprendizaje no supervisado y aprendizaje por refuerzo."
+                },
+                {
+                    "tipo": "abierta",
+                    "pregunta": "¿entrena con datos no etiquetados y debe identificar patrones o estructuras ocultas sin?",
+                    "respuesta_correcta": "En el aprendizaje no supervisado, el modelo se entrena con datos no etiquetados y debe identificar patrones o estructuras ocultas sin ninguna guía previa.",
+                    "explicacion": "La respuesta está relacionada con: En el aprendizaje no supervisado, el modelo se entrena con datos no etiquetados y debe identificar patrones o estructuras ocultas sin ninguna guía previa."
+                },
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "¿Es verdadera la siguiente afirmación?: El aprendizaje supervisado es NO el más común y consiste en entrenar un modelo con un conjunto de datos etiquetados , donde cada entrada tiene una salida correspondiente .",
+                    "respuesta_correcta": false,
+                    "explicacion": "La afirmación es falsa. La versión correcta es: El aprendizaje supervisado es el más común y consiste en entrenar un modelo con un conjunto de datos etiquetados, donde cada entrada tiene una salida correspondiente."
+                },
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "¿Es verdadera la siguiente afirmación?: El aprendizaje automático se puede dividir en tres tipos principales: aprendizaje supervisado, aprendizaje no supervisado y aprendizaje por refuerzo.",
+                    "respuesta_correcta": true,
+                    "explicacion": "La afirmación es verdadera. El aprendizaje automático se puede dividir en tres tipos principales: aprendizaje supervisado, aprendizaje no supervisado y aprendizaje por refuerzo."
+                },
+                {
+                    "tipo": "alternativas",
+                    "pregunta": "¿Cuál de las siguientes opciones es correcta según el texto?",
+                    "opciones": [
+                        "acumulada",
+                        "su comportamiento para maximizar",
+                        "función",
+                        "ajusta"
+                    ],
+                    "respuesta_correcta": "su comportamiento para maximizar",
+                    "explicacion": "La respuesta correcta es 'su comportamiento para maximizar' porque El agente recibe recompensas o penalizaciones en función de sus acciones y ajusta su comportamiento para maximizar la recompensa acumulada."
+                },
+                {
+                    "tipo": "alternativas",
+                    "pregunta": "¿Cuál de las siguientes opciones es correcta según el texto?",
+                    "opciones": [
+                        "aprenda",
+                        "mapear",
+                        "mapear las entradas a las salidas correctas y pueda generalizar este",
+                        "pueda"
+                    ],
+                    "respuesta_correcta": "mapear las entradas a las salidas correctas y pueda generalizar este",
+                    "explicacion": "La respuesta correcta es 'mapear las entradas a las salidas correctas y pueda generalizar este' porque El objetivo es que el modelo aprenda a mapear las entradas a las salidas correctas y pueda generalizar este conocimiento a nuevos datos."
+                },
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "¿Es verdadera la siguiente afirmación?: La investigación en este campo continúa avanzando rápidamente , con el objetivo de desarrollar algoritmos más eficientes , robustos y transparentes NO .",
+                    "respuesta_correcta": false,
+                    "explicacion": "La afirmación es falsa. La versión correcta es: La investigación en este campo continúa avanzando rápidamente, con el objetivo de desarrollar algoritmos más eficientes, robustos y transparentes."
+                },
+                {
+                    "tipo": "alternativas",
+                    "pregunta": "¿Cuál de las siguientes opciones es correcta según el texto?",
+                    "opciones": [
+                        "través",
+                        "principio",
+                        "principio de aprendizaje a través de",
+                        "aprendizaje"
+                    ],
+                    "respuesta_correcta": "principio de aprendizaje a través de",
+                    "explicacion": "La respuesta correcta es 'principio de aprendizaje a través de' porque El aprendizaje por refuerzo se basa en el principio de aprendizaje a través de la interacción con un entorno."
+                }
+            ]
+        },
+        {
+            "fuente": "https://www.python.org/doc/essays/blurb/",
+            "preguntas": [
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "¿Es verdadera la siguiente afirmación?: Los programadores pueden colaborar en proyectos de código abierto, participar en conferencias y acceder a una amplia gama de documentación y foros en línea.",
+                    "respuesta_correcta": true,
+                    "explicacion": "La afirmación es verdadera. Los programadores pueden colaborar en proyectos de código abierto, participar en conferencias y acceder a una amplia gama de documentación y foros en línea."
+                },
+                {
+                    "tipo": "abierta",
+                    "pregunta": "¿los desarrolladores realizar una amplia gama de proyectos sin?",
+                    "respuesta_correcta": "Esto permite a los desarrolladores realizar una amplia gama de proyectos sin necesidad de escribir mucho código desde cero.",
+                    "explicacion": "La respuesta está relacionada con: Esto permite a los desarrolladores realizar una amplia gama de proyectos sin necesidad de escribir mucho código desde cero."
+                },
+                {
+                    "tipo": "alternativas",
+                    "pregunta": "¿Cuál de las siguientes opciones es correcta según el texto?",
+                    "opciones": [
+                        "frameworks",
+                        "escalables",
+                        "Flask",
+                        "Además, frameworks como Django y Flask se utilizan para"
+                    ],
+                    "respuesta_correcta": "Además, frameworks como Django y Flask se utilizan para",
+                    "explicacion": "La respuesta correcta es 'Además, frameworks como Django y Flask se utilizan para' porque Además, frameworks como Django y Flask se utilizan para el desarrollo de aplicaciones web, proporcionando estructuras robustas y escalables."
+                },
+                {
+                    "tipo": "abierta",
+                    "pregunta": "¿código abierto, participar en?",
+                    "respuesta_correcta": "Los programadores pueden colaborar en proyectos de código abierto, participar en conferencias y acceder a una amplia gama de documentación y foros en línea.",
+                    "explicacion": "La respuesta está relacionada con: Los programadores pueden colaborar en proyectos de código abierto, participar en conferencias y acceder a una amplia gama de documentación y foros en línea."
+                },
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "¿Es verdadera la siguiente afirmación?: Python es NO especialmente popular en el campo de la ciencia de datos y el aprendizaje automático .",
+                    "respuesta_correcta": false,
+                    "explicacion": "La afirmación es falsa. La versión correcta es: Python es especialmente popular en el campo de la ciencia de datos y el aprendizaje automático."
+                },
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "¿Es verdadera la siguiente afirmación?: Además, frameworks como Django y Flask se utilizan para el desarrollo de aplicaciones web, proporcionando estructuras robustas y escalables.",
+                    "respuesta_correcta": true,
+                    "explicacion": "La afirmación es verdadera. Además, frameworks como Django y Flask se utilizan para el desarrollo de aplicaciones web, proporcionando estructuras robustas y escalables."
+                },
+                {
+                    "tipo": "alternativas",
+                    "pregunta": "¿Cuál de las siguientes opciones es correcta según el texto?",
+                    "opciones": [
+                        "áreas",
+                        "desean",
+                        ", sino también",
+                        "aquellos"
+                    ],
+                    "respuesta_correcta": ", sino también",
+                    "explicacion": "La respuesta correcta es ', sino también' porque Aprender Python no solo es beneficioso para aquellos que desean una carrera en tecnología, sino también para profesionales de otras áreas que buscan automatizar tareas, analizar datos o desarrollar herramientas personalizadas."
+                },
+                {
+                    "tipo": "alternativas",
+                    "pregunta": "¿Cuál de las siguientes opciones es correcta según el texto?",
+                    "opciones": [
+                        "procesamiento",
+                        "inteligencia",
+                        "de Python es su amplia biblioteca estándar",
+                        "desarrollo"
+                    ],
+                    "respuesta_correcta": "de Python es su amplia biblioteca estándar",
+                    "explicacion": "La respuesta correcta es 'de Python es su amplia biblioteca estándar' porque Una de las principales ventajas de Python es su amplia biblioteca estándar, que incluye módulos y paquetes para una variedad de tareas, desde el procesamiento de datos y la visualización hasta el desarrollo web y la inteligencia artificial."
+                },
+                {
+                    "tipo": "abierta",
+                    "pregunta": "¿de Python es su amplia biblioteca estándar?",
+                    "respuesta_correcta": "Una de las principales ventajas de Python es su amplia biblioteca estándar, que incluye módulos y paquetes para una variedad de tareas, desde el procesamiento de datos y la visualización hasta el desarrollo web y la inteligencia artificial.",
+                    "explicacion": "La respuesta está relacionada con: Una de las principales ventajas de Python es su amplia biblioteca estándar, que incluye módulos y paquetes para una variedad de tareas, desde el procesamiento de datos y la visualización hasta el desarrollo web y la inteligencia artificial."
+                },
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "¿Es verdadera la siguiente afirmación?: Aprender Python no solo es beneficioso para aquellos que desean una carrera en tecnología, sino también para profesionales de otras áreas que buscan automatizar tareas, analizar datos o desarrollar herramientas personalizadas.",
+                    "respuesta_correcta": true,
+                    "explicacion": "La afirmación es verdadera. Aprender Python no solo es beneficioso para aquellos que desean una carrera en tecnología, sino también para profesionales de otras áreas que buscan automatizar tareas, analizar datos o desarrollar herramientas personalizadas."
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,19 @@
+{% extends "plantillas/admin_dashboard.html" %}
+
+{% load static %}
+
+{% block titulo %}{{ category|title }}{% endblock %}
+
+{% block contenido %}
+    <h1 class="text-center text-white mb-4">Cuestionarios de {{ category|title }}</h1>
+
+    <ul>
+        {% for quiz in quizzes %}
+            <li class="col-4 list-group text-center mx-auto mb-3">
+                <a href="{% url 'quiz' category forloop.counter0 %}" id="quizzes" class="btn btn-primary bg-gradient">
+                    Cuestionario {{ forloop.counter }}
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}

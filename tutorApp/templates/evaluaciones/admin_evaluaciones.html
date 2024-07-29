@@ -1,0 +1,245 @@
+{% extends "plantillas/admin_dashboard.html" %}
+
+{% load static %}
+
+{% block titulo %}Administrador de evaluaciones{% endblock %}
+
+{% block contenido %}
+<main class="container">
+    <h1 class="text-center text-white mb-4">Administrador de DocTutor</h1>
+
+    {% if messages %}
+        <div class="alert alert-success" role="alert">
+            {% for message in messages %}
+                {{ message }}
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <article class="row">
+        <section class="col-md-6">
+            <div class="card card-info">
+                <div class="card-header">
+                  <h4>Agregar nueva materia</h4>
+                </div>
+                
+                <div class="card-body">
+                    <form method="post" class="bg-light p-4 rounded mb-4">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            {{ formulario_materia.as_p }}
+                        </div>
+        
+                        <button type="submit" name="agregar_materia" class="btn btn-info">
+                            Añadir materia
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+
+            <div class="card card-info">
+                <div class="card-header">
+                  <h4>Agregar nuevo texto</h4>
+                </div>
+                
+                <div class="card-body">
+                    <form method="post" class="bg-light p-4 rounded mb-4">
+                        {% csrf_token %}
+                        {{ formulario_texto.as_p }}
+        
+                        <button type="submit" class="btn btn-info" name="agregar_texto">
+                            Añadir texto
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+
+            <div class="card card-info">
+                <div class="card-header">
+                    <h4>Subir nuevo PDF</h4>
+                </div>
+                
+                <div class="card-body">
+                    <p class="text-info">
+                        Estimado Administrador: Favor colocar el nombre de la
+                        materia a la que pertenece su archivo <b>.pdf</b> en el nombre
+                        de este mismo para que nuestro clasificador pueda asignar
+                        su pdf a la materia que corresponde.
+                    </p>
+                    
+                    <form method="post" enctype="multipart/form-data" class="bg-light mb-4">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="pdf_file">
+                                Seleccionar archivo PDF:
+                            </label>
+    
+                            <input type="file" class="form-control form-control-lg" id="pdf_file" name="pdf_file" accept=".pdf" multiple required>
+                        </div>
+                        
+                        <button type="submit" name="subir_pdf" class="btn btn-info">
+                            Subir PDF
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <section class="col-md-6">
+            <div class="card card-info">
+                <div class="card-header">
+                  <h4>Materias existentes</h4>
+                </div>
+                
+                <div class="card-body">
+                    <ul class="list-group mb-4">
+                        {% for materia in categories %}
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                {{ materia.nombre }}
+                                
+                                <form method="post" style="display:inline;">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="materia_id" value="{{ materia.id }}">
+                                    
+                                    <button type="submit" name="eliminar_materia" class="btn btn-sm btn-danger">
+                                        Eliminar
+                                    </button>
+                                </form>
+                            </li>
+                        {% empty %}
+                            <li class="list-group-item">No hay categorías aún.</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+              </div>
+
+
+
+            <div class="card card-info">
+                <div class="card-header">
+                  <h4>Textos existentes</h4>
+                </div>
+                
+                <div class="card-body">
+                    <div class="bg-light p-4 rounded mb-4" style="max-height: 500px; overflow-y: auto;" data-simplebar data-simplebar-info>
+                        {% for texto in textos %}
+                            <div class="card mb-3">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ texto.materia.nombre }}</h5>
+                                    
+                                    <p class="card-text">
+                                        {{ texto.texto|truncatewords:30 }}
+                                    </p>
+        
+                                    <a href="{{ texto.fuente }}" class="btn btn-sm btn-info" target="_blank">
+                                        Ver fuente
+                                    </a>
+                                    
+                                    <form method="post" style="display:inline;">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="texto_id" value="{{ texto.id }}">
+                                        
+                                        <button type="submit" name="eliminar_texto" class="btn btn-sm btn-danger">
+                                            Eliminar
+                                        </button>
+                                    </form>
+                                    
+                                    <button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#editarTextoModal{{ texto.id }}">
+                                        Editar
+                                    </button>
+                                </div>
+                            </div>
+        
+                            <!-- Modal para editar texto -->
+                            <div class="modal fade" id="editarTextoModal{{ texto.id }}" tabindex="-1" role="dialog" aria-labelledby="editarTextoModalLabel{{ texto.id }}" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="editarTextoModalLabel{{ texto.id }}">
+                                                Editar Texto
+                                            </h5>
+                                            
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        
+                                        <div class="modal-body">
+                                            <form method="post">
+                                                {% csrf_token %}
+                                                <input type="hidden" name="editar_texto_id" value="{{ texto.id }}">
+                                                
+                                                <div class="form-group">
+                                                    <label for="materia{{ texto.id }}">
+                                                        Materia
+                                                    </label>
+                                                    
+                                                    <select id="materia{{ texto.id }}" name="materia" class="form-control">
+                                                        {% for materia in categories %}
+                                                            <option value="{{ materia.id }}" {% if materia.id == texto.materia.id %}selected{% endif %}>
+                                                                {{ materia.nombre }}
+                                                            </option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+        
+                                                <div class="form-group">
+                                                    <label for="texto{{ texto.id }}">Texto</label>
+                                                    <textarea id="texto{{ texto.id }}" name="texto" class="form-control">{{ texto.texto }}</textarea>
+                                                </div>
+        
+                                                <div class="form-group">
+                                                    <label for="fuente{{ texto.id }}">Fuente</label>
+                                                    <input type="url" id="fuente{{ texto.id }}" name="fuente" class="form-control" value="{{ texto.fuente }}">
+                                                </div>
+        
+                                                <button type="submit" class="btn btn-primary" name="editar_texto">
+                                                    Guardar cambios
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% empty %}
+                            <p>No hay textos aún.</p>
+                        {% endfor %}
+                    </div>
+                </div>
+              </div>
+
+            {% comment %} Administrador PDF Documentación {% endcomment %}
+            <div class="card card-info">
+                <div class="card-header">
+                  <h4>PDFs existentes</h4>
+                </div>
+                
+                
+                <div class="card-body">
+                    <ul class="list-group">
+                        {% for pdf in pdfs %}
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                {{ pdf }}
+                                
+                                <form method="post" style="display:inline;">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="pdf_name" value="{{ pdf }}">
+                                    
+                                    <button type="submit" name="eliminar_pdf" class="btn btn-sm btn-danger">
+                                        Eliminar
+                                    </button>
+                                </form>
+                            </li>
+                        {% empty %}
+                            <li class="list-group-item">No hay PDFs aún.</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            {% comment %} Fin administrador PDF Documentación {% endcomment %}
+        </section>
+    </article>
+</main>
+{% endblock %}

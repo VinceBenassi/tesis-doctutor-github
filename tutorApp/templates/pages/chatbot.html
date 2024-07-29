@@ -1,0 +1,50 @@
+{% extends "plantillas/admin_dashboard.html" %}
+
+{% load static %}
+
+{% block titulo %}Chat Tutor{% endblock %}
+
+{% block contenido %}
+<main class="container-fluid py-5 row justify-content-center">
+    <article class="col-lg-6">
+        <section class="card">
+            <div class="card-header d-flex p-3 bg-success text-white">
+                <p id="titulo_chatbot" class="mb-0">DocTutor</p>
+            </div>
+
+            <div class="card-body" id="chat-history">
+                {% for dialogo in historial_chatbot %}
+                    {% if dialogo.0 == "Usuario" %}
+                        <div id="dialogo_usuario" class="d-flex justify-content-end mb-4">
+                            <div class="p-3 border bg-light" style="border-radius: 15px;">
+                                <p class="small mb-0">{{ dialogo.1 }}</p>
+                            </div>
+                            
+                            <img src="{{ foto_perfil_url }}" style="width:60px; border-radius:50%;">
+                        </div>
+                    {% else %}
+                        <div id="dialogo_tutor" class="d-flex mb-4">
+                            <img src="{% static 'img/icono_tutor.jpg' %}" alt="doctutor" class="img-fluid" style="width:60px; border-radius:50%;">
+                            
+                            <div class="p-3 ms-3 bg-info" style="border-radius: 15px;">
+                                <p class="small mb-0">{{ dialogo.1 }}</p>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+
+            <form class="d-flex align-items-center p-3" method="post" action="{% url 'chatbot' %}">
+                {% csrf_token %}
+                <img src="{{ foto_perfil_url }}" alt="doctutor" class="img-fluid" style="width:60px; border-radius:50%;">
+                
+                <input type="text" class="form-control form-control-lg" id="consulta" name="consulta" placeholder="Escribe un mensaje">
+                
+                <button type="submit" class="btn btn-outline-dark bg-gradient ms-3" style="border-radius: 15px;">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </form>
+        </section>
+    </article>
+</main>
+{% endblock %}

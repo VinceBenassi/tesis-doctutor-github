@@ -1,0 +1,58 @@
+{% extends "plantillas/base_landing.html" %}
+
+{% load static %}
+
+{% block titulo %}Inicio{% endblock %}
+
+{% block contenido %}
+    <main class="row g-0"> 
+        <article id="bienvenida">
+            {% if request.user.is_authenticated %}
+                <h2 class="mb-4">
+                    Bienvenido(a) a DocTutor!, <span>{{ user.username | capfirst }}</span>
+                </h2>
+            {% else %}
+                <h2 class="mb-4">
+                    Bienvenido(a) a DocTutor!, <span>Visitante</span>
+                </h2>
+            {% endif %}
+
+            <h6 class="text-white mb-4">
+                Herramienta de aprendizaje para potenciar e insentivar el 
+                aprendizaje de materias de forma interactiva, amigable y 
+                efectiva mediante inteligencia artificial.
+            </h6>
+
+            <p class="mb-4">
+                Recibe retroalimentación inmediata de tus respuestas, 
+                aprende de forma dinámica y resuelve tus dudas.
+            </p>
+
+            <p class="mb-4">
+                ¡Aprende y descubre como potenciar tu conocimiento con la
+                ayuda de un tutor inteligente!
+            </p>
+
+            <h2 class="mb-4">Características</h2>
+
+            <ul class="mb-4">
+                <li>Aprendizaje personalizado</li>
+                <li>Acceso a un amplio catálogo de contenido</li>
+                <li>Soporte 24/7</li>
+            </ul>
+
+            <p> 
+                Para comenzar solo inicie sesión y pruebe este portal
+                educativo.
+            </p>
+
+            {% if request.user.is_authenticated %}
+                <a id="comenzar" href="{% url 'inicio' %}">Comenzar</a>
+            {% else %}
+                <a id="comenzar" href="{% url 'login' %}">Inicia sesión</a>
+            {% endif %}
+        </article>
+
+        <img src="{% static 'img/tutor_inteligente.png' %}" alt="tutor" class="imgTutor"/>
+    </main>
+{% endblock %}

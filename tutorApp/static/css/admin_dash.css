@@ -1,0 +1,388 @@
+body {
+    background-color: darkslategray;
+}
+
+main {
+    flex: 1 0 auto;
+}
+
+button::focus {
+    box-shadow: none;
+    outline: none;
+    border: none;
+}
+
+button {
+    cursor: pointer;
+}
+
+ul, ol {
+    padding: 0px;
+    margin: 0px;
+    list-style: none;
+}
+
+footer{
+    background-color: #353b48;
+    color: #fff;
+    text-align: center;
+    padding: 10px 30px;
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+}
+
+.wrapper {
+    position: relative;
+    width: 100%;
+    overflow: auto;
+}
+
+
+/* Barra lateral */
+#sidebar {
+    position: fixed;
+    height: 100vh!important;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    z-index: 11;
+    width: 260px;
+    overflow: auto;
+    transition: all 0.3s;
+    background-color: #fff;
+    box-shadow: 0 0 30px rgba(200 200 200 / 20%);
+}
+
+@media only screen and (min-width:992px) {
+    #sidebar.active {
+        left: -260px;
+        height: 100%!important;
+        position: absolute!important;
+        overflow: visible!important;
+        top: 0;
+        z-index: 666;
+        float: left!important;
+        bottom: 0!important;
+    }
+
+    #contenido {
+        width: calc(100% - 260px);
+        position: relative;
+        float: right;
+        transition: all 0.3s;
+    }
+
+    #contenido.active {
+        width: 100%;
+    }
+}
+
+#sidebar::-webkit-scrollbar {
+    width: 5px;
+    border-radius: 10px;
+    background-color: #333;
+    display: none;
+}
+
+#sidebar::-webkit-scrollbar-thumbs {
+    width: 5px;
+    border-radius: 10px;
+    background-color: #333;
+    display: none;
+}
+
+#sidebar:hover::-webkit-scrollbar-thumbs {
+    display: block;
+}
+
+#sidebar:hover::-webkit-scrollbar {
+    display: block;
+}
+
+#sidebar .sidebar-header {
+    padding: 20px;
+    background: #fff;
+    border-bottom: 1px solid #eee;
+}
+
+.sidebar-header h3 img {
+    width: 45px;
+    margin-right: 10px;
+}
+
+#sidebar ul li {
+    padding: 2px 0px;
+}
+
+#sidebar ul li.active > a i{
+    color: #4c7cf3;
+}
+
+#sidebar ul li a:hover {
+    color: #4c7cf3;
+    background-color: #DBE5FD;
+    text-decoration: none;
+}
+
+#sidebar ul li.dropdown {
+    position: sticky;
+}
+
+#sidebar ul li.component {
+    padding: 20px 0px;
+}
+
+#sidebar ul li a {
+    padding: 5px 10px 5px 20px;
+    line-height: 30px;
+    font-size: 15px;
+    position: relative;
+    font-weight: 400;
+    display: block;
+    text-transform: capitalize;
+    color: #777777;
+}
+
+#sidebar ul li a i {
+    position: relative;
+    margin-right: 10px;
+    top: 6px;
+}
+
+#sidebar.show-nav, .body-overlay.show-nav{
+    transform: translatex(0%);
+    opacity: 1;
+    display: block;
+    visibility: visible;
+    z-index: 15;
+}
+/* Fin Barra lateral */
+
+
+
+/* Barra de navegación */
+.top-navbar {
+    width: 100%;
+    z-index: 9;
+    position: relative;
+    padding: 15px 30px;
+    background-color: #353b48;
+    display: flex;
+}
+ 
+.main-content {
+    padding: 30px 30px 0px 30px;
+}
+
+.xp-menubar {
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    line-height: 45px;
+    text-align: center;
+    margin-right: 20px;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    background-color: rgba(0,0,0,0.09);	   
+}
+
+.xp-menubar span {
+    margin: 9px;
+    padding: 0px;
+}
+
+.navbar-nav > li.active {
+    color: #fff;
+    border-radius: 4px;
+    background-color: rgba(0,0,0,0.08);
+}
+
+.navbar-nav > li > a{
+    color: #fff;
+}
+
+.navbar-nav li a {
+    position: relative;
+    display: block;
+    padding: 4px 10px!important;
+}
+
+.dropdown-header {
+    display: flex;
+}
+
+.nav-item .nav-link .material-icons {
+    position: relative;
+    top: 10px;
+    font-size: 19px;
+}
+
+.xp-user-live {
+    position: absolute;
+    bottom: 5px;
+    right: 9px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid #353b48;
+    background-color: #4c7cf3;
+}
+
+#salir {
+    color: red;
+}
+
+
+/* Vista en dispositivos móviles */
+@media only screen and (max-width: 992px){
+    #sidebar{
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        z-index: 10;
+        width: 260px;
+        transform: translatex(-100%);
+        transition: all 150ms linear;
+        box-shadow: none!important;
+    }
+    
+    .body-overlay{
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: none;
+        visibility: hidden;
+        opacity: 0;
+        z-index: 3;
+        transition: all 150ms linear;
+        background-color: rgba(0,0,0,0.5);
+    }
+}
+/* Fin vista en dispositivos móviles */
+
+
+
+
+/* pages/inicio.html */
+
+/* Fin pages/inicio.html */
+
+
+/* Estilos pages/chatbot.html */
+#titulo_chatbot {
+    margin: 0 auto;
+    font-weight: bold;
+    font-size: large;
+}
+
+#chat-history {
+    height: 500px;
+    overflow-y: auto;
+    border: 1px solid #ddd; 
+    padding: 10px;
+}
+
+/* Estilos para la barra de desplazamiento */
+#chat-history::-webkit-scrollbar {
+    width: 12px; /* Ancho de la barra de desplazamiento */
+}
+
+#chat-history::-webkit-scrollbar-track {
+    background: #f1f1f1; /* Color del track */
+    border-radius: 10px; /* Borde redondeado del track */
+}
+
+#chat-history::-webkit-scrollbar-thumb {
+    background-color: #888; /* Color de la barra */
+    border-radius: 10px; /* Borde redondeado de la barra */
+    border: 3px solid #f1f1f1; /* Espacio alrededor de la barra */
+}
+
+#chat-history::-webkit-scrollbar-thumb:hover {
+    background: #555; /* Color de la barra al pasar el ratón */
+}
+
+#dialogo_usuario, #dialogo_tutor {
+    gap: 1rem;
+}
+
+.d-flex.align-items-center.p-3 {
+    gap: 1rem;
+}
+/* Fin estilos pages/chatbot.html */
+
+
+
+/* Estilos pages/documentacion.html */
+.thead {
+    background-color: #038ACE;
+}
+/* Fin estilos pages/documentacion.html */
+
+
+
+/* Estilos pages/evaluaciones.html */
+#evaluaciones {
+    margin: 13%;
+}
+
+#titulo_evaluaciones {
+    margin-left: 11%;
+}
+
+.source-link {
+    color: #007bff;
+    text-decoration: underline;
+    cursor: pointer;
+    position: relative;
+}
+
+.preview-container {
+    position: absolute;
+    z-index: 1000;
+    background-color: white;
+    border: 1px solid #ddd;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    padding: 5px;
+    border-radius: 5px;
+    margin-top: 5px;
+}
+
+#quizzes {
+    font-size: 1.5rem;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    box-shadow: 0 0 20px rgb(161, 223, 248);
+}
+
+#cuest_res {
+    font-size: 1.5rem;
+}
+
+.preview-container {
+    display: none;
+    position: absolute;
+    z-index: 1000;
+    background-color: white;
+    padding: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    border-radius: 5px;
+    max-width: 320px;
+    max-height: 240px;
+    overflow: hidden;
+}
+.preview-container iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+.preview-container a {
+    display: block;
+    margin-top: 5px;
+    font-size: 12px;
+    text-align: right;
+}
+/* Fin estilos pages/evaluaciones.html */

@@ -1,0 +1,30 @@
+{% extends "plantillas/admin_dashboard.html" %}
+
+{% load static %}
+
+{% block titulo %}Evaluaciones{% endblock %}
+
+{% block contenido %}
+<main id="evaluaciones" class="container mx-auto d-block">
+  <h1 id="titulo_evaluaciones" class="text-white p-3">Materias a Evaluar</h1>
+  
+  <article class="row justify-content-center">
+    {% for categoria, quizzes in categorias.items %}
+      <section class="col-12 col-md-6 col-lg-3">
+        <div class="card card-{% cycle 'info' 'warning' 'primary' %}">
+          <div class="card-header">
+            <h4>{{ categoria|title }}</h4>
+          </div>
+
+          <div class="card-body">
+            <a href="{% url 'categoria' categoria %}" class="btn btn-{% cycle 'info' 'warning' 'primary' %}">
+              <i class="ion-{% cycle 'heart' 'university' 'code' %}" data-pack="default"></i>
+              Ver evaluaciones
+            </a>
+          </div>
+        </div>
+      </section>
+    {% endfor %}
+  </article>
+</main>
+{% endblock %}
