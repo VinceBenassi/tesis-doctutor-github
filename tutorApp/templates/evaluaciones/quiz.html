@@ -85,7 +85,7 @@
         const mensaje = esCorrecta ? '¡Correcto!' : 'Incorrecto.';
         respuestasCorrectas += esCorrecta ? 1 : 0;
         
-        const htmlFuente = `<a href="${pregunta.fuente}" class="source-link" data-preview="${pregunta.fuente}">Ver fuente</a>`;
+        const htmlFuente = `<a href="${cuestionario.fuente}" class="source-link" data-preview="${cuestionario.fuente}">Ver fuente</a>`;
         
         document.getElementById('question-container').innerHTML += `
             <div class="alert ${claseAlerta}" role="alert">

@@ -23,7 +23,7 @@ historial_chatbot = []
 datos_json = cargar_datos_json('tutorApp/static/json/quiz.json')
 cuestionarios = generar_cuestionarios_desde_json(datos_json)
 
-with open('cuestionarios_generados.json', 'w', encoding='utf-8') as archivo:
+with open('tutorApp/static/json/cuestionarios_generados.json', 'w', encoding='utf-8') as archivo:
     json.dump(cuestionarios, archivo, ensure_ascii=False, indent=4)
 # Fin carga de los cuestionarios
 
