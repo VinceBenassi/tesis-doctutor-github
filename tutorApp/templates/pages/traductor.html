@@ -1,0 +1,42 @@
+{% extends "plantillas/admin_dashboard.html" %}
+
+{% load static %}
+
+{% block titulo %}Traductor{% endblock %}
+
+{% block contenido %}
+<main class="card container mt-5 justify-content-center bg-light">
+    <h1 class="card-header justify-content-center mb-4">Traductor de Voz</h1>
+
+    <section class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+                <button id="startButton" class="btn btn-primary mb-3">
+                    Iniciar Traducción
+                </button>
+
+                <p id="status" class="alert alert-info" style="display: none;">
+                    Procesando...
+                </p>
+            </div>
+        </div>
+    
+        <div class="row">
+            <div class="col-md-6">
+                <h3>Idioma Detectado</h3>
+                <p id="idioma"></p>
+            </div>
+
+            <div class="col-md-6">
+                <h3>Texto Original</h3>
+                <p id="textoOriginal"></p>
+            </div>
+    
+            <div class="col-md-6">
+                <h3>Traducción</h3>
+                <p id="textoTraducido"></p>
+            </div>
+        </div>
+    </section>
+</main>
+{% endblock %}

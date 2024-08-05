@@ -1,0 +1,197 @@
+{% extends "plantillas/admin_dashboard.html" %}
+
+{% block titulo %}Cuestionario{% endblock %}
+
+{% block contenido %}
+<h1 class="text-center text-white mb-4">Cuestionario</h1>
+
+<div id="quiz-container" class="card w-75 mx-auto py-3 p-4">
+    <div id="progress-bar" class="progress mb-4">
+        <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+    </div>
+
+    <div id="question-container" class="mb-4"></div>
+
+    <button id="check-answer" class="btn btn-primary mr-auto w-25 mb-4">
+        Verificar respuesta
+    </button>
+
+    <button id="next-question" class="btn btn-dark mr-auto w-25 mb-4" style="display: none;">
+        Siguiente pregunta
+    </button>
+</div>
+
+<div id="previewContainer" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); border:1px solid #ccc; background:white; z-index:1000; width:80%; max-width:600px; height:400px; box-shadow: 0 0 10px rgba(0,0,0,0.5);">
+    <iframe id="previewFrame" src="" style="width:100%; height:100%; border:none;"></iframe>
+    <button id="closePreview" style="position:absolute; top:10px; right:10px; background:red; color:white; border:none; padding:5px 10px; cursor:pointer;">Cerrar</button>
+</div>
+
+<script>
+    const cuestionario = JSON.parse('{{ quiz|escapejs }}');
+    let preguntaActual = 0;
+    let respuestasCorrectas = 0;
+
+    function mostrarPregunta() {
+        const contenedorPregunta = document.getElementById('question-container');
+        const pregunta = cuestionario.preguntas[preguntaActual];
+        let html = `<h2 class="mb-4">${pregunta.pregunta}</h2>`;
+
+        if (pregunta.tipo === 'alternativas') {
+            html += '<div class="options">';
+            pregunta.opciones.forEach(opcion => {
+                html += `<label><input type="radio" name="respuesta" value="${opcion}" class="mb-3"> ${opcion}</label><br>`;
+            });
+            html += '</div>';
+        } else if (pregunta.tipo === 'verdadero_falso') {
+            html += `
+                <input type="radio" name="respuesta" value="true" class="mb-3"> Verdadero<br>
+                <input type="radio" name="respuesta" value="false"> Falso
+            `;
+        } else if (pregunta.tipo === 'abierta') {
+            html += '<input type="text" name="respuesta" placeholder="Tu respuesta" class="form-control mx-auto w-75 mb-4">';
+        }
+
+        contenedorPregunta.innerHTML = html;
+        actualizarBarraProgreso();
+    }
+
+    function actualizarBarraProgreso() {
+        const barraProgreso = document.querySelector('.progress-bar');
+        const progreso = ((preguntaActual + 1) / cuestionario.preguntas.length) * 100;
+        barraProgreso.style.width = `${progreso}%`;
+        barraProgreso.setAttribute('aria-valuenow', progreso);
+    }
+
+    function verificarRespuesta() {
+        const respuestaUsuario = document.querySelector('input[name="respuesta"]:checked')?.value || document.querySelector('input[name="respuesta"]')?.value;
+        
+        if (!respuestaUsuario) {
+            alert("Por favor, selecciona o ingresa una respuesta.");
+            return;
+        }
+    
+        const pregunta = cuestionario.preguntas[preguntaActual];
+        let esCorrecta;
+    
+        if (pregunta.tipo === 'verdadero_falso') {
+            esCorrecta = respuestaUsuario.toLowerCase() === pregunta.respuesta_correcta.toString().toLowerCase();
+        } else if (pregunta.tipo === 'abierta') {
+            esCorrecta = respuestaUsuario.toLowerCase().includes(pregunta.respuesta_correcta.toLowerCase());
+        } else {
+            esCorrecta = respuestaUsuario.toLowerCase() === pregunta.respuesta_correcta.toLowerCase();
+        }
+    
+        const claseAlerta = esCorrecta ? 'alert-success' : 'alert-danger';
+        const mensaje = esCorrecta ? '¡Correcto!' : 'Incorrecto.';
+        respuestasCorrectas += esCorrecta ? 1 : 0;
+        
+        const htmlFuente = `<a href="${cuestionario.fuente}" class="source-link" data-preview="${cuestionario.fuente}">Ver fuente</a>`;
+        
+        document.getElementById('question-container').innerHTML += `
+            <div class="alert ${claseAlerta}" role="alert">
+                <h3>${mensaje}</h3>
+                La respuesta correcta es: ${pregunta.respuesta_correcta}<br>
+                Explicación: ${pregunta.explicacion}<br>
+                Fuente: ${htmlFuente}
+            </div>
+        `;
+        
+        document.getElementById('check-answer').style.display = 'none';
+        document.getElementById('next-question').style.display = 'inline-block';
+    
+        inicializarVistaPrevia();
+    }
+
+    function mostrarVistaPrevia(url) {
+        const contenedorVistaPrevia = document.getElementById('previewContainer');
+        const marcoVistaPrevia = document.getElementById('previewFrame');
+        
+        marcoVistaPrevia.src = url;
+        contenedorVistaPrevia.style.display = 'block';
+        
+        document.getElementById('closePreview').onclick = function() {
+            contenedorVistaPrevia.style.display = 'none';
+        };
+    }
+    
+    function inicializarVistaPrevia() {
+        const enlaces = document.querySelectorAll('.source-link');
+        enlaces.forEach(enlace => {
+            enlace.onclick = function(e) {
+                e.preventDefault();
+                mostrarVistaPrevia(this.getAttribute('data-preview'));
+            };
+        });
+    }
+
+    function siguientePregunta() {
+        preguntaActual++;
+        if (preguntaActual < cuestionario.preguntas.length) {
+            mostrarPregunta();
+            document.getElementById('check-answer').style.display = 'inline-block';
+            document.getElementById('next-question').style.display = 'none';
+        } else {
+            mostrarResultados();
+        }
+    }
+
+    function mostrarResultados() {
+        const totalPreguntas = cuestionario.preguntas.length;
+        const puntaje = (respuestasCorrectas / totalPreguntas) * 100;
+        const nota = calcularNota(puntaje);
+    
+        document.getElementById('quiz-container').innerHTML = `
+            <h2 class="text-center mb-4">¡Has completado el cuestionario!</h2>
+            <p id="cuest_res" class="text-center mb-4">Respuestas correctas: <b>${respuestasCorrectas}</b> de <b>${totalPreguntas}</b></p>
+            <p id="cuest_res" class="text-center mb-4">Puntaje: <b>${puntaje.toFixed(2)}%</b></p>
+            <p id="cuest_res" class="text-center mb-4">Nota: <b>${nota}</b></p>
+        `;
+
+        // Enviar el puntaje al servidor
+        fetch('', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-CSRFToken': obtenerCSRFToken()
+            },
+            body: `puntaje=${puntaje}`
+        }).then(respuesta => {
+            if (respuesta.ok) {
+                console.log('Progreso guardado exitosamente');
+            } else {
+                console.error('Error al guardar el progreso');
+            }
+        });
+    }
+
+    function calcularNota(puntaje) {
+        if (puntaje < 60) {
+            return ((puntaje / 60) * 3 + 1).toFixed(1);
+        } else {
+            return ((puntaje - 60) / 40 * 3 + 4).toFixed(1);
+        }
+    }
+
+    function obtenerCSRFToken() {
+        let cookieValue = null;
+        
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        
+        return cookieValue;
+    }
+
+    document.getElementById('check-answer').addEventListener('click', verificarRespuesta);
+    document.getElementById('next-question').addEventListener('click', siguientePregunta);
+
+    mostrarPregunta();
+</script>
+{% endblock %}

@@ -1,0 +1,184 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es-cl" data-bs-theme="dark">
+  <head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+    <link rel="icon" type="image/x-icon" href="{% static 'img/icono_tutor.jpg' %}" style="border-radius:50%;">
+    <title>DocTutor - {% block titulo %}{% endblock %}</title>
+    {% csrf_token %}
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="{% static "bundles/bootstrap-social/bootstrap-social.css" %}">
+    <link rel="stylesheet" href="{% static "bundles/ionicons/css/ionicons.min.css" %}">
+    <link rel="stylesheet" href="{% static "bundles/summernote/summernote-bs4.css" %}">
+    <link rel="stylesheet" href="{% static "bundles/datatables/datatables.min.css" %}">
+    <link rel="stylesheet" href="{% static "bundles/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css" %}">
+    <link rel="stylesheet" href="{% static "css/app.min.css" %}">
+    <link rel="stylesheet" href="{% static "css/style.css" %}">
+    <link rel="stylesheet" href="{% static "css/animate.css" %}">
+    <link rel="stylesheet" href="{% static "css/components.css" %}">
+    <link rel="stylesheet" href="{% static "css/custom.css" %}">
+    <link rel="stylesheet" href="{% static "css/admin_dash.css" %}">
+  </head>
+
+  <body>
+    <div class="wrapper">
+      <div class="body-overlay"></div>
+
+
+      {% comment %} Barra Lateral {% endcomment %}
+      <div id="sidebar">
+        <div class="sidebar-header">
+          <h3>
+            <img src="{% static 'img/icono_tutor.jpg' %}" class="img-fluid" style="width:80px; border-radius:50%;">
+            <span>DocTutor</span>
+          </h3>
+        </div>
+
+        <ul class="list-unstyled component m-0">
+          <li class="active">
+            <a href="{% url 'inicio' %}" class="dashboard">
+              <i class="material-icons">dashboard</i>
+              Inicio 
+            </a>
+          </li>     
+          
+          <li class="">
+            <a href="{% url 'traductor' %}" class="">
+              <i class="material-icons">book</i>
+              Traductor de voz
+            </a>
+          </li>
+
+          <li class="">
+            <a href="{% url 'chatbot' %}" class="">
+              <i class="material-icons">question_answer</i>
+              Chatbot
+            </a>
+          </li>
+            
+          <li class="dropdown">
+            <a href="#homeSubmenu2" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                <i class="material-icons">description</i>
+                Documentación
+            </a>
+            
+            <ul class="collapse list-unstyled menu" id="homeSubmenu2">
+                {% for materia, pdfs in materias.items %}
+                    <li><a href="{% url 'documentacion' materia %}">{{ materia }} ({{ pdfs|length }})</a></li>
+                {% empty %}
+                    <li>No hay materias disponibles</li>
+                {% endfor %}
+            </ul>
+          </li>
+
+          <li class="">
+            <a href="{% url 'evaluaciones' %}" class="">
+              <i class="material-icons">assignment</i>
+              Evaluaciones
+            </a>
+          </li>
+
+          {% if user.is_authenticated and user.is_staff %}
+            <li class="">
+              <a href="{% url 'admin_evaluaciones' %}" class="">
+                <i class="material-icons">business_center</i>
+                Administrador
+              </a>
+            </li>
+          {% endif %}
+        </ul>
+      </div>
+      {% comment %} Fin Barra Lateral {% endcomment %}
+
+
+
+      <div id="contenido">
+        {% comment %} Barra de navegación {% endcomment %}
+        <nav class="top-navbar">
+          {% comment %} Botón hamburguesa {% endcomment %}
+          <div class="xp-menubar">
+            <span class="material-icons text-white">
+              clear_all
+            </span>
+          </div>
+          {% comment %} Fin botón hamburguesa {% endcomment %}
+
+          
+          {% comment %} Perfil {% endcomment %}
+          <ul class="nav navbar-nav flex-row ml-auto">
+            <li class="dropdown nav-item">
+              <a class="nav-link" href="#" data-toggle="dropdown">
+                <img src="{{ foto_perfil_url }}" alt="foto_perfil" class="img-fluid rounded-circle" style="width:40px; border-radius:50%;"/>
+              </a>
+          
+              <ul class="dropdown-menu float-right">
+                <li>
+                  <h6 class="dropdown-title">
+                    Hola {{ nombre_usuario | capfirst }}
+                  </h6>
+                </li>
+
+                <li>
+                  <a class="dropdown-item mb-2" href="{% url 'perfil' %}">
+                    <i class="far fa-user"></i>
+                    Perfil
+                  </a>
+                </li>
+
+                <div class="dropdown-divider"></div>
+          
+                <li>
+                  <a class="dropdown-item" href="{% url 'salir' %}">
+                    <i id="salir" class="fas fa-sign-out-alt"></i>
+                    Cerrar sesión
+                  </a>
+                </li>
+              </ul>
+            </li>
+          </ul>
+          {% comment %} Fin perfil {% endcomment %}
+        </nav>
+        {% comment %} Fin barra de navegación {% endcomment %}
+
+
+
+        {% comment %} Contenido {% endcomment %}
+        <div class="mb-5">
+          {% block contenido %}{% endblock %}
+        </div>
+        {% comment %} Fin contenido {% endcomment %}
+
+
+
+
+        {% comment %} Pie de página {% endcomment %}
+        <footer>
+            <p>
+              &copy; 2024 Franco Benassi - Todos los derechos reservados.
+            </p>
+        </footer>
+        {% comment %} Fin pie de página {% endcomment %}
+      </div>
+    </div>
+
+
+    {% comment %} JS {% endcomment %}
+    <script src="{% static "bundles/apexcharts/apexcharts.min.js" %}"></script>
+    <script src="{% static "bundles/summernote/summernote-bs4.js" %}"></script>
+    <script src="{% static "js/page/index.js" %}"></script>
+    <script src="{% static "js/app.min.js" %}"></script>
+    <script src="{% static "js/scripts.js" %}"></script>
+    <script src="{% static "js/custom.js" %}"></script>
+    <script src="{% static "js/docTutor.js" %}"></script>
+    <script src="{% static "bundles/datatables/datatables.min.js" %}"></script>
+    <script src="{% static "bundles/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js" %}"></script>
+    <script src="{% static "bundles/jquery-ui/jquery-ui.min.js" %}"></script>
+    <script src="{% static "js/page/datatables.js" %}"></script>
+    <script src="{% static "js/popper.js" %}"></script>
+    <script src="{% static "js/hamburguesa_admin.js" %}"></script>
+  </body>
+</html>

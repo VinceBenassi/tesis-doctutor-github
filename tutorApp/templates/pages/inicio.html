@@ -1,0 +1,90 @@
+{% extends "plantillas/admin_dashboard.html" %}
+
+{% load static %}
+
+{% block titulo %}Inicio{% endblock %}
+
+{% block contenido %}
+<main>
+    <article class="container">
+        <!-- Presentación Tutor -->
+        <section class="hero-section text-center text-white">
+            <div class="hero-content">
+                <h1 class="display-4 animate__animated animate__fadeInDown">Bienvenido(a) {{ nombre_usuario | capfirst }}</h1>
+                <p class="lead animate__animated animate__fadeInUp">Tu tutor inteligente para potenciar tu aprendizaje</p>
+                <a href="{% url 'evaluaciones' %}" class="btn btn-success btn-lg animate__animated animate__zoomIn">Comienza Ahora</a>
+            </div>
+        </section>
+
+        <!-- Características -->
+        <section class="features-section py-5">
+            <div class="row text-center">
+                <div class="col-md-4 mb-4">
+                    <div class="feature-box p-4 animate__animated animate__fadeInLeft">
+                        <i class="icon ion-university fa-3x mb-3"></i>
+                        <h3>Aprendizaje Personalizado</h3>
+                        <p>Potencia tus conocimientos con contenidos adaptados a tu nivel.</p>
+                    </div>
+                </div>
+
+                <div class="col-md-4 mb-4">
+                    <div class="feature-box p-4 animate__animated animate__fadeInUp">
+                        <i class="icon ion-code fa-3x mb-3"></i>
+                        <h3>Evaluaciones Inteligentes</h3>
+                        <p>Realiza evaluaciones integradas y monitorea tu progreso.</p>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="feature-box p-4 animate__animated animate__fadeInRight">
+                        <i class="icon ion-heart fa-3x mb-3"></i>
+                        <h3>Desarrollo Personal</h3>
+                        <p>Mejora tus habilidades personales con nuestras herramientas.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section class="about-section py-5 bg-light text-center">
+            <div class="container">
+                <h2 class="animate__animated animate__fadeInDown">Sobre Doctutor</h2>
+                <p class="lead animate__animated animate__fadeInUp">Doctutor es tu compañero ideal para aprender y ejercitar tus habilidades de resolución de problemas.</p>
+                <p class="animate__animated animate__fadeInUp">Doctutor se encargará de potenciar tus conocimientos, además de mejorar y monitorear tu aprendizaje. Cuenta con diversas herramientas que te servirán para tus estudios y desarrollo personal, permitiéndote aprender más y evaluarte con diversas evaluaciones integradas.</p>
+            </div>
+        </section>
+    </article>
+</main>
+
+<!-- Custom CSS for animations -->
+<style>
+    .hero-section {
+        background: url("{% static 'img/tutor2.png' %}") no-repeat center center/cover;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+    }
+
+    .hero-content {
+        background: rgba(0, 0, 0, 0.6);
+        padding: 2rem;
+        border-radius: 1rem;
+    }
+
+    .feature-box {
+        background: white;
+        border-radius: 1rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .about-section {
+        background: #f8f9fa;
+    }
+
+    .animate__animated {
+        --animate-duration: 1s;
+    }
+</style>
+{% endblock %}

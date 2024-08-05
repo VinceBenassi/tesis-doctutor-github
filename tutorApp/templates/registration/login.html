@@ -1,0 +1,25 @@
+{% extends "plantillas/base_landing.html" %}
+
+{% load static %}
+
+{% block titulo %}Inicio Sesión{% endblock %}
+
+{% block contenido %}
+    <h1>Inicia Sesión</h1>
+
+    <form action="" method="post">
+        {% csrf_token %}
+
+        <div class="col-auto mb-3">
+            <input type="text" name="username" class="form-control" placeholder="Nombre de Usuario">
+        </div>
+          
+        <div class="col-auto mb-3">
+            <input type="password" name="password" class="form-control" placeholder="Contraseña">
+        </div>
+
+        <div class="col-auto mb-3">
+            <button type="submit" class="btn btn-success mb-3">Ingresar</button> 
+        </div>
+    </form>
+{% endblock %}
