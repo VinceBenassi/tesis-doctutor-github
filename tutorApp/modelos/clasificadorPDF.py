@@ -1,7 +1,6 @@
 # Clasificador de Materias PDF
 # por Franco Benassi
 import os
-import nltk
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -9,95 +8,108 @@ from sklearn.cluster import DBSCAN
 from collections import Counter
 import re
 
-# nltk.download('punkt', quiet=True)
-# nltk.download('stopwords', quiet=True)
-
-def preprocess_text(text):
-    text = re.sub(r'\.pdf$', '', text, flags=re.IGNORECASE)
-    text = re.sub(r'[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]', ' ', text)
+def preprocesar_texto(texto):
+    texto = re.sub(r'\.pdf$', '', texto, flags=re.IGNORECASE)
+    texto = re.sub(r'[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]', ' ', texto)
     
-    stop_words = set(stopwords.words('spanish') + stopwords.words('english'))
-    keep_words = {'en', 'de', 'la', 'el', 'y', 'e', 'i', 'ii', 'iii', 'iv', 'v'}
-    stop_words = stop_words - keep_words
+    palabras_vacias = set(stopwords.words('spanish') + stopwords.words('english'))
+    palabras_mantener = {'en', 'de', 'la', 'el', 'y', 'e', 'i', 'ii', 'iii', 'iv', 'v'}
+    palabras_vacias = palabras_vacias - palabras_mantener
     
-    tokens = word_tokenize(text.lower())
-    return ' '.join([word for word in tokens if word not in stop_words or word in keep_words])
+    tokens = word_tokenize(texto.lower())
+    return ' '.join([palabra for palabra in tokens if palabra not in palabras_vacias or palabra in palabras_mantener])
 
-def extract_keywords(text, min_words=1, max_words=5):
-    words = word_tokenize(text.lower())
-    word_freq = Counter(words)
-    keywords = []
-    for word, _ in word_freq.most_common():
-        if len(keywords) >= max_words:
+
+
+def extraer_palabras_clave(texto, min_palabras=1, max_palabras=5):
+    palabras = word_tokenize(texto.lower())
+    frecuencia_palabras = Counter(palabras)
+    palabras_clave = []
+
+    for palabra, _ in frecuencia_palabras.most_common():
+        if len(palabras_clave) >= max_palabras:
             break
-        if len(word) > 1 or word in {'i', 'ii', 'iii', 'iv', 'v', 'en', 'i', 'y', 'e'}:
-            keywords.append(word)
+        if len(palabra) > 1 or palabra in {'i', 'ii', 'iii', 'iv', 'v', 'en', 'i', 'y', 'e'}:
+            palabras_clave.append(palabra)
     
-    while len(keywords) < min_words and words:
-        word = words.pop(0)
-        if word not in keywords:
-            keywords.append(word)
+    while len(palabras_clave) < min_palabras and palabras:
+        palabra = palabras.pop(0)
+        if palabra not in palabras_clave:
+            palabras_clave.append(palabra)
     
-    return keywords
+    return palabras_clave
 
-def simplify_materia_name(name):
-    words = name.split()
-    if len(words) <= 2:
-        return name
-    elif 'en' in words[1:]:
-        en_index = words.index('en')
-        return ' '.join(words[:min(en_index + 3, len(words))])
+def simplificar_nombre_materia(nombre):
+    palabras = nombre.split()
+
+    if len(palabras) <= 2:
+        return nombre
+    
+    elif 'en' in palabras[1:]:
+        indice_en = palabras.index('en')
+        return ' '.join(palabras[:min(indice_en + 3, len(palabras))])
+    
     else:
-        return words[0]
+        return palabras[0]
 
-def is_common_word(word):
-    common_words = {'especialidades', 'estandares', 'medicas', 'medio', 'chile'}
-    return word.lower() in common_words
 
-def classify_pdfs(pdf_dir):
-    pdf_files = [f for f in os.listdir(pdf_dir) if f.endswith('.pdf')]
+
+def es_palabra_comun(palabra):
+    palabras_comunes = {'especialidades', 'estandares', 'medicas', 'medio', 'chile'}
+    return palabra.lower() in palabras_comunes
+
+
+
+def clasificar_pdfs(directorio_pdf):
+    archivos_pdf = [f for f in os.listdir(directorio_pdf) if f.endswith('.pdf')]
     
-    if not pdf_files:
+    if not archivos_pdf:
         print("No se encontraron archivos PDF.")
         return {}
 
-    preprocessed_names = [preprocess_text(pdf) for pdf in pdf_files]
-    vectorizer = TfidfVectorizer(ngram_range=(1, 2))
-    X = vectorizer.fit_transform(preprocessed_names)
+    nombres_preprocesados = [preprocesar_texto(pdf) for pdf in archivos_pdf]
+    vectorizador = TfidfVectorizer(ngram_range=(1, 2))
+    X = vectorizador.fit_transform(nombres_preprocesados)
 
-    clustering = DBSCAN(eps=0.5, min_samples=1)
-    cluster_labels = clustering.fit_predict(X.toarray())
+    agrupamiento = DBSCAN(eps=0.5, min_samples=1)
+    etiquetas_cluster = agrupamiento.fit_predict(X.toarray())
 
     materias = {}
-    for pdf, label in zip(pdf_files, cluster_labels):
-        preprocessed_pdf = preprocess_text(pdf)
-        keywords = extract_keywords(preprocessed_pdf)
+    
+    for pdf, etiqueta in zip(archivos_pdf, etiquetas_cluster):
+        pdf_preprocesado = preprocesar_texto(pdf)
+        palabras_clave = extraer_palabras_clave(pdf_preprocesado)
         
-        if label == -1:
-            materia_name = ' '.join(keywords).capitalize()
+        if etiqueta == -1:
+            nombre_materia = ' '.join(palabras_clave).capitalize()
+        
         else:
-            cluster_pdfs = [pdf_files[i] for i, l in enumerate(cluster_labels) if l == label]
-            cluster_text = ' '.join([preprocess_text(cluster_pdf) for cluster_pdf in cluster_pdfs])
-            cluster_keywords = extract_keywords(cluster_text)
-            materia_name = ' '.join(cluster_keywords).capitalize()
+            pdfs_cluster = [archivos_pdf[i] for i, l in enumerate(etiquetas_cluster) if l == etiqueta]
+            texto_cluster = ' '.join([preprocesar_texto(pdf_cluster) for pdf_cluster in pdfs_cluster])
+            palabras_clave_cluster = extraer_palabras_clave(texto_cluster)
+            nombre_materia = ' '.join(palabras_clave_cluster).capitalize()
         
-        materia_name = simplify_materia_name(materia_name)
-        materia_name = ' '.join([word for word in materia_name.split() if not is_common_word(word)])
-        materia_name = re.sub(r'\s+', ' ', materia_name).strip()
+        nombre_materia = simplificar_nombre_materia(nombre_materia)
+        nombre_materia = ' '.join([palabra for palabra in nombre_materia.split() if not es_palabra_comun(palabra)])
+        nombre_materia = re.sub(r'\s+', ' ', nombre_materia).strip()
         
         # Buscar si ya existe una materia similar
-        existing_materia = None
-        for existing in materias:
-            if existing.split()[0].lower() == materia_name.split()[0].lower():
-                existing_materia = existing
+        materia_existente = None
+        
+        for existente in materias:
+            if existente.split()[0].lower() == nombre_materia.split()[0].lower():
+                materia_existente = existente
                 break
         
-        if existing_materia:
-            materias[existing_materia].append(pdf)
+        if materia_existente:
+            materias[materia_existente].append(pdf)
+        
         else:
-            materias[materia_name] = [pdf]
+            materias[nombre_materia] = [pdf]
 
     return materias
 
-def get_materias_data(pdf_dir):
-    return classify_pdfs(pdf_dir)
+
+
+def obtener_datos_materias(directorio_pdf):
+    return clasificar_pdfs(directorio_pdf)

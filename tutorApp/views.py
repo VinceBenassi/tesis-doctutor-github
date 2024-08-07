@@ -1,6 +1,6 @@
 from .modelos.chatbot import predecir_clase_frase, obtener_respuesta, intentos
 from .modelos.traductor import escuchar_microfono
-from .modelos.clasificadorPDF import get_materias_data
+from .modelos.clasificadorPDF import obtener_datos_materias
 from .modelos.generador_quizzes import cargar_datos_json, generar_cuestionarios_desde_json
 from .models import MateriaCuestionario, TextoCuestionario, FormularioMateriaCuestionario, FormularioTextoCuestionario, PerfilUsuario, ResultadoCuestionario, CambiarPerfil, FotoPerfil
 from django.db.models import Avg
@@ -154,7 +154,7 @@ def eliminar_foto(request, foto_id):
 
 # Barra Lateral
 def cargar_materias(request):
-    categorias = get_materias_data(PDF_DIR)
+    categorias = obtener_datos_materias(PDF_DIR)
     print(f"Materias data cargada: {categorias}")  # Depuración
     return categorias
 
