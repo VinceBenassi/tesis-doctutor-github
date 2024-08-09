@@ -4,76 +4,88 @@
             "fuente": "https://www.unbosque.edu.co/blog-universidad-el-bosque/que-es-la-medicina",
             "preguntas": [
                 {
-                    "tipo": "abierta",
-                    "pregunta": "Explica brevemente qué es durante y su importancia en el contexto dado.",
-                    "respuesta_sugerida": "referencia a la",
-                    "explicacion": "La respuesta debe mencionar que durante es referencia a la y explicar su relevancia en el contexto del texto."
-                },
-                {
-                    "tipo": "verdadero_falso",
-                    "pregunta": "¿Es verdadera la siguiente afirmación?: Al crecer : los niños , desde su nacimiento y hasta los 6 años , crecer atendidos por médicos pediatras , quienes explican cómo alimentarlos , cuidarlos y controlar y chequear su salud .",
-                    "respuesta_correcta": false,
-                    "explicacion": "La afirmación es falsa. La versión correcta es: Al crecer: los niños, desde su nacimiento y hasta los 6 años, son atendidos por médicos pediatras, quienes explican cómo alimentarlos, cuidarlos y controlar y chequear su salud."
-                },
-                {
-                    "tipo": "verdadero_falso",
-                    "pregunta": "¿Es verdadera la siguiente afirmación?: Al crecer: los niños, desde su nacimiento y hasta los 6 años, son atendidos por médicos pediatras, quienes explican cómo alimentarlos, cuidarlos y controlar y chequear su salud.",
-                    "respuesta_correcta": true,
-                    "explicacion": "La afirmación es verdadera. Al crecer: los niños, desde su nacimiento y hasta los 6 años, son atendidos por médicos pediatras, quienes explican cómo alimentarlos, cuidarlos y controlar y chequear su salud."
-                },
-                {
-                    "tipo": "abierta",
-                    "pregunta": "Explica brevemente qué es largo y su importancia en el contexto dado.",
-                    "respuesta_sugerida": "referencia a la",
-                    "explicacion": "La respuesta debe mencionar que largo es referencia a la y explicar su relevancia en el contexto del texto."
-                },
-                {
-                    "tipo": "verdadero_falso",
-                    "pregunta": "¿Es verdadera la siguiente afirmación?: Al crecer: los niños, desde su nacimiento y hasta los 6 años, son atendidos por médicos pediatras, quienes explican cómo alimentarlos, cuidarlos y controlar y chequear su salud.",
-                    "respuesta_correcta": true,
-                    "explicacion": "La afirmación es verdadera. Al crecer: los niños, desde su nacimiento y hasta los 6 años, son atendidos por médicos pediatras, quienes explican cómo alimentarlos, cuidarlos y controlar y chequear su salud."
+                    "tipo": "alternativas",
+                    "pregunta": "¿qué abordarer vocación?",
+                    "opciones": [
+                        "En la adultez: en los casos de enfermedad y como forma de prevención, la medicina busca la mejoría y curación, mediante tratamientos quirúrgicos o médicos.",
+                        "En este caso, la medicina está superando y tratando un problema de naturaleza.",
+                        "En la muerte: para identificar causas y brindar también prevención de la enfermedad a su familia.",
+                        "En esta oportunidad, abordaremos la vocación de quienes deciden ser médicos."
+                    ],
+                    "respuesta_correcta": "En esta oportunidad, abordaremos la vocación de quienes deciden ser médicos.",
+                    "explicacion": "La respuesta correcta es: En esta oportunidad, abordaremos la vocación de quienes deciden ser médicos."
                 },
                 {
                     "tipo": "alternativas",
-                    "pregunta": "¿Cuál de las siguientes opciones mejor describe prevenir?",
+                    "pregunta": "¿qué abordarer vocación?",
                     "opciones": [
-                        "como",
-                        "también",
-                        "referencia a la",
-                        "Medicina"
+                        "En esta oportunidad, abordaremos la vocación de quienes deciden ser médicos.",
+                        "Todos, desde que somos pequeños, damos señales de lo que nos gusta y lo que nos disgusta.",
+                        "En este caso, la medicina está superando y tratando un problema de naturaleza.",
+                        "Es una de las profesiones que atiende y protege la salud de las personas desde antes de nacer hasta el día de su muerte."
                     ],
-                    "respuesta_correcta": "referencia a la",
-                    "explicacion": "prevenir se describe como 'referencia a la' porque Medicina también se utiliza como sinónimo de medicamento (del latín medicamentum), que es la sustancia que permite prevenir, aliviar o curar las enfermedades o sus secuelas."
-                },
-                {
-                    "tipo": "verdadero_falso",
-                    "pregunta": "¿Es verdadera la siguiente afirmación?: Como puedes ver , la medicina es una ciencia que está presente a lo largo de la vida y estudia los orígenes de las enfermedades de forma que puedan atenderse efectivamente a del del diagnóstico , prevención y tratamiento de las enfermedades que presenta el cuerpo humano .",
-                    "respuesta_correcta": false,
-                    "explicacion": "La afirmación es falsa. La versión correcta es: Como puedes ver, la medicina es una ciencia que está presente a lo largo de la vida y estudia los orígenes de las enfermedades de forma que puedan atenderse efectivamente a través del diagnóstico, prevención y tratamiento de las enfermedades que presenta el cuerpo humano."
+                    "respuesta_correcta": "En esta oportunidad, abordaremos la vocación de quienes deciden ser médicos.",
+                    "explicacion": "La respuesta correcta es: En esta oportunidad, abordaremos la vocación de quienes deciden ser médicos."
                 },
                 {
                     "tipo": "abierta",
-                    "pregunta": "Explica brevemente qué es busca y su importancia en el contexto dado.",
-                    "respuesta_sugerida": "referencia a la",
-                    "explicacion": "La respuesta debe mencionar que busca es referencia a la y explicar su relevancia en el contexto del texto."
+                    "pregunta": "¿qué superar medicina?",
+                    "respuesta_correcta": "sumergirte en el",
+                    "explicacion": "Una posible respuesta basada en el texto es: sumergirte en el"
                 },
                 {
                     "tipo": "alternativas",
-                    "pregunta": "¿Cuál de las siguientes opciones mejor describe curar?",
+                    "pregunta": "¿qué hacer periódicos?",
                     "opciones": [
-                        "referencia a la",
-                        "permite",
-                        "como",
-                        "sustancia"
+                        "Durante la infancia y adolescencia: se hacen seguimientos periódicos que permitan tener una vida saludable, también se pueden descubrir enfermedades genéticas y tratarlas a tiempo.",
+                        "En esta oportunidad, abordaremos la vocación de quienes deciden ser médicos.",
+                        "Medicina también se utiliza como sinónimo de medicamento (del latín medicamentum), que es la sustancia que permite prevenir, aliviar o curar las enfermedades o sus secuelas.",
+                        "Por eso, conocerás sobre la Medicina y su importancia: El término medicina proviene del latín medicina y hace referencia a la ciencia que permite prevenir y curar las enfermedades del cuerpo humano."
                     ],
-                    "respuesta_correcta": "referencia a la",
-                    "explicacion": "curar se describe como 'referencia a la' porque Medicina también se utiliza como sinónimo de medicamento (del latín medicamentum), que es la sustancia que permite prevenir, aliviar o curar las enfermedades o sus secuelas."
+                    "respuesta_correcta": "Durante la infancia y adolescencia: se hacen seguimientos periódicos que permitan tener una vida saludable, también se pueden descubrir enfermedades genéticas y tratarlas a tiempo.",
+                    "explicacion": "La respuesta correcta es: Durante la infancia y adolescencia: se hacen seguimientos periódicos que permitan tener una vida saludable, también se pueden descubrir enfermedades genéticas y tratarlas a tiempo."
                 },
                 {
                     "tipo": "verdadero_falso",
-                    "pregunta": "¿Es verdadera la siguiente afirmación?: En la adultez: en los casos de enfermedad y como forma de prevención, la medicina busca la mejoría y curación, mediante tratamientos quirúrgicos o médicos.",
+                    "pregunta": "Durante la verdades y adolescencia : se hacen seguimientos periódicos que permitan tener una vida saludable , también se pueden descubrir enfermedades genéticas y tratarlas a tiempo .",
+                    "respuesta_correcta": false,
+                    "explicacion": "Esta afirmación es incorrecta. La versión correcta es: Durante la infancia y adolescencia: se hacen seguimientos periódicos que permitan tener una vida saludable, también se pueden descubrir enfermedades genéticas y tratarlas a tiempo."
+                },
+                {
+                    "tipo": "abierta",
+                    "pregunta": "¿qué ver medicina?",
+                    "respuesta_correcta": "sumergirte en el",
+                    "explicacion": "Una posible respuesta basada en el texto es: sumergirte en el"
+                },
+                {
+                    "tipo": "abierta",
+                    "pregunta": "¿qué jugar medicina?",
+                    "respuesta_correcta": "sumergirte en el",
+                    "explicacion": "Una posible respuesta basada en el texto es: sumergirte en el"
+                },
+                {
+                    "tipo": "alternativas",
+                    "pregunta": "¿qué ocurre con aclarar?",
+                    "opciones": [
+                        "Después del parto: se practican múltiples exámenes al recién nacido, para diagnosticar en él su correcto desarrollo y condiciones de salud.",
+                        "En la adultez: en los casos de enfermedad y como forma de prevención, la medicina busca la mejoría y curación, mediante tratamientos quirúrgicos o médicos.",
+                        "En la concepción: en el caso de una pareja con esterilidad, la medicina les ofrece a ambos la oportunidad de tener hijos propios.",
+                        "Alrededor de la medicina hay múltiples mitos y verdades sobre esta carrera, conócelos y aclara todas tus dudas para que puedas sumergirte en el mágico mundo de la salud."
+                    ],
+                    "respuesta_correcta": "Alrededor de la medicina hay múltiples mitos y verdades sobre esta carrera, conócelos y aclara todas tus dudas para que puedas sumergirte en el mágico mundo de la salud.",
+                    "explicacion": "La respuesta correcta es: Alrededor de la medicina hay múltiples mitos y verdades sobre esta carrera, conócelos y aclara todas tus dudas para que puedas sumergirte en el mágico mundo de la salud."
+                },
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "En este caso, la medicina está superando y tratando un problema de naturaleza.",
                     "respuesta_correcta": true,
-                    "explicacion": "La afirmación es verdadera. En la adultez: en los casos de enfermedad y como forma de prevención, la medicina busca la mejoría y curación, mediante tratamientos quirúrgicos o médicos."
+                    "explicacion": "Esta afirmación es correcta según el texto."
+                },
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "En la años : en el caso de una pareja con esterilidad , la medicina les ofrece a ambos la oportunidad de tener hijos propios .",
+                    "respuesta_correcta": false,
+                    "explicacion": "Esta afirmación es incorrecta. La versión correcta es: En la concepción: en el caso de una pareja con esterilidad, la medicina les ofrece a ambos la oportunidad de tener hijos propios."
                 }
             ]
         },
@@ -82,87 +94,87 @@
             "preguntas": [
                 {
                     "tipo": "verdadero_falso",
-                    "pregunta": "¿Es verdadera la siguiente afirmación?: La cirugía se puede clasificar en diferentes tipos, dependiendo de la urgencia, el propósito y la técnica utilizada.",
+                    "pregunta": "Durante la residencia, los médicos reciben capacitación intensiva en técnicas quirúrgicas, cuidados pre y postoperatorios, y manejo de complicaciones.",
                     "respuesta_correcta": true,
-                    "explicacion": "La afirmación es verdadera. La cirugía se puede clasificar en diferentes tipos, dependiendo de la urgencia, el propósito y la técnica utilizada."
+                    "explicacion": "Esta afirmación es correcta según el texto."
+                },
+                {
+                    "tipo": "alternativas",
+                    "pregunta": "¿qué optar cirujanos?",
+                    "opciones": [
+                        "La cirugía puede ser mínimamente invasiva, utilizando técnicas como la laparoscopia, que implica pequeñas incisiones y el uso de una cámara para guiar el procedimiento, lo que reduce el tiempo de recuperación y el riesgo de complicaciones.",
+                        "Algunos cirujanos optan por subespecializarse en áreas específicas como la neurocirugía, la cirugía cardiovascular, la cirugía ortopédica, la cirugía plástica, entre otras.",
+                        "Después de completar la carrera de medicina, los futuros cirujanos deben realizar una residencia en cirugía, que puede durar entre cinco y siete años.",
+                        "La cirugía es una parte vital del sistema de salud y ha avanzado significativamente con el tiempo."
+                    ],
+                    "respuesta_correcta": "Algunos cirujanos optan por subespecializarse en áreas específicas como la neurocirugía, la cirugía cardiovascular, la cirugía ortopédica, la cirugía plástica, entre otras.",
+                    "explicacion": "La respuesta correcta es: Algunos cirujanos optan por subespecializarse en áreas específicas como la neurocirugía, la cirugía cardiovascular, la cirugía ortopédica, la cirugía plástica, entre otras."
+                },
+                {
+                    "tipo": "alternativas",
+                    "pregunta": "¿qué implicar cirugía?",
+                    "opciones": [
+                        "Después de completar la carrera de medicina, los futuros cirujanos deben realizar una residencia en cirugía, que puede durar entre cinco y siete años.",
+                        "La cirugía robótica es una evolución de la cirugía mínimamente invasiva, donde los cirujanos utilizan brazos robóticos controlados por computadora para realizar procedimientos con alta precisión.",
+                        "Las innovaciones en técnicas quirúrgicas, anestesia y tecnología médica han mejorado la seguridad y la eficacia de los procedimientos quirúrgicos, permitiendo tratar una amplia gama de enfermedades y condiciones de manera más efectiva.",
+                        "La cirugía es una especialidad médica que implica la intervención física para diagnosticar, tratar o prevenir enfermedades y condiciones."
+                    ],
+                    "respuesta_correcta": "La cirugía es una especialidad médica que implica la intervención física para diagnosticar, tratar o prevenir enfermedades y condiciones.",
+                    "explicacion": "La respuesta correcta es: La cirugía es una especialidad médica que implica la intervención física para diagnosticar, tratar o prevenir enfermedades y condiciones."
                 },
                 {
                     "tipo": "abierta",
-                    "pregunta": "Explica brevemente qué es paciente y su importancia en el contexto dado.",
-                    "respuesta_sugerida": "seguridad y",
-                    "explicacion": "La respuesta debe mencionar que paciente es seguridad y y explicar su relevancia en el contexto del texto."
+                    "pregunta": "¿qué realizar cirugía?",
+                    "respuesta_correcta": "otro",
+                    "explicacion": "Una posible respuesta basada en el texto es: otro"
+                },
+                {
+                    "tipo": "abierta",
+                    "pregunta": "¿qué avanzar cirugía?",
+                    "respuesta_correcta": "otro",
+                    "explicacion": "Una posible respuesta basada en el texto es: otro"
+                },
+                {
+                    "tipo": "alternativas",
+                    "pregunta": "¿qué completar cirujanos?",
+                    "opciones": [
+                        "Durante la residencia, los médicos reciben capacitación intensiva en técnicas quirúrgicas, cuidados pre y postoperatorios, y manejo de complicaciones.",
+                        "Después de completar la carrera de medicina, los futuros cirujanos deben realizar una residencia en cirugía, que puede durar entre cinco y siete años.",
+                        "La cirugía se puede clasificar en diferentes tipos, dependiendo de la urgencia, el propósito y la técnica utilizada.",
+                        "La cirugía de emergencia se realiza inmediatamente para salvar la vida del paciente, como en el caso de un trauma grave o una apendicitis aguda."
+                    ],
+                    "respuesta_correcta": "Después de completar la carrera de medicina, los futuros cirujanos deben realizar una residencia en cirugía, que puede durar entre cinco y siete años.",
+                    "explicacion": "La respuesta correcta es: Después de completar la carrera de medicina, los futuros cirujanos deben realizar una residencia en cirugía, que puede durar entre cinco y siete años."
+                },
+                {
+                    "tipo": "abierta",
+                    "pregunta": "¿qué se puede decir sobre la?",
+                    "respuesta_correcta": "de salud y ha avanzado",
+                    "explicacion": "Una posible respuesta basada en el texto es: de salud y ha avanzado"
                 },
                 {
                     "tipo": "verdadero_falso",
-                    "pregunta": "¿Es verdadera la siguiente afirmación?: La cirugía de emergencia se realiza inmediatamente para salvar la vida del paciente, como en el caso de un trauma grave o una apendicitis aguda.",
+                    "pregunta": "La cirugía de emergencia se realiza inmediatamente para salvar la vida del paciente, como en el caso de un trauma grave o una apendicitis aguda.",
                     "respuesta_correcta": true,
-                    "explicacion": "La afirmación es verdadera. La cirugía de emergencia se realiza inmediatamente para salvar la vida del paciente, como en el caso de un trauma grave o una apendicitis aguda."
-                },
-                {
-                    "tipo": "abierta",
-                    "pregunta": "Explica brevemente qué es utilizada y su importancia en el contexto dado.",
-                    "respuesta_sugerida": "controlados por computadora para realizar procedimientos con alta precisión. Después de completar la carrera",
-                    "explicacion": "La respuesta debe mencionar que utilizada es controlados por computadora para realizar procedimientos con alta precisión. Después de completar la carrera y explicar su relevancia en el contexto del texto."
+                    "explicacion": "Esta afirmación es correcta según el texto."
                 },
                 {
                     "tipo": "alternativas",
-                    "pregunta": "¿Cuál de las siguientes opciones mejor describe mínimamente?",
+                    "pregunta": "¿qué utilizar cirugía?",
                     "opciones": [
-                        "complicaciones",
-                        "técnicas",
-                        "seguridad y",
-                        "guiar"
+                        "La cirugía es una parte vital del sistema de salud y ha avanzado significativamente con el tiempo.",
+                        "La cirugía robótica es una evolución de la cirugía mínimamente invasiva, donde los cirujanos utilizan brazos robóticos controlados por computadora para realizar procedimientos con alta precisión.",
+                        "Durante la residencia, los médicos reciben capacitación intensiva en técnicas quirúrgicas, cuidados pre y postoperatorios, y manejo de complicaciones.",
+                        "Los cirujanos utilizan una variedad de técnicas quirúrgicas para acceder al interior del cuerpo humano, reparar tejidos dañados, extraer tumores o corregir anomalías."
                     ],
-                    "respuesta_correcta": "seguridad y",
-                    "explicacion": "mínimamente se describe como 'seguridad y' porque La cirugía puede ser mínimamente invasiva, utilizando técnicas como la laparoscopia, que implica pequeñas incisiones y el uso de una cámara para guiar el procedimiento, lo que reduce el tiempo de recuperación y el riesgo de complicaciones."
+                    "respuesta_correcta": "La cirugía robótica es una evolución de la cirugía mínimamente invasiva, donde los cirujanos utilizan brazos robóticos controlados por computadora para realizar procedimientos con alta precisión.",
+                    "explicacion": "La respuesta correcta es: La cirugía robótica es una evolución de la cirugía mínimamente invasiva, donde los cirujanos utilizan brazos robóticos controlados por computadora para realizar procedimientos con alta precisión."
                 },
                 {
-                    "tipo": "abierta",
-                    "pregunta": "Explica brevemente qué es humano y su importancia en el contexto dado.",
-                    "respuesta_sugerida": "seguridad y",
-                    "explicacion": "La respuesta debe mencionar que humano es seguridad y y explicar su relevancia en el contexto del texto."
-                },
-                {
-                    "tipo": "alternativas",
-                    "pregunta": "¿Cuál de las siguientes opciones mejor describe física?",
-                    "opciones": [
-                        "prevenir",
-                        "implica",
-                        "seguridad y",
-                        "cirugía"
-                    ],
-                    "respuesta_correcta": "seguridad y",
-                    "explicacion": "física se describe como 'seguridad y' porque La cirugía es una especialidad médica que implica la intervención física para diagnosticar, tratar o prevenir enfermedades y condiciones."
-                },
-                {
-                    "tipo": "abierta",
-                    "pregunta": "Explica brevemente qué es cirugía y su importancia en el contexto dado.",
-                    "respuesta_sugerida": "seguridad y",
-                    "explicacion": "La respuesta debe mencionar que cirugía es seguridad y y explicar su relevancia en el contexto del texto."
-                },
-                {
-                    "tipo": "alternativas",
-                    "pregunta": "¿Cuál de las siguientes opciones mejor describe prevenir?",
-                    "opciones": [
-                        "seguridad y",
-                        "diagnosticar",
-                        "especialidad",
-                        "tratar"
-                    ],
-                    "respuesta_correcta": "seguridad y",
-                    "explicacion": "prevenir se describe como 'seguridad y' porque La cirugía es una especialidad médica que implica la intervención física para diagnosticar, tratar o prevenir enfermedades y condiciones."
-                },
-                {
-                    "tipo": "alternativas",
-                    "pregunta": "¿Cuál de las siguientes opciones mejor describe postoperatorios?",
-                    "opciones": [
-                        "controlados por computadora para realizar procedimientos con alta precisión. Después de completar la carrera",
-                        "quirúrgicas",
-                        "capacitación",
-                        "complicaciones"
-                    ],
-                    "respuesta_correcta": "controlados por computadora para realizar procedimientos con alta precisión. Después de completar la carrera",
-                    "explicacion": "postoperatorios se describe como 'controlados por computadora para realizar procedimientos con alta precisión. Después de completar la carrera' porque Durante la residencia, los médicos reciben capacitación intensiva en técnicas quirúrgicas, cuidados pre y postoperatorios, y manejo de complicaciones."
+                    "tipo": "verdadero_falso",
+                    "pregunta": "Durante la sistema , los médicos reciben capacitación intensiva en técnicas quirúrgicas , cuidados pre y postoperatorios , y manejo de complicaciones .",
+                    "respuesta_correcta": false,
+                    "explicacion": "Esta afirmación es incorrecta. La versión correcta es: Durante la residencia, los médicos reciben capacitación intensiva en técnicas quirúrgicas, cuidados pre y postoperatorios, y manejo de complicaciones."
                 }
             ]
         }
@@ -173,81 +185,81 @@
             "preguntas": [
                 {
                     "tipo": "alternativas",
-                    "pregunta": "¿Cuál de las siguientes opciones mejor describe comprensión?",
+                    "pregunta": "¿qué desarrollar eje?",
                     "opciones": [
-                        "expresión",
-                        "escrita",
-                        "Esto tiene como propósito ofrecer variadas oportunidades, algunas desarrolladas",
-                        "enfoque"
+                        "Se nutre de la experiencia internacional y de la investigación sobre adquisición de la lengua como idioma extranjero, y de los estudios sobre procesos cognitivos, entre otros ámbitos.",
+                        "Indagación: Este eje de formación está orientado a desarrollar competencias para la recolección de evidencia relevante sobre los estudiantes y su aprendizaje de inglés.",
+                        "Formación General: Aborda el conocimiento, comprensión y aplicación de valores como el respecto a los derechos humanos, ejercicio de la ciudadanía, temas relacionados a la diversidad, a la inclusión y a la equidad, que son claves para la formación de un docente con altas expectativas de todos sus estudiantes.",
+                        "Se fomenta la exposición permanente a la lengua inglesa tanto en clases formales como en lectura de bibliografía en inglés, ayudantías, medios audiovisuales, programas en internet, participación en actividades con profesores invitados extranjeros, presentaciones y congresos de interés para los estudiantes, entre otros."
                     ],
-                    "respuesta_correcta": "Esto tiene como propósito ofrecer variadas oportunidades, algunas desarrolladas",
-                    "explicacion": "comprensión se describe como 'Esto tiene como propósito ofrecer variadas oportunidades, algunas desarrolladas' porque Programa de formación El plan de estudio de la carrera tiene un enfoque comunicativo que integra progresivamente el desarrollo de las habilidades de comprensión lectora, comprensión auditiva, expresión oral y expresión escrita, y aborda el aprendizaje de la lingüística desde una perspectiva aplicada."
-                },
-                {
-                    "tipo": "alternativas",
-                    "pregunta": "¿Cuál de las siguientes opciones mejor describe malla?",
-                    "opciones": [
-                        "como",
-                        "Lengua",
-                        "Aprendizaje",
-                        "Esto tiene como propósito ofrecer variadas oportunidades, algunas desarrolladas"
-                    ],
-                    "respuesta_correcta": "Esto tiene como propósito ofrecer variadas oportunidades, algunas desarrolladas",
-                    "explicacion": "malla se describe como 'Esto tiene como propósito ofrecer variadas oportunidades, algunas desarrolladas' porque La malla curricular se estructura de acuerdo a 5 ejes o líneas de formación: Aprendizaje de la Lengua: Tiene como propósito desarrollar las competencias de la comunicación en inglés avanzado (nivel C1, del Common European Framework), su conocimiento formal y los aspectos culturales asociados a la lengua."
-                },
-                {
-                    "tipo": "abierta",
-                    "pregunta": "Explica brevemente qué es referenciales y su importancia en el contexto dado.",
-                    "respuesta_sugerida": "Esto tiene como propósito ofrecer variadas oportunidades, algunas desarrolladas",
-                    "explicacion": "La respuesta debe mencionar que referenciales es Esto tiene como propósito ofrecer variadas oportunidades, algunas desarrolladas y explicar su relevancia en el contexto del texto."
+                    "respuesta_correcta": "Indagación: Este eje de formación está orientado a desarrollar competencias para la recolección de evidencia relevante sobre los estudiantes y su aprendizaje de inglés.",
+                    "explicacion": "La respuesta correcta es: Indagación: Este eje de formación está orientado a desarrollar competencias para la recolección de evidencia relevante sobre los estudiantes y su aprendizaje de inglés."
                 },
                 {
                     "tipo": "verdadero_falso",
-                    "pregunta": "¿Es verdadera la siguiente afirmación?: Esto tiene como propósito ofrecer variadas oportunidades , algunas desarrolladas en la universidad y otras en los centros escolares , que permitirán ofrecer estudiante aprender a enseñar , logrando sinergia e integración entre teoría y práctica a través de la evaluación y planificación de unidades de aprendizaje en inglés .",
+                    "pregunta": "La competencias de Pedagogía en Inglés tiene como propósito formar profesionales integrales , versátiles y comprometidos , para promover el aprendizaje de niños / as y jóvenes a través del idioma inglés .",
                     "respuesta_correcta": false,
-                    "explicacion": "La afirmación es falsa. La versión correcta es: Esto tiene como propósito ofrecer variadas oportunidades, algunas desarrolladas en la universidad y otras en los centros escolares, que permitirán al estudiante aprender a enseñar, logrando sinergia e integración entre teoría y práctica a través de la evaluación y planificación de unidades de aprendizaje en inglés."
-                },
-                {
-                    "tipo": "abierta",
-                    "pregunta": "Explica brevemente qué es como y su importancia en el contexto dado.",
-                    "respuesta_sugerida": "Esto tiene como propósito ofrecer variadas oportunidades, algunas desarrolladas",
-                    "explicacion": "La respuesta debe mencionar que como es Esto tiene como propósito ofrecer variadas oportunidades, algunas desarrolladas y explicar su relevancia en el contexto del texto."
-                },
-                {
-                    "tipo": "abierta",
-                    "pregunta": "Explica brevemente qué es inmerso y su importancia en el contexto dado.",
-                    "respuesta_sugerida": "inmerso en discusiones con sus pares y con docentes,",
-                    "explicacion": "La respuesta debe mencionar que inmerso es inmerso en discusiones con sus pares y con docentes, y explicar su relevancia en el contexto del texto."
+                    "explicacion": "Esta afirmación es incorrecta. La versión correcta es: La carrera de Pedagogía en Inglés tiene como propósito formar profesionales integrales, versátiles y comprometidos, para promover el aprendizaje de niños/as y jóvenes a través del idioma inglés."
                 },
                 {
                     "tipo": "alternativas",
-                    "pregunta": "¿Cuál de las siguientes opciones mejor describe aprendizaje?",
+                    "pregunta": "¿qué dar carácter?",
                     "opciones": [
-                        "Esto tiene como propósito ofrecer variadas oportunidades, algunas desarrolladas",
-                        "lectora",
-                        "auditiva",
-                        "escrita"
+                        "¿Cómo motivar a que los estudiantes participen activamente en el aprendizaje de inglés?",
+                        "Dado el carácter reflexivo de estas asignaturas, el estudiante estará permanentemente inmerso en discusiones con sus pares y con docentes, para luego contrastarlas en sus prácticas y así retroalimentar el proceso de enseñanza de la lengua en distintos contextos escolares.",
+                        "Ámbitos de dominio y certificación de competencias Dominio del inglés equivalente al estándar C1 del Common European Framework of Reference for Language (CEF), demostrado a través de exámenes internacionales en el noveno semestre y mediante aplicación de mediciones referenciales intermedias durante la carrera.",
+                        "Esta línea de aprendizaje tiene una duración de nueve semestres de la carrera y también incluye asignaturas de fundamentos léxicos y gramaticales de la lengua, lingüística y cultura de los países angloparlantes."
                     ],
-                    "respuesta_correcta": "Esto tiene como propósito ofrecer variadas oportunidades, algunas desarrolladas",
-                    "explicacion": "aprendizaje se describe como 'Esto tiene como propósito ofrecer variadas oportunidades, algunas desarrolladas' porque Programa de formación El plan de estudio de la carrera tiene un enfoque comunicativo que integra progresivamente el desarrollo de las habilidades de comprensión lectora, comprensión auditiva, expresión oral y expresión escrita, y aborda el aprendizaje de la lingüística desde una perspectiva aplicada."
+                    "respuesta_correcta": "Dado el carácter reflexivo de estas asignaturas, el estudiante estará permanentemente inmerso en discusiones con sus pares y con docentes, para luego contrastarlas en sus prácticas y así retroalimentar el proceso de enseñanza de la lengua en distintos contextos escolares.",
+                    "explicacion": "La respuesta correcta es: Dado el carácter reflexivo de estas asignaturas, el estudiante estará permanentemente inmerso en discusiones con sus pares y con docentes, para luego contrastarlas en sus prácticas y así retroalimentar el proceso de enseñanza de la lengua en distintos contextos escolares."
+                },
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "¿Cómo integrar inglés al quehacer escolar?",
+                    "respuesta_correcta": true,
+                    "explicacion": "Esta afirmación es correcta según el texto."
+                },
+                {
+                    "tipo": "alternativas",
+                    "pregunta": "¿qué motivar estudiantes?",
+                    "opciones": [
+                        "Dominio de la didáctica de la enseñanza del inglés como idioma extranjero, demostrado en el noveno semestre a través de exámenes internacionales disciplinares y de metodología de la enseñanza de inglés.",
+                        "¿Cómo motivar a que los estudiantes participen activamente en el aprendizaje de inglés?",
+                        "Se fomenta la exposición permanente a la lengua inglesa tanto en clases formales como en lectura de bibliografía en inglés, ayudantías, medios audiovisuales, programas en internet, participación en actividades con profesores invitados extranjeros, presentaciones y congresos de interés para los estudiantes, entre otros.",
+                        "De esta manera se fomenta una capacidad reflexiva estrechamente vinculada al desarrollo de un “saber hacer” que preparará al estudiante para enfrentar adecuadamente su trabajo como profesor al egreso de la carrera."
+                    ],
+                    "respuesta_correcta": "¿Cómo motivar a que los estudiantes participen activamente en el aprendizaje de inglés?",
+                    "explicacion": "La respuesta correcta es: ¿Cómo motivar a que los estudiantes participen activamente en el aprendizaje de inglés?"
                 },
                 {
                     "tipo": "abierta",
-                    "pregunta": "Explica brevemente qué es conocimiento y su importancia en el contexto dado.",
-                    "respuesta_sugerida": "Esto tiene como propósito ofrecer variadas oportunidades, algunas desarrolladas",
-                    "explicacion": "La respuesta debe mencionar que conocimiento es Esto tiene como propósito ofrecer variadas oportunidades, algunas desarrolladas y explicar su relevancia en el contexto del texto."
+                    "pregunta": "¿qué estructurar malla?",
+                    "respuesta_correcta": "centros escolares, que permitirán al estudiante aprender a enseñar, logrando sinergia e",
+                    "explicacion": "Una posible respuesta basada en el texto es: centros escolares, que permitirán al estudiante aprender a enseñar, logrando sinergia e"
+                },
+                {
+                    "tipo": "abierta",
+                    "pregunta": "¿qué fomentar exposición?",
+                    "respuesta_correcta": "centros escolares, que permitirán al estudiante aprender a enseñar, logrando sinergia e",
+                    "explicacion": "Una posible respuesta basada en el texto es: centros escolares, que permitirán al estudiante aprender a enseñar, logrando sinergia e"
+                },
+                {
+                    "tipo": "abierta",
+                    "pregunta": "¿qué tomar estudiantes?",
+                    "respuesta_correcta": "formación de un docente con altas expectativas de",
+                    "explicacion": "Una posible respuesta basada en el texto es: formación de un docente con altas expectativas de"
+                },
+                {
+                    "tipo": "abierta",
+                    "pregunta": "¿qué motivar estudiantes?",
+                    "respuesta_correcta": "centros escolares, que permitirán al estudiante aprender a enseñar, logrando sinergia e",
+                    "explicacion": "Una posible respuesta basada en el texto es: centros escolares, que permitirán al estudiante aprender a enseñar, logrando sinergia e"
                 },
                 {
                     "tipo": "verdadero_falso",
-                    "pregunta": "¿Es verdadera la siguiente afirmación?: Ámbitos de dominio y certificación de competencias Dominio del inglés equivalente al estándar C1 del Common European Framework of Reference for Language (CEF), demostrado a través de exámenes internacionales en el noveno semestre y mediante aplicación de mediciones referenciales intermedias durante la carrera.",
-                    "respuesta_correcta": true,
-                    "explicacion": "La afirmación es verdadera. Ámbitos de dominio y certificación de competencias Dominio del inglés equivalente al estándar C1 del Common European Framework of Reference for Language (CEF), demostrado a través de exámenes internacionales en el noveno semestre y mediante aplicación de mediciones referenciales intermedias durante la carrera."
-                },
-                {
-                    "tipo": "verdadero_falso",
-                    "pregunta": "¿Es verdadera la siguiente afirmación?: La malla curricular se estructura de acuerdo a 5 ejes o líneas de formación: Aprendizaje de la Lengua: Tiene como propósito desarrollar las competencias de la comunicación en inglés avanzado (nivel C1, del Common European Framework), su conocimiento formal y los aspectos culturales asociados a la lengua.",
-                    "respuesta_correcta": true,
-                    "explicacion": "La afirmación es verdadera. La malla curricular se estructura de acuerdo a 5 ejes o líneas de formación: Aprendizaje de la Lengua: Tiene como propósito desarrollar las competencias de la comunicación en inglés avanzado (nivel C1, del Common European Framework), su conocimiento formal y los aspectos culturales asociados a la lengua."
+                    "pregunta": "La inglés de Pedagogía en Inglés tiene como propósito formar profesionales integrales , versátiles y comprometidos , para promover el aprendizaje de niños / as y jóvenes a través del idioma inglés .",
+                    "respuesta_correcta": false,
+                    "explicacion": "Esta afirmación es incorrecta. La versión correcta es: La carrera de Pedagogía en Inglés tiene como propósito formar profesionales integrales, versátiles y comprometidos, para promover el aprendizaje de niños/as y jóvenes a través del idioma inglés."
                 }
             ]
         },
@@ -255,94 +267,80 @@
             "fuente": "https://www.teachingenglish.org.uk/article/digital-literacy",
             "preguntas": [
                 {
+                    "tipo": "abierta",
+                    "pregunta": "¿qué referir alfabetización?",
+                    "respuesta_correcta": "través de redes sociales",
+                    "explicacion": "Una posible respuesta basada en el texto es: través de redes sociales"
+                },
+                {
                     "tipo": "alternativas",
-                    "pregunta": "¿Cuál de las siguientes opciones mejor describe inglés?",
+                    "pregunta": "¿qué incluir esto?",
                     "opciones": [
-                        "tecnologías",
-                        "Esto puede incluir la creación de contenido digital,",
-                        "digitales",
-                        "como"
+                        "Esto puede incluir la creación de contenido digital, la colaboración en línea y la comunicación a través de redes sociales.",
+                        "La alfabetización digital en la enseñanza del inglés como lengua extranjera se refiere al uso de tecnologías digitales, como computadoras, tabletas y teléfonos inteligentes, para enseñar y aprender inglés."
                     ],
-                    "respuesta_correcta": "Esto puede incluir la creación de contenido digital,",
-                    "explicacion": "inglés se describe como 'Esto puede incluir la creación de contenido digital,' porque La alfabetización digital en la enseñanza del inglés como lengua extranjera se refiere al uso de tecnologías digitales, como computadoras, tabletas y teléfonos inteligentes, para enseñar y aprender inglés."
+                    "respuesta_correcta": "Esto puede incluir la creación de contenido digital, la colaboración en línea y la comunicación a través de redes sociales.",
+                    "explicacion": "La respuesta correcta es: Esto puede incluir la creación de contenido digital, la colaboración en línea y la comunicación a través de redes sociales."
+                },
+                {
+                    "tipo": "abierta",
+                    "pregunta": "¿qué incluir esto?",
+                    "respuesta_correcta": "través de redes sociales",
+                    "explicacion": "Una posible respuesta basada en el texto es: través de redes sociales"
+                },
+                {
+                    "tipo": "alternativas",
+                    "pregunta": "¿qué referir alfabetización?",
+                    "opciones": [
+                        "Esto puede incluir la creación de contenido digital, la colaboración en línea y la comunicación a través de redes sociales.",
+                        "La alfabetización digital en la enseñanza del inglés como lengua extranjera se refiere al uso de tecnologías digitales, como computadoras, tabletas y teléfonos inteligentes, para enseñar y aprender inglés."
+                    ],
+                    "respuesta_correcta": "La alfabetización digital en la enseñanza del inglés como lengua extranjera se refiere al uso de tecnologías digitales, como computadoras, tabletas y teléfonos inteligentes, para enseñar y aprender inglés.",
+                    "explicacion": "La respuesta correcta es: La alfabetización digital en la enseñanza del inglés como lengua extranjera se refiere al uso de tecnologías digitales, como computadoras, tabletas y teléfonos inteligentes, para enseñar y aprender inglés."
                 },
                 {
                     "tipo": "verdadero_falso",
-                    "pregunta": "¿Es verdadera la siguiente afirmación?: La alfabetización digital en la enseñanza del inglés como tabletas extranjera se refiere al uso de tecnologías digitales , como computadoras , tabletas y teléfonos inteligentes , para enseñar y aprender inglés .",
+                    "pregunta": "Esto puede refiere la creación de contenido digital , la colaboración en línea y la comunicación a través de redes sociales .",
                     "respuesta_correcta": false,
-                    "explicacion": "La afirmación es falsa. La versión correcta es: La alfabetización digital en la enseñanza del inglés como lengua extranjera se refiere al uso de tecnologías digitales, como computadoras, tabletas y teléfonos inteligentes, para enseñar y aprender inglés."
-                },
-                {
-                    "tipo": "abierta",
-                    "pregunta": "Explica brevemente qué es tabletas y su importancia en el contexto dado.",
-                    "respuesta_sugerida": "Esto puede incluir la creación de contenido digital,",
-                    "explicacion": "La respuesta debe mencionar que tabletas es Esto puede incluir la creación de contenido digital, y explicar su relevancia en el contexto del texto."
-                },
-                {
-                    "tipo": "alternativas",
-                    "pregunta": "¿Cuál de las siguientes opciones mejor describe inteligentes?",
-                    "opciones": [
-                        "Esto puede incluir la creación de contenido digital,",
-                        "aprender",
-                        "tecnologías",
-                        "inglés"
-                    ],
-                    "respuesta_correcta": "Esto puede incluir la creación de contenido digital,",
-                    "explicacion": "inteligentes se describe como 'Esto puede incluir la creación de contenido digital,' porque La alfabetización digital en la enseñanza del inglés como lengua extranjera se refiere al uso de tecnologías digitales, como computadoras, tabletas y teléfonos inteligentes, para enseñar y aprender inglés."
+                    "explicacion": "Esta afirmación es incorrecta. La versión correcta es: Esto puede incluir la creación de contenido digital, la colaboración en línea y la comunicación a través de redes sociales."
                 },
                 {
                     "tipo": "verdadero_falso",
-                    "pregunta": "¿Es verdadera la siguiente afirmación?: Esto puede incluir la creación de contenido digital, la colaboración en línea y la comunicación a través de redes sociales.",
+                    "pregunta": "La alfabetización digital en la enseñanza del inglés como lengua extranjera se refiere al uso de tecnologías digitales, como computadoras, tabletas y teléfonos inteligentes, para enseñar y aprender inglés.",
                     "respuesta_correcta": true,
-                    "explicacion": "La afirmación es verdadera. Esto puede incluir la creación de contenido digital, la colaboración en línea y la comunicación a través de redes sociales."
-                },
-                {
-                    "tipo": "abierta",
-                    "pregunta": "Explica brevemente qué es incluir y su importancia en el contexto dado.",
-                    "respuesta_sugerida": "Esto puede incluir la creación de contenido digital,",
-                    "explicacion": "La respuesta debe mencionar que incluir es Esto puede incluir la creación de contenido digital, y explicar su relevancia en el contexto del texto."
-                },
-                {
-                    "tipo": "abierta",
-                    "pregunta": "Explica brevemente qué es para y su importancia en el contexto dado.",
-                    "respuesta_sugerida": "Esto puede incluir la creación de contenido digital,",
-                    "explicacion": "La respuesta debe mencionar que para es Esto puede incluir la creación de contenido digital, y explicar su relevancia en el contexto del texto."
+                    "explicacion": "Esta afirmación es correcta según el texto."
                 },
                 {
                     "tipo": "alternativas",
-                    "pregunta": "¿Cuál de las siguientes opciones mejor describe sociales?",
+                    "pregunta": "¿qué incluir esto?",
                     "opciones": [
-                        "digital",
-                        "Esto",
-                        "puede",
-                        "Esto puede incluir la creación de contenido digital,"
+                        "La alfabetización digital en la enseñanza del inglés como lengua extranjera se refiere al uso de tecnologías digitales, como computadoras, tabletas y teléfonos inteligentes, para enseñar y aprender inglés.",
+                        "Esto puede incluir la creación de contenido digital, la colaboración en línea y la comunicación a través de redes sociales."
                     ],
-                    "respuesta_correcta": "Esto puede incluir la creación de contenido digital,",
-                    "explicacion": "sociales se describe como 'Esto puede incluir la creación de contenido digital,' porque Esto puede incluir la creación de contenido digital, la colaboración en línea y la comunicación a través de redes sociales."
+                    "respuesta_correcta": "Esto puede incluir la creación de contenido digital, la colaboración en línea y la comunicación a través de redes sociales.",
+                    "explicacion": "La respuesta correcta es: Esto puede incluir la creación de contenido digital, la colaboración en línea y la comunicación a través de redes sociales."
+                },
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "Esto puede incluir la creación de contenido digital, la colaboración en línea y la comunicación a través de redes sociales.",
+                    "respuesta_correcta": true,
+                    "explicacion": "Esta afirmación es correcta según el texto."
+                },
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "La través digital en la enseñanza del inglés como lengua extranjera se refiere al uso de tecnologías digitales , como computadoras , tabletas y teléfonos inteligentes , para enseñar y aprender inglés .",
+                    "respuesta_correcta": false,
+                    "explicacion": "Esta afirmación es incorrecta. La versión correcta es: La alfabetización digital en la enseñanza del inglés como lengua extranjera se refiere al uso de tecnologías digitales, como computadoras, tabletas y teléfonos inteligentes, para enseñar y aprender inglés."
                 },
                 {
                     "tipo": "alternativas",
-                    "pregunta": "¿Cuál de las siguientes opciones mejor describe incluir?",
+                    "pregunta": "¿qué referir alfabetización?",
                     "opciones": [
-                        "digital",
-                        "través",
-                        "Esto",
-                        "Esto puede incluir la creación de contenido digital,"
+                        "La alfabetización digital en la enseñanza del inglés como lengua extranjera se refiere al uso de tecnologías digitales, como computadoras, tabletas y teléfonos inteligentes, para enseñar y aprender inglés.",
+                        "Esto puede incluir la creación de contenido digital, la colaboración en línea y la comunicación a través de redes sociales."
                     ],
-                    "respuesta_correcta": "Esto puede incluir la creación de contenido digital,",
-                    "explicacion": "incluir se describe como 'Esto puede incluir la creación de contenido digital,' porque Esto puede incluir la creación de contenido digital, la colaboración en línea y la comunicación a través de redes sociales."
-                },
-                {
-                    "tipo": "alternativas",
-                    "pregunta": "¿Cuál de las siguientes opciones mejor describe inglés?",
-                    "opciones": [
-                        "aprender",
-                        "digitales",
-                        "Esto puede incluir la creación de contenido digital,",
-                        "inteligentes"
-                    ],
-                    "respuesta_correcta": "Esto puede incluir la creación de contenido digital,",
-                    "explicacion": "inglés se describe como 'Esto puede incluir la creación de contenido digital,' porque La alfabetización digital en la enseñanza del inglés como lengua extranjera se refiere al uso de tecnologías digitales, como computadoras, tabletas y teléfonos inteligentes, para enseñar y aprender inglés."
+                    "respuesta_correcta": "La alfabetización digital en la enseñanza del inglés como lengua extranjera se refiere al uso de tecnologías digitales, como computadoras, tabletas y teléfonos inteligentes, para enseñar y aprender inglés.",
+                    "explicacion": "La respuesta correcta es: La alfabetización digital en la enseñanza del inglés como lengua extranjera se refiere al uso de tecnologías digitales, como computadoras, tabletas y teléfonos inteligentes, para enseñar y aprender inglés."
                 }
             ]
         }
@@ -352,88 +350,70 @@
             "fuente": "https://planderecuperacion.gob.es/noticias/que-es-inteligencia-artificial-ia-prtr#:~:text=La%20inteligencia%20artificial%20(IA)%20es,el%20razonamiento%20y%20la%20percepci%C3%B3n.",
             "preguntas": [
                 {
-                    "tipo": "verdadero_falso",
-                    "pregunta": "¿Es verdadera la siguiente afirmación?: El automático automático es un componente clave de la IA , donde los algoritmos permiten a las computadoras aprender de los datos y mejorar su rendimiento con el tiempo sin programación explícita .",
-                    "respuesta_correcta": false,
-                    "explicacion": "La afirmación es falsa. La versión correcta es: El aprendizaje automático es un componente clave de la IA, donde los algoritmos permiten a las computadoras aprender de los datos y mejorar su rendimiento con el tiempo sin programación explícita."
-                },
-                {
-                    "tipo": "alternativas",
-                    "pregunta": "¿Cuál de las siguientes opciones mejor describe ingeniería?",
-                    "opciones": [
-                        "capaces",
-                        "humana",
-                        "mecánica",
-                        "reconocimiento de patrones. La investigación y el desarrollo continuos tienen como objetivo mejorar las"
-                    ],
-                    "respuesta_correcta": "reconocimiento de patrones. La investigación y el desarrollo continuos tienen como objetivo mejorar las",
-                    "explicacion": "ingeniería se describe como 'reconocimiento de patrones. La investigación y el desarrollo continuos tienen como objetivo mejorar las' porque La robótica combina la IA con la ingeniería mecánica para crear máquinas inteligentes capaces de realizar tareas físicas e interacción humana."
-                },
-                {
-                    "tipo": "alternativas",
-                    "pregunta": "¿Cuál de las siguientes opciones mejor describe analicen?",
-                    "opciones": [
-                        "computadora",
-                        "información",
-                        "el",
-                        "reconocimiento de patrones. La investigación y el desarrollo continuos tienen como objetivo mejorar las"
-                    ],
-                    "respuesta_correcta": "reconocimiento de patrones. La investigación y el desarrollo continuos tienen como objetivo mejorar las",
-                    "explicacion": "analicen se describe como 'reconocimiento de patrones. La investigación y el desarrollo continuos tienen como objetivo mejorar las' porque La visión por computadora permite que las computadoras perciban y analicen información visual, facilitando el reconocimiento de imágenes y la detección de objetos."
-                },
-                {
-                    "tipo": "alternativas",
-                    "pregunta": "¿Cuál de las siguientes opciones mejor describe objetivo?",
-                    "opciones": [
-                        "mejorar",
-                        "como",
-                        "continuos",
-                        "reconocimiento de patrones. La investigación y el desarrollo continuos tienen como objetivo mejorar las"
-                    ],
-                    "respuesta_correcta": "reconocimiento de patrones. La investigación y el desarrollo continuos tienen como objetivo mejorar las",
-                    "explicacion": "objetivo se describe como 'reconocimiento de patrones. La investigación y el desarrollo continuos tienen como objetivo mejorar las' porque La investigación y el desarrollo continuos tienen como objetivo mejorar las capacidades de la IA, mejorar su comprensión de tareas complejas y garantizar su implementación responsable y beneficiosa en varios aspectos de nuestras vidas."
+                    "tipo": "abierta",
+                    "pregunta": "¿qué permitir visión?",
+                    "respuesta_correcta": "Alexa ayudan con las tareas diarias. Si bien la IA ofrece un",
+                    "explicacion": "Una posible respuesta basada en el texto es: Alexa ayudan con las tareas diarias. Si bien la IA ofrece un"
                 },
                 {
                     "tipo": "abierta",
-                    "pregunta": "Explica brevemente qué es computadora y su importancia en el contexto dado.",
-                    "respuesta_sugerida": "reconocimiento de patrones. La investigación y el desarrollo continuos tienen como objetivo mejorar las",
-                    "explicacion": "La respuesta debe mencionar que computadora es reconocimiento de patrones. La investigación y el desarrollo continuos tienen como objetivo mejorar las y explicar su relevancia en el contexto del texto."
-                },
-                {
-                    "tipo": "abierta",
-                    "pregunta": "Explica brevemente qué es componente y su importancia en el contexto dado.",
-                    "respuesta_sugerida": "reconocimiento de patrones. La investigación y el desarrollo continuos tienen como objetivo mejorar las",
-                    "explicacion": "La respuesta debe mencionar que componente es reconocimiento de patrones. La investigación y el desarrollo continuos tienen como objetivo mejorar las y explicar su relevancia en el contexto del texto."
-                },
-                {
-                    "tipo": "abierta",
-                    "pregunta": "Explica brevemente qué es interacción y su importancia en el contexto dado.",
-                    "respuesta_sugerida": "reconocimiento de patrones. La investigación y el desarrollo continuos tienen como objetivo mejorar las",
-                    "explicacion": "La respuesta debe mencionar que interacción es reconocimiento de patrones. La investigación y el desarrollo continuos tienen como objetivo mejorar las y explicar su relevancia en el contexto del texto."
-                },
-                {
-                    "tipo": "abierta",
-                    "pregunta": "Explica brevemente qué es analicen y su importancia en el contexto dado.",
-                    "respuesta_sugerida": "reconocimiento de patrones. La investigación y el desarrollo continuos tienen como objetivo mejorar las",
-                    "explicacion": "La respuesta debe mencionar que analicen es reconocimiento de patrones. La investigación y el desarrollo continuos tienen como objetivo mejorar las y explicar su relevancia en el contexto del texto."
+                    "pregunta": "¿qué permitir aprendizaje?",
+                    "respuesta_correcta": "Alexa ayudan con las tareas diarias. Si bien la IA ofrece un",
+                    "explicacion": "Una posible respuesta basada en el texto es: Alexa ayudan con las tareas diarias. Si bien la IA ofrece un"
                 },
                 {
                     "tipo": "verdadero_falso",
-                    "pregunta": "¿Es verdadera la siguiente afirmación?: El procesamiento del lenguaje natural permite que las máquinas comprendan e interpreten el lenguaje humano, lo que permite aplicaciones como asistentes virtuales y traducción de idiomas.",
+                    "pregunta": "Implica el desarrollo de sistemas informáticos y algoritmos capaces de realizar tareas que típicamente requieren inteligencia humana, como el reconocimiento de voz, la resolución de problemas, el aprendizaje, la toma de decisiones y el reconocimiento de patrones.",
                     "respuesta_correcta": true,
-                    "explicacion": "La afirmación es verdadera. El procesamiento del lenguaje natural permite que las máquinas comprendan e interpreten el lenguaje humano, lo que permite aplicaciones como asistentes virtuales y traducción de idiomas."
+                    "explicacion": "Esta afirmación es correcta según el texto."
+                },
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "IA el desarrollo de sistemas informáticos y algoritmos capaces de realizar tareas que típicamente requieren inteligencia humana , como el reconocimiento de voz , la resolución de problemas , el aprendizaje , la toma de decisiones y el reconocimiento de patrones .",
+                    "respuesta_correcta": false,
+                    "explicacion": "Esta afirmación es incorrecta. La versión correcta es: Implica el desarrollo de sistemas informáticos y algoritmos capaces de realizar tareas que típicamente requieren inteligencia humana, como el reconocimiento de voz, la resolución de problemas, el aprendizaje, la toma de decisiones y el reconocimiento de patrones."
+                },
+                {
+                    "tipo": "abierta",
+                    "pregunta": "¿qué utilizar instituciones?",
+                    "respuesta_correcta": "Alexa ayudan con las tareas diarias. Si bien la IA ofrece un",
+                    "explicacion": "Una posible respuesta basada en el texto es: Alexa ayudan con las tareas diarias. Si bien la IA ofrece un"
+                },
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "El chatbots automático es un componente clave de la IA , donde los algoritmos permiten a las computadoras aprender de los datos y mejorar su rendimiento con el tiempo sin programación explícita .",
+                    "respuesta_correcta": false,
+                    "explicacion": "Esta afirmación es incorrecta. La versión correcta es: El aprendizaje automático es un componente clave de la IA, donde los algoritmos permiten a las computadoras aprender de los datos y mejorar su rendimiento con el tiempo sin programación explícita."
+                },
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "En la salud, la IA se utiliza para el diagnóstico médico, el descubrimiento de medicamentos y los planes de tratamiento personalizados.",
+                    "respuesta_correcta": true,
+                    "explicacion": "Esta afirmación es correcta según el texto."
+                },
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "El algoritmos del lenguaje natural permite que las máquinas comprendan e interpreten el lenguaje humano , lo que permite aplicaciones como asistentes virtuales y traducción de idiomas .",
+                    "respuesta_correcta": false,
+                    "explicacion": "Esta afirmación es incorrecta. La versión correcta es: El procesamiento del lenguaje natural permite que las máquinas comprendan e interpreten el lenguaje humano, lo que permite aplicaciones como asistentes virtuales y traducción de idiomas."
                 },
                 {
                     "tipo": "alternativas",
-                    "pregunta": "¿Cuál de las siguientes opciones mejor describe puedan?",
+                    "pregunta": "¿qué utilizar instituciones?",
                     "opciones": [
-                        "Inteligencia",
-                        "reconocimiento de patrones. La investigación y el desarrollo continuos tienen como objetivo mejorar las",
-                        "humanas",
-                        "enfoca"
+                        "El aprendizaje automático es un componente clave de la IA, donde los algoritmos permiten a las computadoras aprender de los datos y mejorar su rendimiento con el tiempo sin programación explícita.",
+                        "Los coches autónomos emplean algoritmos de IA para la navegación y la detección de obstáculos.",
+                        "Las instituciones financieras utilizan la IA para la detección de fraudes, la evaluación de riesgos y el comercio algorítmico.",
+                        "La Inteligencia Artificial (IA) es un campo de estudio y tecnología que se enfoca en crear máquinas inteligentes que puedan simular habilidades cognitivas humanas."
                     ],
-                    "respuesta_correcta": "reconocimiento de patrones. La investigación y el desarrollo continuos tienen como objetivo mejorar las",
-                    "explicacion": "puedan se describe como 'reconocimiento de patrones. La investigación y el desarrollo continuos tienen como objetivo mejorar las' porque La Inteligencia Artificial (IA) es un campo de estudio y tecnología que se enfoca en crear máquinas inteligentes que puedan simular habilidades cognitivas humanas."
+                    "respuesta_correcta": "Las instituciones financieras utilizan la IA para la detección de fraudes, la evaluación de riesgos y el comercio algorítmico.",
+                    "explicacion": "La respuesta correcta es: Las instituciones financieras utilizan la IA para la detección de fraudes, la evaluación de riesgos y el comercio algorítmico."
+                },
+                {
+                    "tipo": "abierta",
+                    "pregunta": "¿qué avanzar tecnología?",
+                    "respuesta_correcta": "Alexa ayudan con las tareas diarias. Si bien la IA ofrece un",
+                    "explicacion": "Una posible respuesta basada en el texto es: Alexa ayudan con las tareas diarias. Si bien la IA ofrece un"
                 }
             ]
         },
@@ -442,117 +422,87 @@
             "preguntas": [
                 {
                     "tipo": "alternativas",
-                    "pregunta": "¿Cuál de las siguientes opciones mejor describe desafíos?",
+                    "pregunta": "¿qué consistir aprendizaje?",
                     "opciones": [
-                        "plantea",
-                        "modelos",
-                        "gama de",
-                        "datos"
+                        "El aprendizaje por refuerzo se basa en el principio de aprendizaje a través de la interacción con un entorno.",
+                        "El aprendizaje supervisado es el más común y consiste en entrenar un modelo con un conjunto de datos etiquetados, donde cada entrada tiene una salida correspondiente.",
+                        "A diferencia de los enfoques tradicionales de programación, donde se definen reglas explícitas para cada tarea, el aprendizaje automático permite que los sistemas informáticos identifiquen patrones y relaciones en los datos, y hagan predicciones o tomen decisiones basadas en esos hallazgos.",
+                        "El objetivo es que el modelo aprenda a mapear las entradas a las salidas correctas y pueda generalizar este conocimiento a nuevos datos."
                     ],
-                    "respuesta_correcta": "gama de",
-                    "explicacion": "desafíos se describe como 'gama de' porque Sin embargo, también plantea desafíos éticos y técnicos, como la interpretabilidad de los modelos, la equidad y el sesgo en los datos, y la privacidad de la información."
+                    "respuesta_correcta": "El aprendizaje supervisado es el más común y consiste en entrenar un modelo con un conjunto de datos etiquetados, donde cada entrada tiene una salida correspondiente.",
+                    "explicacion": "La respuesta correcta es: El aprendizaje supervisado es el más común y consiste en entrenar un modelo con un conjunto de datos etiquetados, donde cada entrada tiene una salida correspondiente."
                 },
                 {
                     "tipo": "abierta",
-                    "pregunta": "Explica brevemente qué es automático y su importancia en el contexto dado.",
-                    "respuesta_sugerida": "gama de",
-                    "explicacion": "La respuesta debe mencionar que automático es gama de y explicar su relevancia en el contexto del texto."
+                    "pregunta": "¿qué aprendar objetivo?",
+                    "respuesta_correcta": "y el",
+                    "explicacion": "Una posible respuesta basada en el texto es: y el"
+                },
+                {
+                    "tipo": "abierta",
+                    "pregunta": "¿qué continuar investigación?",
+                    "respuesta_correcta": "y el",
+                    "explicacion": "Una posible respuesta basada en el texto es: y el"
                 },
                 {
                     "tipo": "alternativas",
-                    "pregunta": "¿Cuál de las siguientes opciones mejor describe previa?",
+                    "pregunta": "¿qué se puede decir sobre esta?",
                     "opciones": [
-                        "ocultas",
-                        "gama de",
-                        "guía",
-                        "supervisado"
+                        "En el aprendizaje no supervisado, el modelo se entrena con datos no etiquetados y debe identificar patrones o estructuras ocultas sin ninguna guía previa.",
+                        "Sin embargo, también plantea desafíos éticos y técnicos, como la interpretabilidad de los modelos, la equidad y el sesgo en los datos, y la privacidad de la información.",
+                        "Esta técnica es ampliamente utilizada en robótica y juegos.",
+                        "El aprendizaje automático tiene una amplia gama de aplicaciones, desde la detección de fraudes en finanzas hasta el reconocimiento de imágenes en visión por computadora, pasando por el diagnóstico médico y la recomendación de contenido en plataformas de streaming."
                     ],
-                    "respuesta_correcta": "gama de",
-                    "explicacion": "previa se describe como 'gama de' porque En el aprendizaje no supervisado, el modelo se entrena con datos no etiquetados y debe identificar patrones o estructuras ocultas sin ninguna guía previa."
+                    "respuesta_correcta": "Esta técnica es ampliamente utilizada en robótica y juegos.",
+                    "explicacion": "La respuesta correcta es: Esta técnica es ampliamente utilizada en robótica y juegos."
+                },
+                {
+                    "tipo": "abierta",
+                    "pregunta": "¿qué basar aprendizaje?",
+                    "respuesta_correcta": "y el",
+                    "explicacion": "Una posible respuesta basada en el texto es: y el"
+                },
+                {
+                    "tipo": "abierta",
+                    "pregunta": "¿qué tener aprendizaje?",
+                    "respuesta_correcta": "y el",
+                    "explicacion": "Una posible respuesta basada en el texto es: y el"
+                },
+                {
+                    "tipo": "abierta",
+                    "pregunta": "¿qué se puede decir sobre esta?",
+                    "respuesta_correcta": "y el",
+                    "explicacion": "Una posible respuesta basada en el texto es: y el"
                 },
                 {
                     "tipo": "alternativas",
-                    "pregunta": "¿Cuál de las siguientes opciones mejor describe supervisado?",
+                    "pregunta": "¿qué tener aprendizaje?",
                     "opciones": [
-                        "puede",
-                        "dividir",
-                        "aprendizaje",
-                        "gama de"
+                        "El aprendizaje automático tiene una amplia gama de aplicaciones, desde la detección de fraudes en finanzas hasta el reconocimiento de imágenes en visión por computadora, pasando por el diagnóstico médico y la recomendación de contenido en plataformas de streaming.",
+                        "El aprendizaje por refuerzo se basa en el principio de aprendizaje a través de la interacción con un entorno.",
+                        "La investigación en este campo continúa avanzando rápidamente, con el objetivo de desarrollar algoritmos más eficientes, robustos y transparentes.",
+                        "El aprendizaje automático se puede dividir en tres tipos principales: aprendizaje supervisado, aprendizaje no supervisado y aprendizaje por refuerzo."
                     ],
-                    "respuesta_correcta": "gama de",
-                    "explicacion": "supervisado se describe como 'gama de' porque El aprendizaje automático se puede dividir en tres tipos principales: aprendizaje supervisado, aprendizaje no supervisado y aprendizaje por refuerzo."
+                    "respuesta_correcta": "El aprendizaje automático tiene una amplia gama de aplicaciones, desde la detección de fraudes en finanzas hasta el reconocimiento de imágenes en visión por computadora, pasando por el diagnóstico médico y la recomendación de contenido en plataformas de streaming.",
+                    "explicacion": "La respuesta correcta es: El aprendizaje automático tiene una amplia gama de aplicaciones, desde la detección de fraudes en finanzas hasta el reconocimiento de imágenes en visión por computadora, pasando por el diagnóstico médico y la recomendación de contenido en plataformas de streaming."
+                },
+                {
+                    "tipo": "abierta",
+                    "pregunta": "¿qué consistir aprendizaje?",
+                    "respuesta_correcta": "y el",
+                    "explicacion": "Una posible respuesta basada en el texto es: y el"
                 },
                 {
                     "tipo": "alternativas",
-                    "pregunta": "¿Cuál de las siguientes opciones mejor describe principales?",
+                    "pregunta": "¿qué recibir agente?",
                     "opciones": [
-                        "puede",
-                        "gama de",
-                        "aprendizaje",
-                        "automático"
+                        "El agente recibe recompensas o penalizaciones en función de sus acciones y ajusta su comportamiento para maximizar la recompensa acumulada.",
+                        "La investigación en este campo continúa avanzando rápidamente, con el objetivo de desarrollar algoritmos más eficientes, robustos y transparentes.",
+                        "Esto es útil para tareas como la agrupación (clustering) y la reducción de dimensionalidad.",
+                        "El aprendizaje por refuerzo se basa en el principio de aprendizaje a través de la interacción con un entorno."
                     ],
-                    "respuesta_correcta": "gama de",
-                    "explicacion": "principales se describe como 'gama de' porque El aprendizaje automático se puede dividir en tres tipos principales: aprendizaje supervisado, aprendizaje no supervisado y aprendizaje por refuerzo."
-                },
-                {
-                    "tipo": "alternativas",
-                    "pregunta": "¿Cuál de las siguientes opciones mejor describe supervisado?",
-                    "opciones": [
-                        "aprendizaje",
-                        "puede",
-                        "gama de",
-                        "principales"
-                    ],
-                    "respuesta_correcta": "gama de",
-                    "explicacion": "supervisado se describe como 'gama de' porque El aprendizaje automático se puede dividir en tres tipos principales: aprendizaje supervisado, aprendizaje no supervisado y aprendizaje por refuerzo."
-                },
-                {
-                    "tipo": "alternativas",
-                    "pregunta": "¿Cuál de las siguientes opciones mejor describe diagnóstico?",
-                    "opciones": [
-                        "imágenes",
-                        "gama",
-                        "médico",
-                        "gama de"
-                    ],
-                    "respuesta_correcta": "gama de",
-                    "explicacion": "diagnóstico se describe como 'gama de' porque El aprendizaje automático tiene una amplia gama de aplicaciones, desde la detección de fraudes en finanzas hasta el reconocimiento de imágenes en visión por computadora, pasando por el diagnóstico médico y la recomendación de contenido en plataformas de streaming."
-                },
-                {
-                    "tipo": "alternativas",
-                    "pregunta": "¿Cuál de las siguientes opciones mejor describe este?",
-                    "opciones": [
-                        "gama de",
-                        "correctas",
-                        "datos",
-                        "modelo"
-                    ],
-                    "respuesta_correcta": "gama de",
-                    "explicacion": "este se describe como 'gama de' porque El objetivo es que el modelo aprenda a mapear las entradas a las salidas correctas y pueda generalizar este conocimiento a nuevos datos."
-                },
-                {
-                    "tipo": "alternativas",
-                    "pregunta": "¿Cuál de las siguientes opciones mejor describe principales?",
-                    "opciones": [
-                        "aprendizaje",
-                        "refuerzo",
-                        "gama de",
-                        "aprendizaje"
-                    ],
-                    "respuesta_correcta": "gama de",
-                    "explicacion": "principales se describe como 'gama de' porque El aprendizaje automático se puede dividir en tres tipos principales: aprendizaje supervisado, aprendizaje no supervisado y aprendizaje por refuerzo."
-                },
-                {
-                    "tipo": "alternativas",
-                    "pregunta": "¿Cuál de las siguientes opciones mejor describe refuerzo?",
-                    "opciones": [
-                        "gama de",
-                        "dividir",
-                        "aprendizaje",
-                        "aprendizaje"
-                    ],
-                    "respuesta_correcta": "gama de",
-                    "explicacion": "refuerzo se describe como 'gama de' porque El aprendizaje automático se puede dividir en tres tipos principales: aprendizaje supervisado, aprendizaje no supervisado y aprendizaje por refuerzo."
+                    "respuesta_correcta": "El agente recibe recompensas o penalizaciones en función de sus acciones y ajusta su comportamiento para maximizar la recompensa acumulada.",
+                    "explicacion": "La respuesta correcta es: El agente recibe recompensas o penalizaciones en función de sus acciones y ajusta su comportamiento para maximizar la recompensa acumulada."
                 }
             ]
         },
@@ -561,87 +511,87 @@
             "preguntas": [
                 {
                     "tipo": "verdadero_falso",
-                    "pregunta": "¿Es verdadera la siguiente afirmación?: Una de las principales ventajas de Python es su amplia biblioteca estándar , que incluye módulos y paquetes para una variedad de tareas , amplia el procesamiento de datos y la visualización hasta el desarrollo web y la inteligencia artificial .",
+                    "pregunta": "Una de las solo ventajas de Python es su amplia biblioteca estándar , que incluye módulos y paquetes para una variedad de tareas , desde el procesamiento de datos y la visualización hasta el desarrollo web y la inteligencia artificial .",
                     "respuesta_correcta": false,
-                    "explicacion": "La afirmación es falsa. La versión correcta es: Una de las principales ventajas de Python es su amplia biblioteca estándar, que incluye módulos y paquetes para una variedad de tareas, desde el procesamiento de datos y la visualización hasta el desarrollo web y la inteligencia artificial."
+                    "explicacion": "Esta afirmación es incorrecta. La versión correcta es: Una de las principales ventajas de Python es su amplia biblioteca estándar, que incluye módulos y paquetes para una variedad de tareas, desde el procesamiento de datos y la visualización hasta el desarrollo web y la inteligencia artificial."
+                },
+                {
+                    "tipo": "alternativas",
+                    "pregunta": "¿qué permitir esto?",
+                    "opciones": [
+                        "Herramientas como Pandas, NumPy, y Matplotlib facilitan el análisis de datos y la creación de visualizaciones, mientras que bibliotecas como TensorFlow y PyTorch permiten el desarrollo de modelos de aprendizaje automático y redes neuronales.",
+                        "Los programadores pueden colaborar en proyectos de código abierto, participar en conferencias y acceder a una amplia gama de documentación y foros en línea.",
+                        "En resumen, la programación en Python ofrece una combinación única de simplicidad, potencia y versatilidad, lo que lo convierte en una opción ideal tanto para principiantes como para programadores experimentados que buscan expandir sus habilidades y capacidades.",
+                        "Esto permite a los desarrolladores realizar una amplia gama de proyectos sin necesidad de escribir mucho código desde cero."
+                    ],
+                    "respuesta_correcta": "Esto permite a los desarrolladores realizar una amplia gama de proyectos sin necesidad de escribir mucho código desde cero.",
+                    "explicacion": "La respuesta correcta es: Esto permite a los desarrolladores realizar una amplia gama de proyectos sin necesidad de escribir mucho código desde cero."
                 },
                 {
                     "tipo": "abierta",
-                    "pregunta": "Explica brevemente qué es gama y su importancia en el contexto dado.",
-                    "respuesta_sugerida": "automatizar tareas, analizar datos o desarrollar",
-                    "explicacion": "La respuesta debe mencionar que gama es automatizar tareas, analizar datos o desarrollar y explicar su relevancia en el contexto del texto."
+                    "pregunta": "¿qué facilitar python?",
+                    "respuesta_correcta": "conferencias y acceder",
+                    "explicacion": "Una posible respuesta basada en el texto es: conferencias y acceder"
+                },
+                {
+                    "tipo": "alternativas",
+                    "pregunta": "¿qué desear aprender?",
+                    "opciones": [
+                        "Python es especialmente popular en el campo de la ciencia de datos y el aprendizaje automático.",
+                        "Una de las principales ventajas de Python es su amplia biblioteca estándar, que incluye módulos y paquetes para una variedad de tareas, desde el procesamiento de datos y la visualización hasta el desarrollo web y la inteligencia artificial.",
+                        "Herramientas como Pandas, NumPy, y Matplotlib facilitan el análisis de datos y la creación de visualizaciones, mientras que bibliotecas como TensorFlow y PyTorch permiten el desarrollo de modelos de aprendizaje automático y redes neuronales.",
+                        "Aprender Python no solo es beneficioso para aquellos que desean una carrera en tecnología, sino también para profesionales de otras áreas que buscan automatizar tareas, analizar datos o desarrollar herramientas personalizadas."
+                    ],
+                    "respuesta_correcta": "Aprender Python no solo es beneficioso para aquellos que desean una carrera en tecnología, sino también para profesionales de otras áreas que buscan automatizar tareas, analizar datos o desarrollar herramientas personalizadas.",
+                    "explicacion": "La respuesta correcta es: Aprender Python no solo es beneficioso para aquellos que desean una carrera en tecnología, sino también para profesionales de otras áreas que buscan automatizar tareas, analizar datos o desarrollar herramientas personalizadas."
+                },
+                {
+                    "tipo": "alternativas",
+                    "pregunta": "¿qué permitir esto?",
+                    "opciones": [
+                        "Su aplicabilidad en diversas disciplinas lo convierte en una herramienta valiosa para científicos, ingenieros, analistas de datos, y muchos otros.",
+                        "Esto permite a los desarrolladores realizar una amplia gama de proyectos sin necesidad de escribir mucho código desde cero.",
+                        "Los programadores pueden colaborar en proyectos de código abierto, participar en conferencias y acceder a una amplia gama de documentación y foros en línea.",
+                        "La programación en Python se ha convertido en una de las habilidades más buscadas en la industria de la tecnología debido a su versatilidad y facilidad de aprendizaje."
+                    ],
+                    "respuesta_correcta": "Esto permite a los desarrolladores realizar una amplia gama de proyectos sin necesidad de escribir mucho código desde cero.",
+                    "explicacion": "La respuesta correcta es: Esto permite a los desarrolladores realizar una amplia gama de proyectos sin necesidad de escribir mucho código desde cero."
                 },
                 {
                     "tipo": "verdadero_falso",
-                    "pregunta": "¿Es verdadera la siguiente afirmación?: En resumen , la programación en Python ofrece una combinación única de simplicidad , potencia versatilidad versatilidad , lo que lo convierte en una opción ideal tanto para principiantes como para programadores experimentados que buscan expandir sus habilidades y capacidades .",
+                    "pregunta": "Esto permite a los desarrolladores realizar una amplia gama de proyectos sin necesidad de escribir mucho código desde cero.",
+                    "respuesta_correcta": true,
+                    "explicacion": "Esta afirmación es correcta según el texto."
+                },
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "Flask es un lenguaje de programación de alto nivel , interpretado y orientado a objetos , conocido por su sintaxis simple y clara , lo que facilita su lectura y escritura .",
                     "respuesta_correcta": false,
-                    "explicacion": "La afirmación es falsa. La versión correcta es: En resumen, la programación en Python ofrece una combinación única de simplicidad, potencia y versatilidad, lo que lo convierte en una opción ideal tanto para principiantes como para programadores experimentados que buscan expandir sus habilidades y capacidades."
-                },
-                {
-                    "tipo": "alternativas",
-                    "pregunta": "¿Cuál de las siguientes opciones mejor describe como?",
-                    "opciones": [
-                        "neuronales",
-                        "bibliotecas",
-                        "automatizar tareas, analizar datos o desarrollar",
-                        "PyTorch"
-                    ],
-                    "respuesta_correcta": "automatizar tareas, analizar datos o desarrollar",
-                    "explicacion": "como se describe como 'automatizar tareas, analizar datos o desarrollar' porque Herramientas como Pandas, NumPy, y Matplotlib facilitan el análisis de datos y la creación de visualizaciones, mientras que bibliotecas como TensorFlow y PyTorch permiten el desarrollo de modelos de aprendizaje automático y redes neuronales."
-                },
-                {
-                    "tipo": "alternativas",
-                    "pregunta": "¿Cuál de las siguientes opciones mejor describe escritura?",
-                    "opciones": [
-                        "Python",
-                        "nivel",
-                        "conocido",
-                        "automatizar tareas, analizar datos o desarrollar"
-                    ],
-                    "respuesta_correcta": "automatizar tareas, analizar datos o desarrollar",
-                    "explicacion": "escritura se describe como 'automatizar tareas, analizar datos o desarrollar' porque Python es un lenguaje de programación de alto nivel, interpretado y orientado a objetos, conocido por su sintaxis simple y clara, lo que facilita su lectura y escritura."
+                    "explicacion": "Esta afirmación es incorrecta. La versión correcta es: Python es un lenguaje de programación de alto nivel, interpretado y orientado a objetos, conocido por su sintaxis simple y clara, lo que facilita su lectura y escritura."
                 },
                 {
                     "tipo": "verdadero_falso",
-                    "pregunta": "¿Es verdadera la siguiente afirmación?: La comunidad de Python es grande y activa, lo que significa que hay una abundancia de recursos, tutoriales y soporte disponible para los desarrolladores de todos los niveles.",
+                    "pregunta": "Su aplicabilidad en diversas disciplinas lo convierte en una herramienta valiosa para científicos, ingenieros, analistas de datos, y muchos otros.",
                     "respuesta_correcta": true,
-                    "explicacion": "La afirmación es verdadera. La comunidad de Python es grande y activa, lo que significa que hay una abundancia de recursos, tutoriales y soporte disponible para los desarrolladores de todos los niveles."
+                    "explicacion": "Esta afirmación es correcta según el texto."
                 },
                 {
                     "tipo": "alternativas",
-                    "pregunta": "¿Cuál de las siguientes opciones mejor describe solo?",
+                    "pregunta": "¿qué significar comunidad?",
                     "opciones": [
-                        "Python",
-                        "automatizar tareas, analizar datos o desarrollar",
-                        "para",
-                        "tareas"
+                        "Además, frameworks como Django y Flask se utilizan para el desarrollo de aplicaciones web, proporcionando estructuras robustas y escalables.",
+                        "La programación en Python se ha convertido en una de las habilidades más buscadas en la industria de la tecnología debido a su versatilidad y facilidad de aprendizaje.",
+                        "Los programadores pueden colaborar en proyectos de código abierto, participar en conferencias y acceder a una amplia gama de documentación y foros en línea.",
+                        "La comunidad de Python es grande y activa, lo que significa que hay una abundancia de recursos, tutoriales y soporte disponible para los desarrolladores de todos los niveles."
                     ],
-                    "respuesta_correcta": "automatizar tareas, analizar datos o desarrollar",
-                    "explicacion": "solo se describe como 'automatizar tareas, analizar datos o desarrollar' porque Aprender Python no solo es beneficioso para aquellos que desean una carrera en tecnología, sino también para profesionales de otras áreas que buscan automatizar tareas, analizar datos o desarrollar herramientas personalizadas."
-                },
-                {
-                    "tipo": "abierta",
-                    "pregunta": "Explica brevemente qué es estructuras y su importancia en el contexto dado.",
-                    "respuesta_sugerida": "automatizar tareas, analizar datos o desarrollar",
-                    "explicacion": "La respuesta debe mencionar que estructuras es automatizar tareas, analizar datos o desarrollar y explicar su relevancia en el contexto del texto."
-                },
-                {
-                    "tipo": "alternativas",
-                    "pregunta": "¿Cuál de las siguientes opciones mejor describe comunidad?",
-                    "opciones": [
-                        "automatizar tareas, analizar datos o desarrollar",
-                        "Python",
-                        "tutoriales",
-                        "para"
-                    ],
-                    "respuesta_correcta": "automatizar tareas, analizar datos o desarrollar",
-                    "explicacion": "comunidad se describe como 'automatizar tareas, analizar datos o desarrollar' porque La comunidad de Python es grande y activa, lo que significa que hay una abundancia de recursos, tutoriales y soporte disponible para los desarrolladores de todos los niveles."
+                    "respuesta_correcta": "La comunidad de Python es grande y activa, lo que significa que hay una abundancia de recursos, tutoriales y soporte disponible para los desarrolladores de todos los niveles.",
+                    "explicacion": "La respuesta correcta es: La comunidad de Python es grande y activa, lo que significa que hay una abundancia de recursos, tutoriales y soporte disponible para los desarrolladores de todos los niveles."
                 },
                 {
                     "tipo": "verdadero_falso",
-                    "pregunta": "¿Es verdadera la siguiente afirmación?: Una de las principales ventajas de Python es su amplia biblioteca estándar, que incluye módulos y paquetes para una variedad de tareas, desde el procesamiento de datos y la visualización hasta el desarrollo web y la inteligencia artificial.",
-                    "respuesta_correcta": true,
-                    "explicacion": "La afirmación es verdadera. Una de las principales ventajas de Python es su amplia biblioteca estándar, que incluye módulos y paquetes para una variedad de tareas, desde el procesamiento de datos y la visualización hasta el desarrollo web y la inteligencia artificial."
+                    "pregunta": "La profesionales en Python se ha convertido en una de las habilidades más buscadas en la industria de la tecnología debido a su versatilidad y facilidad de aprendizaje .",
+                    "respuesta_correcta": false,
+                    "explicacion": "Esta afirmación es incorrecta. La versión correcta es: La programación en Python se ha convertido en una de las habilidades más buscadas en la industria de la tecnología debido a su versatilidad y facilidad de aprendizaje."
                 }
             ]
         }

@@ -26,7 +26,9 @@ Django==4.2.5
 django-admin-material-dashboard==1.0.10
 django-allauth==0.57.0
 django-bootstrap-v5==1.0.11
+django-environ==0.11.2
 en-core-web-sm @ https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.7.1/en_core_web_sm-3.7.1-py3-none-any.whl#sha256=86cc141f63942d4b2c5fcee06630fd6f904788d2f0ab005cce45aadb8fb73889
+environ==1.0
 es-core-news-sm @ https://github.com/explosion/spacy-models/releases/download/es_core_news_sm-3.7.0/es_core_news_sm-3.7.0-py3-none-any.whl#sha256=61e6e5530941f5880166855f09f60d7e6ba79ec1e8e45f96244bdb1eb169eb1d
 executing==2.0.1
 filelock==3.14.0
