@@ -4,88 +4,100 @@
             "fuente": "https://www.unbosque.edu.co/blog-universidad-el-bosque/que-es-la-medicina",
             "preguntas": [
                 {
-                    "tipo": "alternativas",
-                    "pregunta": "¿qué abordarer vocación?",
-                    "opciones": [
-                        "En la adultez: en los casos de enfermedad y como forma de prevención, la medicina busca la mejoría y curación, mediante tratamientos quirúrgicos o médicos.",
-                        "En este caso, la medicina está superando y tratando un problema de naturaleza.",
-                        "En la muerte: para identificar causas y brindar también prevención de la enfermedad a su familia.",
-                        "En esta oportunidad, abordaremos la vocación de quienes deciden ser médicos."
-                    ],
-                    "respuesta_correcta": "En esta oportunidad, abordaremos la vocación de quienes deciden ser médicos.",
-                    "explicacion": "La respuesta correcta es: En esta oportunidad, abordaremos la vocación de quienes deciden ser médicos."
+                    "tipo": "verdadero_falso",
+                    "pregunta": "Como puedes ver, la medicina es una ciencia que está presente a lo largo de la vida y estudia los orígenes de las [unused27] de forma que puedan atenderse efectivamente a través del diagnóstico, prevención y tratamiento de las [unused27] que presenta el cuerpo humano.",
+                    "respuesta_correcta": false,
+                    "explicacion": "Como puedes ver, la medicina es una ciencia que está presente a lo largo de la vida y estudia los orígenes de las enfermedades de forma que puedan atenderse efectivamente a través del diagnóstico, prevención y tratamiento de las enfermedades que presenta el cuerpo humano."
                 },
                 {
                     "tipo": "alternativas",
-                    "pregunta": "¿qué abordarer vocación?",
+                    "pregunta": "Para algunos es más clara que para otros, por lo que si todavía no sabes cuál es tu vocación, solo es necesario que la descubras y conozcas de cerca tu pasión para que puedas dedicar los mejores años de tu vida en hacer lo que amas.",
                     "opciones": [
-                        "En esta oportunidad, abordaremos la vocación de quienes deciden ser médicos.",
-                        "Todos, desde que somos pequeños, damos señales de lo que nos gusta y lo que nos disgusta.",
-                        "En este caso, la medicina está superando y tratando un problema de naturaleza.",
-                        "Es una de las profesiones que atiende y protege la salud de las personas desde antes de nacer hasta el día de su muerte."
+                        "Para algunos es más clara que para otros, por lo que si todavía no sabes cuál es tu vocación, solo es necesario que la descubras y conozcas de cerca tu [unused27] para que puedas dedicar los mejores años de tu vida en hacer lo que amas.",
+                        "Para algunos es más clara que para otros, por lo que si todavía no sabes cuál es tu vocación, solo es [unused514] que la descubras y conozcas de cerca tu pasión para que puedas dedicar los mejores años de tu vida en hacer lo que amas.",
+                        "Para algunos es más clara que para otros, por lo que si todavía no sabes cuál es tu vocación, solo es necesario que la descubras y conozcas de cerca tu pasión para que puedas dedicar los mejores años de tu vida en hacer lo que [unused547].",
+                        "Para algunos es más clara que para otros, por lo que si todavía no sabes cuál es tu vocación, solo es necesario que la descubras y conozcas de cerca tu pasión para que puedas dedicar los mejores años de tu vida en hacer lo que amas."
                     ],
-                    "respuesta_correcta": "En esta oportunidad, abordaremos la vocación de quienes deciden ser médicos.",
-                    "explicacion": "La respuesta correcta es: En esta oportunidad, abordaremos la vocación de quienes deciden ser médicos."
-                },
-                {
-                    "tipo": "abierta",
-                    "pregunta": "¿qué superar medicina?",
-                    "respuesta_correcta": "sumergirte en el",
-                    "explicacion": "Una posible respuesta basada en el texto es: sumergirte en el"
-                },
-                {
-                    "tipo": "alternativas",
-                    "pregunta": "¿qué hacer periódicos?",
-                    "opciones": [
-                        "Durante la infancia y adolescencia: se hacen seguimientos periódicos que permitan tener una vida saludable, también se pueden descubrir enfermedades genéticas y tratarlas a tiempo.",
-                        "En esta oportunidad, abordaremos la vocación de quienes deciden ser médicos.",
-                        "Medicina también se utiliza como sinónimo de medicamento (del latín medicamentum), que es la sustancia que permite prevenir, aliviar o curar las enfermedades o sus secuelas.",
-                        "Por eso, conocerás sobre la Medicina y su importancia: El término medicina proviene del latín medicina y hace referencia a la ciencia que permite prevenir y curar las enfermedades del cuerpo humano."
-                    ],
-                    "respuesta_correcta": "Durante la infancia y adolescencia: se hacen seguimientos periódicos que permitan tener una vida saludable, también se pueden descubrir enfermedades genéticas y tratarlas a tiempo.",
-                    "explicacion": "La respuesta correcta es: Durante la infancia y adolescencia: se hacen seguimientos periódicos que permitan tener una vida saludable, también se pueden descubrir enfermedades genéticas y tratarlas a tiempo."
+                    "respuesta_correcta": "Para algunos es más clara que para otros, por lo que si todavía no sabes cuál es tu vocación, solo es necesario que la descubras y conozcas de cerca tu pasión para que puedas dedicar los mejores años de tu vida en hacer lo que amas.",
+                    "explicacion": "La vocación viene con nosotros desde que llegamos al mundo y, con el paso de los años, vamos desarrollándola cada vez más."
                 },
                 {
                     "tipo": "verdadero_falso",
-                    "pregunta": "Durante la verdades y adolescencia : se hacen seguimientos periódicos que permitan tener una vida saludable , también se pueden descubrir enfermedades genéticas y tratarlas a tiempo .",
-                    "respuesta_correcta": false,
-                    "explicacion": "Esta afirmación es incorrecta. La versión correcta es: Durante la infancia y adolescencia: se hacen seguimientos periódicos que permitan tener una vida saludable, también se pueden descubrir enfermedades genéticas y tratarlas a tiempo."
-                },
-                {
-                    "tipo": "abierta",
-                    "pregunta": "¿qué ver medicina?",
-                    "respuesta_correcta": "sumergirte en el",
-                    "explicacion": "Una posible respuesta basada en el texto es: sumergirte en el"
-                },
-                {
-                    "tipo": "abierta",
-                    "pregunta": "¿qué jugar medicina?",
-                    "respuesta_correcta": "sumergirte en el",
-                    "explicacion": "Una posible respuesta basada en el texto es: sumergirte en el"
+                    "pregunta": "Para algunos es más clara que para otros, por lo que si todavía no sabes cuál es tu vocación, solo es necesario que la descubras y conozcas de cerca tu pasión para que puedas dedicar los mejores años de tu vida en hacer lo que amas.",
+                    "respuesta_correcta": true,
+                    "explicacion": "La vocación viene con nosotros desde que llegamos al mundo y, con el paso de los años, vamos desarrollándola cada vez más."
                 },
                 {
                     "tipo": "alternativas",
-                    "pregunta": "¿qué ocurre con aclarar?",
+                    "pregunta": "Como puedes ver, la medicina es una ciencia que está presente a lo largo de la vida y estudia los orígenes de las enfermedades de forma que puedan atenderse efectivamente a través del diagnóstico, prevención y tratamiento de las enfermedades que presenta el cuerpo humano.",
                     "opciones": [
-                        "Después del parto: se practican múltiples exámenes al recién nacido, para diagnosticar en él su correcto desarrollo y condiciones de salud.",
-                        "En la adultez: en los casos de enfermedad y como forma de prevención, la medicina busca la mejoría y curación, mediante tratamientos quirúrgicos o médicos.",
-                        "En la concepción: en el caso de una pareja con esterilidad, la medicina les ofrece a ambos la oportunidad de tener hijos propios.",
+                        "Como puedes ver, la medicina es una ciencia que está presente a lo largo de la vida y estudia los orígenes de las enfermedades de [unused480] que puedan atenderse efectivamente a través del diagnóstico, prevención y tratamiento de las enfermedades que presenta el cuerpo humano.",
+                        "Como puedes [unused540], la medicina es una ciencia que está presente a lo largo de la vida y estudia los orígenes de las enfermedades de forma que puedan atenderse efectivamente a través del diagnóstico, prevención y tratamiento de las enfermedades que presenta el cuerpo humano.",
+                        "Como puedes ver, la medicina es una ciencia que está presente a lo largo de la vida y estudia los orígenes de las enfermedades de forma que puedan atenderse efectivamente a través del diagnóstico, prevención y tratamiento de las enfermedades que presenta el cuerpo humano.",
+                        "Como puedes ver, la medicina es una ciencia que está presente a lo largo de la vida y estudia los orígenes de las enfermedades de forma que puedan atenderse efectivamente a través del diagnóstico, prevención y tratamiento de las enfermedades que [unused400] el cuerpo humano."
+                    ],
+                    "respuesta_correcta": "Como puedes ver, la medicina es una ciencia que está presente a lo largo de la vida y estudia los orígenes de las enfermedades de forma que puedan atenderse efectivamente a través del diagnóstico, prevención y tratamiento de las enfermedades que presenta el cuerpo humano.",
+                    "explicacion": "Por eso, conocerás sobre la Medicina y su importancia: El término medicina proviene del latín medicina y hace referencia a la ciencia que permite prevenir y curar las enfermedades del cuerpo humano."
+                },
+                {
+                    "tipo": "alternativas",
+                    "pregunta": "Como puedes ver, la medicina es una ciencia que está presente a lo largo de la vida y estudia los orígenes de las enfermedades de forma que puedan atenderse efectivamente a través del diagnóstico, prevención y tratamiento de las enfermedades que presenta el cuerpo humano.",
+                    "opciones": [
+                        "Como puedes ver, la medicina es una [unused211] que está presente a lo largo de la vida y estudia los orígenes de las enfermedades de forma que puedan atenderse efectivamente a través del diagnóstico, prevención y tratamiento de las enfermedades que presenta el cuerpo humano.",
+                        "Como puedes ver, la medicina es una ciencia que está presente a lo largo de la vida y estudia los orígenes de las enfermedades de forma que puedan atenderse efectivamente a través del diagnóstico, prevención y tratamiento de las enfermedades que presenta el cuerpo humano.",
+                        "Como puedes ver, la medicina es una ciencia que está presente a lo largo de la vida y estudia los orígenes de las [unused27] de forma que puedan atenderse efectivamente a través del diagnóstico, prevención y tratamiento de las [unused27] que presenta el cuerpo humano.",
+                        "Como puedes ver, la medicina es una ciencia que está presente a lo largo de la vida y [unused689] los orígenes de las enfermedades de forma que puedan atenderse efectivamente a través del diagnóstico, prevención y tratamiento de las enfermedades que presenta el cuerpo humano."
+                    ],
+                    "respuesta_correcta": "Como puedes ver, la medicina es una ciencia que está presente a lo largo de la vida y estudia los orígenes de las enfermedades de forma que puedan atenderse efectivamente a través del diagnóstico, prevención y tratamiento de las enfermedades que presenta el cuerpo humano.",
+                    "explicacion": "Por eso, conocerás sobre la Medicina y su importancia: El término medicina proviene del latín medicina y hace referencia a la ciencia que permite prevenir y curar las enfermedades del cuerpo humano."
+                },
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "Para algunos es más clara que para otros, por lo que si todavía no sabes cuál es tu vocación, solo es necesario que la descubras y conozcas de cerca tu pasión para que puedas dedicar los mejores años de tu vida en hacer lo que [unused547].",
+                    "respuesta_correcta": false,
+                    "explicacion": "Para algunos es más clara que para otros, por lo que si todavía no sabes cuál es tu vocación, solo es necesario que la descubras y conozcas de cerca tu pasión para que puedas dedicar los mejores años de tu vida en hacer lo que amas."
+                },
+                {
+                    "tipo": "alternativas",
+                    "pregunta": "Alrededor de la medicina hay múltiples mitos y verdades sobre esta carrera, conócelos y aclara todas tus dudas para que puedas sumergirte en el mágico mundo de la salud.",
+                    "opciones": [
+                        "Alrededor de la medicina hay múltiples mitos y verdades sobre esta [unused633], conócelos y aclara todas tus dudas para que puedas sumergirte en el mágico mundo de la salud.",
+                        "Alrededor de la medicina hay múltiples mitos y verdades sobre esta carrera, conócelos y aclara todas tus dudas para que [unused463] sumergirte en el mágico mundo de la salud.",
+                        "Alrededor de la medicina hay múltiples mitos y [unused381] sobre esta carrera, conócelos y aclara todas tus dudas para que puedas sumergirte en el mágico mundo de la salud.",
                         "Alrededor de la medicina hay múltiples mitos y verdades sobre esta carrera, conócelos y aclara todas tus dudas para que puedas sumergirte en el mágico mundo de la salud."
                     ],
                     "respuesta_correcta": "Alrededor de la medicina hay múltiples mitos y verdades sobre esta carrera, conócelos y aclara todas tus dudas para que puedas sumergirte en el mágico mundo de la salud.",
-                    "explicacion": "La respuesta correcta es: Alrededor de la medicina hay múltiples mitos y verdades sobre esta carrera, conócelos y aclara todas tus dudas para que puedas sumergirte en el mágico mundo de la salud."
+                    "explicacion": "Para algunos es más clara que para otros, por lo que si todavía no sabes cuál es tu vocación, solo es necesario que la descubras y conozcas de cerca tu pasión para que puedas dedicar los mejores años de tu vida en hacer lo que amas."
+                },
+                {
+                    "tipo": "alternativas",
+                    "pregunta": "La vocación viene con nosotros desde que llegamos al mundo y, con el paso de los años, vamos desarrollándola cada vez más.",
+                    "opciones": [
+                        "La vocación viene con nosotros desde que llegamos al mundo y, con el [unused314] de los años, vamos desarrollándola cada vez más.",
+                        "La vocación viene con nosotros desde que llegamos al mundo y, con el paso de los años, vamos desarrollándola cada vez más.",
+                        "La vocación viene con nosotros desde que llegamos al mundo y, con el paso de los años, vamos desarrollándola cada [unused177] más.",
+                        "La vocación viene con nosotros desde que llegamos al mundo y, con el paso de los [unused454], vamos desarrollándola cada vez más."
+                    ],
+                    "respuesta_correcta": "La vocación viene con nosotros desde que llegamos al mundo y, con el paso de los años, vamos desarrollándola cada vez más.",
+                    "explicacion": "Para algunos es más clara que para otros, por lo que si todavía no sabes cuál es tu vocación, solo es necesario que la descubras y conozcas de cerca tu pasión para que puedas dedicar los mejores años de tu vida en hacer lo que amas."
+                },
+                {
+                    "tipo": "alternativas",
+                    "pregunta": "Medicina también se utiliza como sinónimo de medicamento (del latín medicamentum), que es la sustancia que permite prevenir, aliviar o curar las enfermedades o sus secuelas.",
+                    "opciones": [
+                        "Medicina también se utiliza como sinónimo de medicamento (del latín medicamentum), que es la sustancia que permite prevenir, [unused424] o curar las enfermedades o sus secuelas.",
+                        "Medicina también se utiliza como sinónimo de medicamento (del [unused74] medicamentum), que es la sustancia que permite prevenir, aliviar o curar las enfermedades o sus secuelas.",
+                        "Medicina también se utiliza como sinónimo de medicamento (del latín medicamentum), que es la sustancia que permite prevenir, aliviar o curar las enfermedades o sus secuelas.",
+                        "Medicina también se utiliza como [unused302] de medicamento (del latín medicamentum), que es la sustancia que permite prevenir, aliviar o curar las enfermedades o sus secuelas."
+                    ],
+                    "respuesta_correcta": "Medicina también se utiliza como sinónimo de medicamento (del latín medicamentum), que es la sustancia que permite prevenir, aliviar o curar las enfermedades o sus secuelas.",
+                    "explicacion": "Por eso, conocerás sobre la Medicina y su importancia: El término medicina proviene del latín medicina y hace referencia a la ciencia que permite prevenir y curar las enfermedades del cuerpo humano."
                 },
                 {
                     "tipo": "verdadero_falso",
-                    "pregunta": "En este caso, la medicina está superando y tratando un problema de naturaleza.",
+                    "pregunta": "Al crecer: los niños, desde su nacimiento y hasta los 6 años, son atendidos por médicos pediatras, quienes explican cómo alimentarlos, cuidarlos y controlar y chequear su salud.",
                     "respuesta_correcta": true,
-                    "explicacion": "Esta afirmación es correcta según el texto."
-                },
-                {
-                    "tipo": "verdadero_falso",
-                    "pregunta": "En la años : en el caso de una pareja con esterilidad , la medicina les ofrece a ambos la oportunidad de tener hijos propios .",
-                    "respuesta_correcta": false,
-                    "explicacion": "Esta afirmación es incorrecta. La versión correcta es: En la concepción: en el caso de una pareja con esterilidad, la medicina les ofrece a ambos la oportunidad de tener hijos propios."
+                    "explicacion": "Durante el embarazo: con la Medicina se protege tanto a la madre como  al embrión y al feto, dándole a conocer a la futura madre los cuidados que debe tener, la dieta y los ejercicios que deberá manejar luego de convertirse en mamá."
                 }
             ]
         },
@@ -93,88 +105,94 @@
             "fuente": "https://www.hopkinsmedicine.org/health/treatment-tests-and-therapies/types-of-surgery",
             "preguntas": [
                 {
-                    "tipo": "verdadero_falso",
-                    "pregunta": "Durante la residencia, los médicos reciben capacitación intensiva en técnicas quirúrgicas, cuidados pre y postoperatorios, y manejo de complicaciones.",
-                    "respuesta_correcta": true,
-                    "explicacion": "Esta afirmación es correcta según el texto."
-                },
-                {
                     "tipo": "alternativas",
-                    "pregunta": "¿qué optar cirujanos?",
+                    "pregunta": "La cirugía es una especialidad médica que implica la intervención física para diagnosticar, tratar o prevenir enfermedades y condiciones.",
                     "opciones": [
-                        "La cirugía puede ser mínimamente invasiva, utilizando técnicas como la laparoscopia, que implica pequeñas incisiones y el uso de una cámara para guiar el procedimiento, lo que reduce el tiempo de recuperación y el riesgo de complicaciones.",
-                        "Algunos cirujanos optan por subespecializarse en áreas específicas como la neurocirugía, la cirugía cardiovascular, la cirugía ortopédica, la cirugía plástica, entre otras.",
-                        "Después de completar la carrera de medicina, los futuros cirujanos deben realizar una residencia en cirugía, que puede durar entre cinco y siete años.",
-                        "La cirugía es una parte vital del sistema de salud y ha avanzado significativamente con el tiempo."
-                    ],
-                    "respuesta_correcta": "Algunos cirujanos optan por subespecializarse en áreas específicas como la neurocirugía, la cirugía cardiovascular, la cirugía ortopédica, la cirugía plástica, entre otras.",
-                    "explicacion": "La respuesta correcta es: Algunos cirujanos optan por subespecializarse en áreas específicas como la neurocirugía, la cirugía cardiovascular, la cirugía ortopédica, la cirugía plástica, entre otras."
-                },
-                {
-                    "tipo": "alternativas",
-                    "pregunta": "¿qué implicar cirugía?",
-                    "opciones": [
-                        "Después de completar la carrera de medicina, los futuros cirujanos deben realizar una residencia en cirugía, que puede durar entre cinco y siete años.",
-                        "La cirugía robótica es una evolución de la cirugía mínimamente invasiva, donde los cirujanos utilizan brazos robóticos controlados por computadora para realizar procedimientos con alta precisión.",
-                        "Las innovaciones en técnicas quirúrgicas, anestesia y tecnología médica han mejorado la seguridad y la eficacia de los procedimientos quirúrgicos, permitiendo tratar una amplia gama de enfermedades y condiciones de manera más efectiva.",
+                        "La cirugía es una especialidad médica que implica la intervención física para diagnosticar, tratar o prevenir enfermedades y [unused426].",
+                        "La cirugía es una especialidad médica que implica la intervención física para diagnosticar, [unused400] o prevenir enfermedades y condiciones.",
+                        "La cirugía es una especialidad médica que implica la [unused68] física para diagnosticar, tratar o prevenir enfermedades y condiciones.",
                         "La cirugía es una especialidad médica que implica la intervención física para diagnosticar, tratar o prevenir enfermedades y condiciones."
                     ],
                     "respuesta_correcta": "La cirugía es una especialidad médica que implica la intervención física para diagnosticar, tratar o prevenir enfermedades y condiciones.",
-                    "explicacion": "La respuesta correcta es: La cirugía es una especialidad médica que implica la intervención física para diagnosticar, tratar o prevenir enfermedades y condiciones."
-                },
-                {
-                    "tipo": "abierta",
-                    "pregunta": "¿qué realizar cirugía?",
-                    "respuesta_correcta": "otro",
-                    "explicacion": "Una posible respuesta basada en el texto es: otro"
-                },
-                {
-                    "tipo": "abierta",
-                    "pregunta": "¿qué avanzar cirugía?",
-                    "respuesta_correcta": "otro",
-                    "explicacion": "Una posible respuesta basada en el texto es: otro"
-                },
-                {
-                    "tipo": "alternativas",
-                    "pregunta": "¿qué completar cirujanos?",
-                    "opciones": [
-                        "Durante la residencia, los médicos reciben capacitación intensiva en técnicas quirúrgicas, cuidados pre y postoperatorios, y manejo de complicaciones.",
-                        "Después de completar la carrera de medicina, los futuros cirujanos deben realizar una residencia en cirugía, que puede durar entre cinco y siete años.",
-                        "La cirugía se puede clasificar en diferentes tipos, dependiendo de la urgencia, el propósito y la técnica utilizada.",
-                        "La cirugía de emergencia se realiza inmediatamente para salvar la vida del paciente, como en el caso de un trauma grave o una apendicitis aguda."
-                    ],
-                    "respuesta_correcta": "Después de completar la carrera de medicina, los futuros cirujanos deben realizar una residencia en cirugía, que puede durar entre cinco y siete años.",
-                    "explicacion": "La respuesta correcta es: Después de completar la carrera de medicina, los futuros cirujanos deben realizar una residencia en cirugía, que puede durar entre cinco y siete años."
-                },
-                {
-                    "tipo": "abierta",
-                    "pregunta": "¿qué se puede decir sobre la?",
-                    "respuesta_correcta": "de salud y ha avanzado",
-                    "explicacion": "Una posible respuesta basada en el texto es: de salud y ha avanzado"
+                    "explicacion": "Los cirujanos utilizan una variedad de técnicas quirúrgicas para acceder al interior del cuerpo humano, reparar tejidos dañados, extraer tumores o corregir anomalías."
                 },
                 {
                     "tipo": "verdadero_falso",
-                    "pregunta": "La cirugía de emergencia se realiza inmediatamente para salvar la vida del paciente, como en el caso de un trauma grave o una apendicitis aguda.",
+                    "pregunta": "Después de completar la carrera de medicina, los futuros cirujanos deben realizar una [unused339] en cirugía, que puede durar entre cinco y siete años.",
+                    "respuesta_correcta": false,
+                    "explicacion": "Después de completar la carrera de medicina, los futuros cirujanos deben realizar una residencia en cirugía, que puede durar entre cinco y siete años."
+                },
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "La cirugía electiva, por otro lado, se planifica con antelación y no es de urgencia, como una cirugía estética o una reparación de hernia.",
                     "respuesta_correcta": true,
-                    "explicacion": "Esta afirmación es correcta según el texto."
+                    "explicacion": "La cirugía es una especialidad médica que implica la intervención física para diagnosticar, tratar o prevenir enfermedades y condiciones."
+                },
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "Después de completar la carrera de medicina, los futuros cirujanos deben realizar una residencia en cirugía, que puede durar entre cinco y siete años.",
+                    "respuesta_correcta": true,
+                    "explicacion": "La formación de un cirujano es rigurosa y extensa."
+                },
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "La cirugía electiva, por otro lado, se planifica con antelación y no es de urgencia, como una cirugía [unused697] o una reparación de hernia.",
+                    "respuesta_correcta": false,
+                    "explicacion": "La cirugía electiva, por otro lado, se planifica con antelación y no es de urgencia, como una cirugía estética o una reparación de hernia."
+                },
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "Los cirujanos utilizan una variedad de técnicas quirúrgicas para acceder al interior del cuerpo humano, reparar tejidos dañados, extraer tumores o corregir anomalías.",
+                    "respuesta_correcta": false,
+                    "explicacion": "La cirugía es una especialidad médica que implica la intervención física para diagnosticar, tratar o prevenir enfermedades y condiciones."
                 },
                 {
                     "tipo": "alternativas",
-                    "pregunta": "¿qué utilizar cirugía?",
+                    "pregunta": "Durante la residencia, los médicos reciben capacitación intensiva en técnicas quirúrgicas, cuidados pre y postoperatorios, y manejo de complicaciones.",
+                    "opciones": [
+                        "Durante la residencia, los médicos [unused302] capacitación intensiva en técnicas quirúrgicas, cuidados pre y postoperatorios, y manejo de complicaciones.",
+                        "Durante la residencia, los médicos reciben capacitación intensiva en técnicas quirúrgicas, cuidados pre y postoperatorios, y manejo de complicaciones.",
+                        "Durante la residencia, los médicos reciben capacitación intensiva en técnicas quirúrgicas, [unused118] pre y postoperatorios, y manejo de complicaciones.",
+                        "Durante la residencia, los médicos reciben [unused302] intensiva en técnicas quirúrgicas, cuidados pre y postoperatorios, y manejo de complicaciones."
+                    ],
+                    "respuesta_correcta": "Durante la residencia, los médicos reciben capacitación intensiva en técnicas quirúrgicas, cuidados pre y postoperatorios, y manejo de complicaciones.",
+                    "explicacion": "Después de completar la carrera de medicina, los futuros cirujanos deben realizar una residencia en cirugía, que puede durar entre cinco y siete años."
+                },
+                {
+                    "tipo": "alternativas",
+                    "pregunta": "La cirugía es una parte vital del sistema de salud y ha avanzado significativamente con el tiempo.",
                     "opciones": [
                         "La cirugía es una parte vital del sistema de salud y ha avanzado significativamente con el tiempo.",
-                        "La cirugía robótica es una evolución de la cirugía mínimamente invasiva, donde los cirujanos utilizan brazos robóticos controlados por computadora para realizar procedimientos con alta precisión.",
-                        "Durante la residencia, los médicos reciben capacitación intensiva en técnicas quirúrgicas, cuidados pre y postoperatorios, y manejo de complicaciones.",
-                        "Los cirujanos utilizan una variedad de técnicas quirúrgicas para acceder al interior del cuerpo humano, reparar tejidos dañados, extraer tumores o corregir anomalías."
+                        "La cirugía es una parte vital del sistema de [unused574] y ha avanzado significativamente con el tiempo.",
+                        "La cirugía es una parte [unused695] del sistema de salud y ha avanzado significativamente con el tiempo.",
+                        "La cirugía es una parte vital del sistema de salud y ha [unused454] significativamente con el tiempo."
                     ],
-                    "respuesta_correcta": "La cirugía robótica es una evolución de la cirugía mínimamente invasiva, donde los cirujanos utilizan brazos robóticos controlados por computadora para realizar procedimientos con alta precisión.",
-                    "explicacion": "La respuesta correcta es: La cirugía robótica es una evolución de la cirugía mínimamente invasiva, donde los cirujanos utilizan brazos robóticos controlados por computadora para realizar procedimientos con alta precisión."
+                    "respuesta_correcta": "La cirugía es una parte vital del sistema de salud y ha avanzado significativamente con el tiempo.",
+                    "explicacion": "Las innovaciones en técnicas quirúrgicas, anestesia y tecnología médica han mejorado la seguridad y la eficacia de los procedimientos quirúrgicos, permitiendo tratar una amplia gama de enfermedades y condiciones de manera más efectiva."
                 },
                 {
-                    "tipo": "verdadero_falso",
-                    "pregunta": "Durante la sistema , los médicos reciben capacitación intensiva en técnicas quirúrgicas , cuidados pre y postoperatorios , y manejo de complicaciones .",
-                    "respuesta_correcta": false,
-                    "explicacion": "Esta afirmación es incorrecta. La versión correcta es: Durante la residencia, los médicos reciben capacitación intensiva en técnicas quirúrgicas, cuidados pre y postoperatorios, y manejo de complicaciones."
+                    "tipo": "alternativas",
+                    "pregunta": "La cirugía electiva, por otro lado, se planifica con antelación y no es de urgencia, como una cirugía estética o una reparación de hernia.",
+                    "opciones": [
+                        "La [unused404] electiva, por otro lado, se planifica con antelación y no es de urgencia, como una [unused404] estética o una reparación de hernia.",
+                        "La cirugía electiva, por otro lado, se planifica con antelación y no es de urgencia, como una cirugía [unused697] o una reparación de hernia.",
+                        "La cirugía electiva, por otro lado, se planifica con antelación y no es de [unused574], como una cirugía estética o una reparación de hernia.",
+                        "La cirugía electiva, por otro lado, se planifica con antelación y no es de urgencia, como una cirugía estética o una reparación de hernia."
+                    ],
+                    "respuesta_correcta": "La cirugía electiva, por otro lado, se planifica con antelación y no es de urgencia, como una cirugía estética o una reparación de hernia.",
+                    "explicacion": "La cirugía es una especialidad médica que implica la intervención física para diagnosticar, tratar o prevenir enfermedades y condiciones."
+                },
+                {
+                    "tipo": "alternativas",
+                    "pregunta": "La cirugía electiva, por otro lado, se planifica con antelación y no es de urgencia, como una cirugía estética o una reparación de hernia.",
+                    "opciones": [
+                        "La cirugía electiva, por [unused514] lado, se planifica con antelación y no es de urgencia, como una cirugía estética o una reparación de hernia.",
+                        "La cirugía electiva, por otro lado, se planifica con [unused656] y no es de urgencia, como una cirugía estética o una reparación de hernia.",
+                        "La cirugía electiva, por otro lado, se planifica con antelación y no es de urgencia, como una cirugía [unused697] o una reparación de hernia.",
+                        "La cirugía electiva, por otro lado, se planifica con antelación y no es de urgencia, como una cirugía estética o una reparación de hernia."
+                    ],
+                    "respuesta_correcta": "La cirugía electiva, por otro lado, se planifica con antelación y no es de urgencia, como una cirugía estética o una reparación de hernia.",
+                    "explicacion": "La cirugía es una especialidad médica que implica la intervención física para diagnosticar, tratar o prevenir enfermedades y condiciones."
                 }
             ]
         }
@@ -184,82 +202,88 @@
             "fuente": "https://educacion.udp.cl/carreras/pedagogia-en-ingles/",
             "preguntas": [
                 {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "De esta manera se fomenta una capacidad reflexiva estrechamente vinculada al desarrollo de un “saber hacer” que preparará al estudiante para enfrentar adecuadamente su trabajo como profesor al egreso de la [unused77].",
+                    "respuesta_correcta": false,
+                    "explicacion": "De esta manera se fomenta una capacidad reflexiva estrechamente vinculada al desarrollo de un “saber hacer” que preparará al estudiante para enfrentar adecuadamente su trabajo como profesor al egreso de la carrera."
+                },
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "Su foco radica en el aprendizaje y enseñanza de la lengua inglesa en el contexto escolar nacional y de acuerdo con el Marco Curricular del Mineduc.",
+                    "respuesta_correcta": true,
+                    "explicacion": "La malla curricular se estructura de acuerdo a 5 ejes o líneas de formación: Aprendizaje de la Lengua: Tiene como propósito desarrollar las competencias de la comunicación en inglés avanzado (nivel C1, del Common European Framework), su conocimiento formal y los aspectos culturales asociados a la lengua."
+                },
+                {
                     "tipo": "alternativas",
-                    "pregunta": "¿qué desarrollar eje?",
+                    "pregunta": "Esta evidencia permitirá informar y fundamentar las decisiones pedagógicas para mejorar el proceso de enseñanza-aprendizaje.",
+                    "opciones": [
+                        "Esta evidencia permitirá informar y fundamentar las decisiones pedagógicas para mejorar el proceso de enseñanza-aprendizaje.",
+                        "Esta evidencia permitirá [unused38] y fundamentar las decisiones pedagógicas para mejorar el proceso de enseñanza-aprendizaje.",
+                        "Esta evidencia [unused726] informar y fundamentar las decisiones pedagógicas para mejorar el proceso de enseñanza-aprendizaje.",
+                        "Esta [unused146] permitirá informar y fundamentar las decisiones pedagógicas para mejorar el proceso de enseñanza-aprendizaje."
+                    ],
+                    "respuesta_correcta": "Esta evidencia permitirá informar y fundamentar las decisiones pedagógicas para mejorar el proceso de enseñanza-aprendizaje.",
+                    "explicacion": "Dado el carácter reflexivo de estas asignaturas, el estudiante estará permanentemente inmerso en discusiones con sus pares y con docentes, para luego contrastarlas en sus prácticas y así retroalimentar el proceso de enseñanza de la lengua en distintos contextos escolares."
+                },
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "¿Cómo y qué evaluar en [unused651]?",
+                    "respuesta_correcta": false,
+                    "explicacion": "Ámbitos de dominio y certificación de competencias Dominio del inglés equivalente al estándar C1 del Common European Framework of Reference for Language (CEF), demostrado a través de exámenes internacionales en el noveno semestre y mediante aplicación de mediciones referenciales intermedias durante la carrera."
+                },
+                {
+                    "tipo": "alternativas",
+                    "pregunta": "De esta manera se fomenta una capacidad reflexiva estrechamente vinculada al desarrollo de un “saber hacer” que preparará al estudiante para enfrentar adecuadamente su trabajo como profesor al egreso de la carrera.",
+                    "opciones": [
+                        "De esta manera se fomenta una capacidad reflexiva estrechamente vinculada al desarrollo de un “saber hacer” que preparará al estudiante para enfrentar adecuadamente su trabajo como [unused302] al egreso de la carrera.",
+                        "De esta manera se fomenta una capacidad reflexiva estrechamente vinculada al desarrollo de un “saber hacer[unused726] que preparará al estudiante para enfrentar adecuadamente su trabajo como profesor al egreso de la carrera.",
+                        "De esta manera se fomenta una capacidad reflexiva estrechamente vinculada al desarrollo de un “saber hacer” que preparará al estudiante para enfrentar adecuadamente su trabajo como profesor al egreso de la carrera.",
+                        "De esta manera se fomenta una capacidad reflexiva estrechamente vinculada al desarrollo de un “saber hacer” que preparará al [unused302] para enfrentar adecuadamente su trabajo como profesor al egreso de la carrera."
+                    ],
+                    "respuesta_correcta": "De esta manera se fomenta una capacidad reflexiva estrechamente vinculada al desarrollo de un “saber hacer” que preparará al estudiante para enfrentar adecuadamente su trabajo como profesor al egreso de la carrera.",
+                    "explicacion": "Dado el carácter reflexivo de estas asignaturas, el estudiante estará permanentemente inmerso en discusiones con sus pares y con docentes, para luego contrastarlas en sus prácticas y así retroalimentar el proceso de enseñanza de la lengua en distintos contextos escolares."
+                },
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "Se nutre de la experiencia internacional y de la investigación sobre adquisición de la lengua como idioma extranjero, y de los estudios sobre procesos cognitivos, entre otros ámbitos.",
+                    "respuesta_correcta": true,
+                    "explicacion": "Programa de formación El plan de estudio de la carrera tiene un enfoque comunicativo que integra progresivamente el desarrollo de las habilidades de comprensión lectora, comprensión auditiva, expresión oral y expresión escrita, y aborda el aprendizaje de la lingüística desde una perspectiva aplicada."
+                },
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "¿Cómo y qué evaluar en inglés?",
+                    "respuesta_correcta": true,
+                    "explicacion": "Enseñanza de la Lengua: ¿Cómo enseñar inglés?"
+                },
+                {
+                    "tipo": "alternativas",
+                    "pregunta": "Se nutre de la experiencia internacional y de la investigación sobre adquisición de la lengua como idioma extranjero, y de los estudios sobre procesos cognitivos, entre otros ámbitos.",
                     "opciones": [
                         "Se nutre de la experiencia internacional y de la investigación sobre adquisición de la lengua como idioma extranjero, y de los estudios sobre procesos cognitivos, entre otros ámbitos.",
-                        "Indagación: Este eje de formación está orientado a desarrollar competencias para la recolección de evidencia relevante sobre los estudiantes y su aprendizaje de inglés.",
-                        "Formación General: Aborda el conocimiento, comprensión y aplicación de valores como el respecto a los derechos humanos, ejercicio de la ciudadanía, temas relacionados a la diversidad, a la inclusión y a la equidad, que son claves para la formación de un docente con altas expectativas de todos sus estudiantes.",
-                        "Se fomenta la exposición permanente a la lengua inglesa tanto en clases formales como en lectura de bibliografía en inglés, ayudantías, medios audiovisuales, programas en internet, participación en actividades con profesores invitados extranjeros, presentaciones y congresos de interés para los estudiantes, entre otros."
+                        "Se nutre de la experiencia internacional y de la investigación sobre adquisición de la lengua como idioma extranjero, y de los estudios sobre procesos cognitivos, entre otros [unused77].",
+                        "Se nutre de la experiencia internacional y de la [unused302] sobre adquisición de la lengua como idioma extranjero, y de los estudios sobre procesos cognitivos, entre otros ámbitos.",
+                        "Se nutre de la [unused23] internacional y de la investigación sobre adquisición de la lengua como idioma extranjero, y de los estudios sobre procesos cognitivos, entre otros ámbitos."
                     ],
-                    "respuesta_correcta": "Indagación: Este eje de formación está orientado a desarrollar competencias para la recolección de evidencia relevante sobre los estudiantes y su aprendizaje de inglés.",
-                    "explicacion": "La respuesta correcta es: Indagación: Este eje de formación está orientado a desarrollar competencias para la recolección de evidencia relevante sobre los estudiantes y su aprendizaje de inglés."
-                },
-                {
-                    "tipo": "verdadero_falso",
-                    "pregunta": "La competencias de Pedagogía en Inglés tiene como propósito formar profesionales integrales , versátiles y comprometidos , para promover el aprendizaje de niños / as y jóvenes a través del idioma inglés .",
-                    "respuesta_correcta": false,
-                    "explicacion": "Esta afirmación es incorrecta. La versión correcta es: La carrera de Pedagogía en Inglés tiene como propósito formar profesionales integrales, versátiles y comprometidos, para promover el aprendizaje de niños/as y jóvenes a través del idioma inglés."
+                    "respuesta_correcta": "Se nutre de la experiencia internacional y de la investigación sobre adquisición de la lengua como idioma extranjero, y de los estudios sobre procesos cognitivos, entre otros ámbitos.",
+                    "explicacion": "Programa de formación El plan de estudio de la carrera tiene un enfoque comunicativo que integra progresivamente el desarrollo de las habilidades de comprensión lectora, comprensión auditiva, expresión oral y expresión escrita, y aborda el aprendizaje de la lingüística desde una perspectiva aplicada."
                 },
                 {
                     "tipo": "alternativas",
-                    "pregunta": "¿qué dar carácter?",
+                    "pregunta": "El desarrollo de estas competencias conducirá al grado de Licenciado en Educación.",
                     "opciones": [
-                        "¿Cómo motivar a que los estudiantes participen activamente en el aprendizaje de inglés?",
-                        "Dado el carácter reflexivo de estas asignaturas, el estudiante estará permanentemente inmerso en discusiones con sus pares y con docentes, para luego contrastarlas en sus prácticas y así retroalimentar el proceso de enseñanza de la lengua en distintos contextos escolares.",
-                        "Ámbitos de dominio y certificación de competencias Dominio del inglés equivalente al estándar C1 del Common European Framework of Reference for Language (CEF), demostrado a través de exámenes internacionales en el noveno semestre y mediante aplicación de mediciones referenciales intermedias durante la carrera.",
-                        "Esta línea de aprendizaje tiene una duración de nueve semestres de la carrera y también incluye asignaturas de fundamentos léxicos y gramaticales de la lengua, lingüística y cultura de los países angloparlantes."
+                        "El desarrollo de estas competencias conducirá al [unused302] de Licenciado en Educación.",
+                        "El [unused302] de estas competencias conducirá al grado de Licenciado en Educación.",
+                        "El desarrollo de estas [unused238] conducirá al grado de Licenciado en Educación.",
+                        "El desarrollo de estas competencias conducirá al grado de Licenciado en Educación."
                     ],
-                    "respuesta_correcta": "Dado el carácter reflexivo de estas asignaturas, el estudiante estará permanentemente inmerso en discusiones con sus pares y con docentes, para luego contrastarlas en sus prácticas y así retroalimentar el proceso de enseñanza de la lengua en distintos contextos escolares.",
-                    "explicacion": "La respuesta correcta es: Dado el carácter reflexivo de estas asignaturas, el estudiante estará permanentemente inmerso en discusiones con sus pares y con docentes, para luego contrastarlas en sus prácticas y así retroalimentar el proceso de enseñanza de la lengua en distintos contextos escolares."
+                    "respuesta_correcta": "El desarrollo de estas competencias conducirá al grado de Licenciado en Educación.",
+                    "explicacion": "Formación Profesional y Práctica: La carrera desarrolla competencias para la formación práctica a través de toda la carrera."
                 },
                 {
                     "tipo": "verdadero_falso",
-                    "pregunta": "¿Cómo integrar inglés al quehacer escolar?",
+                    "pregunta": "Esta evidencia permitirá informar y fundamentar las decisiones pedagógicas para mejorar el proceso de enseñanza-aprendizaje.",
                     "respuesta_correcta": true,
-                    "explicacion": "Esta afirmación es correcta según el texto."
-                },
-                {
-                    "tipo": "alternativas",
-                    "pregunta": "¿qué motivar estudiantes?",
-                    "opciones": [
-                        "Dominio de la didáctica de la enseñanza del inglés como idioma extranjero, demostrado en el noveno semestre a través de exámenes internacionales disciplinares y de metodología de la enseñanza de inglés.",
-                        "¿Cómo motivar a que los estudiantes participen activamente en el aprendizaje de inglés?",
-                        "Se fomenta la exposición permanente a la lengua inglesa tanto en clases formales como en lectura de bibliografía en inglés, ayudantías, medios audiovisuales, programas en internet, participación en actividades con profesores invitados extranjeros, presentaciones y congresos de interés para los estudiantes, entre otros.",
-                        "De esta manera se fomenta una capacidad reflexiva estrechamente vinculada al desarrollo de un “saber hacer” que preparará al estudiante para enfrentar adecuadamente su trabajo como profesor al egreso de la carrera."
-                    ],
-                    "respuesta_correcta": "¿Cómo motivar a que los estudiantes participen activamente en el aprendizaje de inglés?",
-                    "explicacion": "La respuesta correcta es: ¿Cómo motivar a que los estudiantes participen activamente en el aprendizaje de inglés?"
-                },
-                {
-                    "tipo": "abierta",
-                    "pregunta": "¿qué estructurar malla?",
-                    "respuesta_correcta": "centros escolares, que permitirán al estudiante aprender a enseñar, logrando sinergia e",
-                    "explicacion": "Una posible respuesta basada en el texto es: centros escolares, que permitirán al estudiante aprender a enseñar, logrando sinergia e"
-                },
-                {
-                    "tipo": "abierta",
-                    "pregunta": "¿qué fomentar exposición?",
-                    "respuesta_correcta": "centros escolares, que permitirán al estudiante aprender a enseñar, logrando sinergia e",
-                    "explicacion": "Una posible respuesta basada en el texto es: centros escolares, que permitirán al estudiante aprender a enseñar, logrando sinergia e"
-                },
-                {
-                    "tipo": "abierta",
-                    "pregunta": "¿qué tomar estudiantes?",
-                    "respuesta_correcta": "formación de un docente con altas expectativas de",
-                    "explicacion": "Una posible respuesta basada en el texto es: formación de un docente con altas expectativas de"
-                },
-                {
-                    "tipo": "abierta",
-                    "pregunta": "¿qué motivar estudiantes?",
-                    "respuesta_correcta": "centros escolares, que permitirán al estudiante aprender a enseñar, logrando sinergia e",
-                    "explicacion": "Una posible respuesta basada en el texto es: centros escolares, que permitirán al estudiante aprender a enseñar, logrando sinergia e"
-                },
-                {
-                    "tipo": "verdadero_falso",
-                    "pregunta": "La inglés de Pedagogía en Inglés tiene como propósito formar profesionales integrales , versátiles y comprometidos , para promover el aprendizaje de niños / as y jóvenes a través del idioma inglés .",
-                    "respuesta_correcta": false,
-                    "explicacion": "Esta afirmación es incorrecta. La versión correcta es: La carrera de Pedagogía en Inglés tiene como propósito formar profesionales integrales, versátiles y comprometidos, para promover el aprendizaje de niños/as y jóvenes a través del idioma inglés."
+                    "explicacion": "Dado el carácter reflexivo de estas asignaturas, el estudiante estará permanentemente inmerso en discusiones con sus pares y con docentes, para luego contrastarlas en sus prácticas y así retroalimentar el proceso de enseñanza de la lengua en distintos contextos escolares."
                 }
             ]
         },
@@ -267,80 +291,100 @@
             "fuente": "https://www.teachingenglish.org.uk/article/digital-literacy",
             "preguntas": [
                 {
-                    "tipo": "abierta",
-                    "pregunta": "¿qué referir alfabetización?",
-                    "respuesta_correcta": "través de redes sociales",
-                    "explicacion": "Una posible respuesta basada en el texto es: través de redes sociales"
-                },
-                {
                     "tipo": "alternativas",
-                    "pregunta": "¿qué incluir esto?",
+                    "pregunta": "La alfabetización digital en la enseñanza del inglés como lengua extranjera se refiere al uso de tecnologías digitales, como computadoras, tabletas y teléfonos inteligentes, para enseñar y aprender inglés.",
                     "opciones": [
-                        "Esto puede incluir la creación de contenido digital, la colaboración en línea y la comunicación a través de redes sociales.",
-                        "La alfabetización digital en la enseñanza del inglés como lengua extranjera se refiere al uso de tecnologías digitales, como computadoras, tabletas y teléfonos inteligentes, para enseñar y aprender inglés."
-                    ],
-                    "respuesta_correcta": "Esto puede incluir la creación de contenido digital, la colaboración en línea y la comunicación a través de redes sociales.",
-                    "explicacion": "La respuesta correcta es: Esto puede incluir la creación de contenido digital, la colaboración en línea y la comunicación a través de redes sociales."
-                },
-                {
-                    "tipo": "abierta",
-                    "pregunta": "¿qué incluir esto?",
-                    "respuesta_correcta": "través de redes sociales",
-                    "explicacion": "Una posible respuesta basada en el texto es: través de redes sociales"
-                },
-                {
-                    "tipo": "alternativas",
-                    "pregunta": "¿qué referir alfabetización?",
-                    "opciones": [
-                        "Esto puede incluir la creación de contenido digital, la colaboración en línea y la comunicación a través de redes sociales.",
+                        "La [unused74] digital en la enseñanza del inglés como lengua extranjera se refiere al uso de tecnologías digitales, como computadoras, tabletas y teléfonos inteligentes, para enseñar y aprender inglés.",
+                        "La alfabetización digital en la enseñanza del [unused539] como lengua extranjera se refiere al uso de tecnologías digitales, como computadoras, tabletas y teléfonos inteligentes, para enseñar y aprender [unused539].",
+                        "La alfabetización digital en la [unused74] del inglés como lengua extranjera se refiere al uso de tecnologías digitales, como computadoras, tabletas y teléfonos inteligentes, para enseñar y aprender inglés.",
                         "La alfabetización digital en la enseñanza del inglés como lengua extranjera se refiere al uso de tecnologías digitales, como computadoras, tabletas y teléfonos inteligentes, para enseñar y aprender inglés."
                     ],
                     "respuesta_correcta": "La alfabetización digital en la enseñanza del inglés como lengua extranjera se refiere al uso de tecnologías digitales, como computadoras, tabletas y teléfonos inteligentes, para enseñar y aprender inglés.",
-                    "explicacion": "La respuesta correcta es: La alfabetización digital en la enseñanza del inglés como lengua extranjera se refiere al uso de tecnologías digitales, como computadoras, tabletas y teléfonos inteligentes, para enseñar y aprender inglés."
-                },
-                {
-                    "tipo": "verdadero_falso",
-                    "pregunta": "Esto puede refiere la creación de contenido digital , la colaboración en línea y la comunicación a través de redes sociales .",
-                    "respuesta_correcta": false,
-                    "explicacion": "Esta afirmación es incorrecta. La versión correcta es: Esto puede incluir la creación de contenido digital, la colaboración en línea y la comunicación a través de redes sociales."
+                    "explicacion": "Esto puede incluir la creación de contenido digital, la colaboración en línea y la comunicación a través de redes sociales."
                 },
                 {
                     "tipo": "verdadero_falso",
                     "pregunta": "La alfabetización digital en la enseñanza del inglés como lengua extranjera se refiere al uso de tecnologías digitales, como computadoras, tabletas y teléfonos inteligentes, para enseñar y aprender inglés.",
                     "respuesta_correcta": true,
-                    "explicacion": "Esta afirmación es correcta según el texto."
+                    "explicacion": "Esto puede incluir la creación de contenido digital, la colaboración en línea y la comunicación a través de redes sociales."
                 },
                 {
                     "tipo": "alternativas",
-                    "pregunta": "¿qué incluir esto?",
+                    "pregunta": "Esto puede incluir la creación de contenido digital, la colaboración en línea y la comunicación a través de redes sociales.",
                     "opciones": [
-                        "La alfabetización digital en la enseñanza del inglés como lengua extranjera se refiere al uso de tecnologías digitales, como computadoras, tabletas y teléfonos inteligentes, para enseñar y aprender inglés.",
+                        "Esto puede incluir la creación de [unused318] digital, la colaboración en línea y la comunicación a través de redes sociales.",
+                        "Esto puede incluir la creación de contenido [unused706], la colaboración en línea y la comunicación a través de redes sociales.",
+                        "Esto puede incluir la creación de contenido digital, la colaboración en línea y la comunicación a [unused175] de redes sociales.",
                         "Esto puede incluir la creación de contenido digital, la colaboración en línea y la comunicación a través de redes sociales."
                     ],
                     "respuesta_correcta": "Esto puede incluir la creación de contenido digital, la colaboración en línea y la comunicación a través de redes sociales.",
-                    "explicacion": "La respuesta correcta es: Esto puede incluir la creación de contenido digital, la colaboración en línea y la comunicación a través de redes sociales."
+                    "explicacion": "La alfabetización digital en la enseñanza del inglés como lengua extranjera se refiere al uso de tecnologías digitales, como computadoras, tabletas y teléfonos inteligentes, para enseñar y aprender inglés."
                 },
                 {
                     "tipo": "verdadero_falso",
-                    "pregunta": "Esto puede incluir la creación de contenido digital, la colaboración en línea y la comunicación a través de redes sociales.",
-                    "respuesta_correcta": true,
-                    "explicacion": "Esta afirmación es correcta según el texto."
-                },
-                {
-                    "tipo": "verdadero_falso",
-                    "pregunta": "La través digital en la enseñanza del inglés como lengua extranjera se refiere al uso de tecnologías digitales , como computadoras , tabletas y teléfonos inteligentes , para enseñar y aprender inglés .",
+                    "pregunta": "Esto puede incluir la creación de contenido digital, la colaboración en [unused61] y la comunicación a través de redes sociales.",
                     "respuesta_correcta": false,
-                    "explicacion": "Esta afirmación es incorrecta. La versión correcta es: La alfabetización digital en la enseñanza del inglés como lengua extranjera se refiere al uso de tecnologías digitales, como computadoras, tabletas y teléfonos inteligentes, para enseñar y aprender inglés."
+                    "explicacion": "Esto puede incluir la creación de contenido digital, la colaboración en línea y la comunicación a través de redes sociales."
                 },
                 {
                     "tipo": "alternativas",
-                    "pregunta": "¿qué referir alfabetización?",
+                    "pregunta": "La alfabetización digital en la enseñanza del inglés como lengua extranjera se refiere al uso de tecnologías digitales, como computadoras, tabletas y teléfonos inteligentes, para enseñar y aprender inglés.",
                     "opciones": [
                         "La alfabetización digital en la enseñanza del inglés como lengua extranjera se refiere al uso de tecnologías digitales, como computadoras, tabletas y teléfonos inteligentes, para enseñar y aprender inglés.",
-                        "Esto puede incluir la creación de contenido digital, la colaboración en línea y la comunicación a través de redes sociales."
+                        "La alfabetización digital en la enseñanza del inglés como lengua extranjera se [unused74] al uso de tecnologías digitales, como computadoras, tabletas y teléfonos inteligentes, para enseñar y aprender inglés.",
+                        "La alfabetización digital en la enseñanza del inglés como lengua extranjera se refiere al uso de tecnologías [unused198], como computadoras, tabletas y teléfonos inteligentes, para enseñar y aprender inglés.",
+                        "La alfabetización digital en la enseñanza del [unused539] como lengua extranjera se refiere al uso de tecnologías digitales, como computadoras, tabletas y teléfonos inteligentes, para enseñar y aprender [unused539]."
                     ],
                     "respuesta_correcta": "La alfabetización digital en la enseñanza del inglés como lengua extranjera se refiere al uso de tecnologías digitales, como computadoras, tabletas y teléfonos inteligentes, para enseñar y aprender inglés.",
-                    "explicacion": "La respuesta correcta es: La alfabetización digital en la enseñanza del inglés como lengua extranjera se refiere al uso de tecnologías digitales, como computadoras, tabletas y teléfonos inteligentes, para enseñar y aprender inglés."
+                    "explicacion": "Esto puede incluir la creación de contenido digital, la colaboración en línea y la comunicación a través de redes sociales."
+                },
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "La alfabetización digital en la enseñanza del inglés como lengua extranjera se refiere al uso de tecnologías digitales, como computadoras, tabletas y teléfonos inteligentes, para enseñar y aprender inglés.",
+                    "respuesta_correcta": false,
+                    "explicacion": "Esto puede incluir la creación de contenido digital, la colaboración en línea y la comunicación a través de redes sociales."
+                },
+                {
+                    "tipo": "alternativas",
+                    "pregunta": "Esto puede incluir la creación de contenido digital, la colaboración en línea y la comunicación a través de redes sociales.",
+                    "opciones": [
+                        "Esto puede incluir la creación de contenido digital, la [unused431] en línea y la comunicación a través de redes sociales.",
+                        "Esto puede [unused302] la creación de contenido digital, la colaboración en línea y la comunicación a través de redes sociales.",
+                        "Esto puede incluir la creación de contenido digital, la colaboración en línea y la comunicación a través de redes sociales.",
+                        "Esto puede incluir la creación de contenido digital, la colaboración en línea y la comunicación a través de redes [unused506]."
+                    ],
+                    "respuesta_correcta": "Esto puede incluir la creación de contenido digital, la colaboración en línea y la comunicación a través de redes sociales.",
+                    "explicacion": "La alfabetización digital en la enseñanza del inglés como lengua extranjera se refiere al uso de tecnologías digitales, como computadoras, tabletas y teléfonos inteligentes, para enseñar y aprender inglés."
+                },
+                {
+                    "tipo": "alternativas",
+                    "pregunta": "La alfabetización digital en la enseñanza del inglés como lengua extranjera se refiere al uso de tecnologías digitales, como computadoras, tabletas y teléfonos inteligentes, para enseñar y aprender inglés.",
+                    "opciones": [
+                        "La alfabetización digital en la enseñanza del inglés como lengua extranjera se refiere al uso de tecnologías digitales, como computadoras, tabletas y teléfonos inteligentes, para enseñar y aprender inglés.",
+                        "La alfabetización digital en la enseñanza del inglés como [unused186] extranjera se refiere al uso de tecnologías digitales, como computadoras, tabletas y teléfonos inteligentes, para enseñar y aprender inglés.",
+                        "La alfabetización digital en la enseñanza del inglés como lengua [unused74] se refiere al uso de tecnologías digitales, como computadoras, tabletas y teléfonos inteligentes, para enseñar y aprender inglés.",
+                        "La alfabetización digital en la enseñanza del inglés como lengua extranjera se refiere al uso de tecnologías digitales, como computadoras, tabletas y teléfonos inteligentes, para enseñar y [unused91] inglés."
+                    ],
+                    "respuesta_correcta": "La alfabetización digital en la enseñanza del inglés como lengua extranjera se refiere al uso de tecnologías digitales, como computadoras, tabletas y teléfonos inteligentes, para enseñar y aprender inglés.",
+                    "explicacion": "Esto puede incluir la creación de contenido digital, la colaboración en línea y la comunicación a través de redes sociales."
+                },
+                {
+                    "tipo": "alternativas",
+                    "pregunta": "La alfabetización digital en la enseñanza del inglés como lengua extranjera se refiere al uso de tecnologías digitales, como computadoras, tabletas y teléfonos inteligentes, para enseñar y aprender inglés.",
+                    "opciones": [
+                        "La alfabetización digital en la [unused74] del inglés como lengua extranjera se refiere al uso de tecnologías digitales, como computadoras, tabletas y teléfonos inteligentes, para enseñar y aprender inglés.",
+                        "La alfabetización digital en la enseñanza del inglés como lengua extranjera se refiere al [unused211] de tecnologías digitales, como computadoras, tabletas y teléfonos inteligentes, para enseñar y aprender inglés.",
+                        "La alfabetización digital en la enseñanza del inglés como lengua extranjera se refiere al uso de tecnologías digitales, como computadoras, tabletas y teléfonos inteligentes, para enseñar y aprender inglés.",
+                        "La alfabetización digital en la enseñanza del inglés como lengua [unused74] se refiere al uso de tecnologías digitales, como computadoras, tabletas y teléfonos inteligentes, para enseñar y aprender inglés."
+                    ],
+                    "respuesta_correcta": "La alfabetización digital en la enseñanza del inglés como lengua extranjera se refiere al uso de tecnologías digitales, como computadoras, tabletas y teléfonos inteligentes, para enseñar y aprender inglés.",
+                    "explicacion": "Esto puede incluir la creación de contenido digital, la colaboración en línea y la comunicación a través de redes sociales."
+                },
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "La alfabetización digital en la enseñanza del inglés como lengua extranjera se [unused74] al uso de tecnologías digitales, como computadoras, tabletas y teléfonos inteligentes, para enseñar y aprender inglés.",
+                    "respuesta_correcta": false,
+                    "explicacion": "La alfabetización digital en la enseñanza del inglés como lengua extranjera se refiere al uso de tecnologías digitales, como computadoras, tabletas y teléfonos inteligentes, para enseñar y aprender inglés."
                 }
             ]
         }
@@ -350,70 +394,118 @@
             "fuente": "https://planderecuperacion.gob.es/noticias/que-es-inteligencia-artificial-ia-prtr#:~:text=La%20inteligencia%20artificial%20(IA)%20es,el%20razonamiento%20y%20la%20percepci%C3%B3n.",
             "preguntas": [
                 {
-                    "tipo": "abierta",
-                    "pregunta": "¿qué permitir visión?",
-                    "respuesta_correcta": "Alexa ayudan con las tareas diarias. Si bien la IA ofrece un",
-                    "explicacion": "Una posible respuesta basada en el texto es: Alexa ayudan con las tareas diarias. Si bien la IA ofrece un"
-                },
-                {
-                    "tipo": "abierta",
-                    "pregunta": "¿qué permitir aprendizaje?",
-                    "respuesta_correcta": "Alexa ayudan con las tareas diarias. Si bien la IA ofrece un",
-                    "explicacion": "Una posible respuesta basada en el texto es: Alexa ayudan con las tareas diarias. Si bien la IA ofrece un"
-                },
-                {
-                    "tipo": "verdadero_falso",
-                    "pregunta": "Implica el desarrollo de sistemas informáticos y algoritmos capaces de realizar tareas que típicamente requieren inteligencia humana, como el reconocimiento de voz, la resolución de problemas, el aprendizaje, la toma de decisiones y el reconocimiento de patrones.",
-                    "respuesta_correcta": true,
-                    "explicacion": "Esta afirmación es correcta según el texto."
-                },
-                {
-                    "tipo": "verdadero_falso",
-                    "pregunta": "IA el desarrollo de sistemas informáticos y algoritmos capaces de realizar tareas que típicamente requieren inteligencia humana , como el reconocimiento de voz , la resolución de problemas , el aprendizaje , la toma de decisiones y el reconocimiento de patrones .",
-                    "respuesta_correcta": false,
-                    "explicacion": "Esta afirmación es incorrecta. La versión correcta es: Implica el desarrollo de sistemas informáticos y algoritmos capaces de realizar tareas que típicamente requieren inteligencia humana, como el reconocimiento de voz, la resolución de problemas, el aprendizaje, la toma de decisiones y el reconocimiento de patrones."
-                },
-                {
-                    "tipo": "abierta",
-                    "pregunta": "¿qué utilizar instituciones?",
-                    "respuesta_correcta": "Alexa ayudan con las tareas diarias. Si bien la IA ofrece un",
-                    "explicacion": "Una posible respuesta basada en el texto es: Alexa ayudan con las tareas diarias. Si bien la IA ofrece un"
-                },
-                {
-                    "tipo": "verdadero_falso",
-                    "pregunta": "El chatbots automático es un componente clave de la IA , donde los algoritmos permiten a las computadoras aprender de los datos y mejorar su rendimiento con el tiempo sin programación explícita .",
-                    "respuesta_correcta": false,
-                    "explicacion": "Esta afirmación es incorrecta. La versión correcta es: El aprendizaje automático es un componente clave de la IA, donde los algoritmos permiten a las computadoras aprender de los datos y mejorar su rendimiento con el tiempo sin programación explícita."
-                },
-                {
-                    "tipo": "verdadero_falso",
-                    "pregunta": "En la salud, la IA se utiliza para el diagnóstico médico, el descubrimiento de medicamentos y los planes de tratamiento personalizados.",
-                    "respuesta_correcta": true,
-                    "explicacion": "Esta afirmación es correcta según el texto."
-                },
-                {
-                    "tipo": "verdadero_falso",
-                    "pregunta": "El algoritmos del lenguaje natural permite que las máquinas comprendan e interpreten el lenguaje humano , lo que permite aplicaciones como asistentes virtuales y traducción de idiomas .",
-                    "respuesta_correcta": false,
-                    "explicacion": "Esta afirmación es incorrecta. La versión correcta es: El procesamiento del lenguaje natural permite que las máquinas comprendan e interpreten el lenguaje humano, lo que permite aplicaciones como asistentes virtuales y traducción de idiomas."
+                    "tipo": "alternativas",
+                    "pregunta": "La IA ha encontrado aplicaciones en numerosos dominios, incluyendo la salud, las finanzas, el transporte, la fabricación y el entretenimiento.",
+                    "opciones": [
+                        "La IA ha encontrado aplicaciones en numerosos dominios, incluyendo la salud, las finanzas, el transporte, la fabricación y el entretenimiento.",
+                        "La IA ha encontrado [unused454] en numerosos dominios, incluyendo la salud, las finanzas, el transporte, la fabricación y el entretenimiento.",
+                        "La IA ha [unused251] aplicaciones en numerosos dominios, incluyendo la salud, las finanzas, el transporte, la fabricación y el entretenimiento.",
+                        "La IA ha encontrado aplicaciones en numerosos dominios, incluyendo la salud, las finanzas, el transporte, la [unused294] y el entretenimiento."
+                    ],
+                    "respuesta_correcta": "La IA ha encontrado aplicaciones en numerosos dominios, incluyendo la salud, las finanzas, el transporte, la fabricación y el entretenimiento.",
+                    "explicacion": "La IA abarca varios subcampos, incluyendo el aprendizaje automático, el procesamiento del lenguaje natural, la visión por computadora y la robótica."
                 },
                 {
                     "tipo": "alternativas",
-                    "pregunta": "¿qué utilizar instituciones?",
+                    "pregunta": "La IA ha encontrado aplicaciones en numerosos dominios, incluyendo la salud, las finanzas, el transporte, la fabricación y el entretenimiento.",
                     "opciones": [
-                        "El aprendizaje automático es un componente clave de la IA, donde los algoritmos permiten a las computadoras aprender de los datos y mejorar su rendimiento con el tiempo sin programación explícita.",
-                        "Los coches autónomos emplean algoritmos de IA para la navegación y la detección de obstáculos.",
-                        "Las instituciones financieras utilizan la IA para la detección de fraudes, la evaluación de riesgos y el comercio algorítmico.",
-                        "La Inteligencia Artificial (IA) es un campo de estudio y tecnología que se enfoca en crear máquinas inteligentes que puedan simular habilidades cognitivas humanas."
+                        "La IA ha encontrado aplicaciones en numerosos [unused406], incluyendo la salud, las finanzas, el transporte, la fabricación y el entretenimiento.",
+                        "La IA ha encontrado [unused454] en numerosos dominios, incluyendo la salud, las finanzas, el transporte, la fabricación y el entretenimiento.",
+                        "La IA ha encontrado aplicaciones en numerosos dominios, incluyendo la salud, las finanzas, el transporte, la fabricación y el entretenimiento.",
+                        "La IA ha encontrado aplicaciones en numerosos dominios, incluyendo la [unused431], las finanzas, el transporte, la fabricación y el entretenimiento."
                     ],
-                    "respuesta_correcta": "Las instituciones financieras utilizan la IA para la detección de fraudes, la evaluación de riesgos y el comercio algorítmico.",
-                    "explicacion": "La respuesta correcta es: Las instituciones financieras utilizan la IA para la detección de fraudes, la evaluación de riesgos y el comercio algorítmico."
+                    "respuesta_correcta": "La IA ha encontrado aplicaciones en numerosos dominios, incluyendo la salud, las finanzas, el transporte, la fabricación y el entretenimiento.",
+                    "explicacion": "La IA abarca varios subcampos, incluyendo el aprendizaje automático, el procesamiento del lenguaje natural, la visión por computadora y la robótica."
                 },
                 {
-                    "tipo": "abierta",
-                    "pregunta": "¿qué avanzar tecnología?",
-                    "respuesta_correcta": "Alexa ayudan con las tareas diarias. Si bien la IA ofrece un",
-                    "explicacion": "Una posible respuesta basada en el texto es: Alexa ayudan con las tareas diarias. Si bien la IA ofrece un"
+                    "tipo": "alternativas",
+                    "pregunta": "Implica el desarrollo de sistemas informáticos y algoritmos capaces de realizar tareas que típicamente requieren inteligencia humana, como el reconocimiento de voz, la resolución de problemas, el aprendizaje, la toma de decisiones y el reconocimiento de patrones.",
+                    "opciones": [
+                        "Implica el desarrollo de sistemas informáticos y algoritmos capaces de realizar tareas que típicamente requieren inteligencia humana, como el reconocimiento de voz, la resolución de problemas, el [unused153], la toma de decisiones y el reconocimiento de patrones.",
+                        "Implica el desarrollo de sistemas informáticos y algoritmos capaces de realizar tareas que típicamente requieren inteligencia humana, como el reconocimiento de voz, la resolución de problemas, el aprendizaje, la toma de decisiones y el reconocimiento de [unused211].",
+                        "Implica el desarrollo de sistemas informáticos y algoritmos capaces de realizar tareas que típicamente requieren inteligencia humana, como el reconocimiento de voz, la [unused314] de problemas, el aprendizaje, la toma de decisiones y el reconocimiento de patrones.",
+                        "Implica el desarrollo de sistemas informáticos y algoritmos capaces de realizar tareas que típicamente requieren inteligencia humana, como el reconocimiento de voz, la resolución de problemas, el aprendizaje, la toma de decisiones y el reconocimiento de patrones."
+                    ],
+                    "respuesta_correcta": "Implica el desarrollo de sistemas informáticos y algoritmos capaces de realizar tareas que típicamente requieren inteligencia humana, como el reconocimiento de voz, la resolución de problemas, el aprendizaje, la toma de decisiones y el reconocimiento de patrones.",
+                    "explicacion": "El procesamiento del lenguaje natural permite que las máquinas comprendan e interpreten el lenguaje humano, lo que permite aplicaciones como asistentes virtuales y traducción de idiomas."
+                },
+                {
+                    "tipo": "alternativas",
+                    "pregunta": "Los coches autónomos emplean algoritmos de IA para la navegación y la detección de obstáculos.",
+                    "opciones": [
+                        "Los coches [unused567] emplean algoritmos de IA para la navegación y la detección de obstáculos.",
+                        "Los coches autónomos emplean algoritmos de IA para la [unused598] y la detección de obstáculos.",
+                        "Los coches autónomos emplean algoritmos de IA para la navegación y la [unused598] de obstáculos.",
+                        "Los coches autónomos emplean algoritmos de IA para la navegación y la detección de obstáculos."
+                    ],
+                    "respuesta_correcta": "Los coches autónomos emplean algoritmos de IA para la navegación y la detección de obstáculos.",
+                    "explicacion": "La robótica combina la IA con la ingeniería mecánica para crear máquinas inteligentes capaces de realizar tareas físicas e interacción humana."
+                },
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "Las discusiones sobre la ética de la IA se centran en cuestiones como el sesgo en los algoritmos, las preocupaciones de privacidad, el desplazamiento laboral y el impacto general de la IA en la sociedad.",
+                    "respuesta_correcta": false,
+                    "explicacion": "Si bien la IA ofrece un inmenso potencial, las consideraciones éticas y el desarrollo responsable son cruciales."
+                },
+                {
+                    "tipo": "alternativas",
+                    "pregunta": "Implica el desarrollo de sistemas informáticos y algoritmos capaces de realizar tareas que típicamente requieren inteligencia humana, como el reconocimiento de voz, la resolución de problemas, el aprendizaje, la toma de decisiones y el reconocimiento de patrones.",
+                    "opciones": [
+                        "Implica el desarrollo de sistemas informáticos y algoritmos [unused304] de realizar tareas que típicamente requieren inteligencia humana, como el reconocimiento de voz, la resolución de problemas, el aprendizaje, la toma de decisiones y el reconocimiento de patrones.",
+                        "Implica el desarrollo de sistemas informáticos y algoritmos capaces de realizar tareas que típicamente requieren inteligencia humana, como el reconocimiento de voz, la resolución de [unused211], el aprendizaje, la toma de decisiones y el reconocimiento de patrones.",
+                        "Implica el desarrollo de sistemas informáticos y algoritmos capaces de realizar tareas que típicamente requieren inteligencia humana, como el reconocimiento de [unused454], la resolución de problemas, el aprendizaje, la toma de decisiones y el reconocimiento de patrones.",
+                        "Implica el desarrollo de sistemas informáticos y algoritmos capaces de realizar tareas que típicamente requieren inteligencia humana, como el reconocimiento de voz, la resolución de problemas, el aprendizaje, la toma de decisiones y el reconocimiento de patrones."
+                    ],
+                    "respuesta_correcta": "Implica el desarrollo de sistemas informáticos y algoritmos capaces de realizar tareas que típicamente requieren inteligencia humana, como el reconocimiento de voz, la resolución de problemas, el aprendizaje, la toma de decisiones y el reconocimiento de patrones.",
+                    "explicacion": "El procesamiento del lenguaje natural permite que las máquinas comprendan e interpreten el lenguaje humano, lo que permite aplicaciones como asistentes virtuales y traducción de idiomas."
+                },
+                {
+                    "tipo": "alternativas",
+                    "pregunta": "La robótica combina la IA con la ingeniería mecánica para crear máquinas inteligentes capaces de realizar tareas físicas e interacción humana.",
+                    "opciones": [
+                        "La robótica [unused74] la IA con la ingeniería mecánica para crear máquinas inteligentes capaces de realizar tareas físicas e interacción humana.",
+                        "La robótica combina la IA con la ingeniería mecánica para crear máquinas inteligentes capaces de realizar tareas físicas e [unused177] humana.",
+                        "La robótica combina la IA con la ingeniería [unused238] para crear máquinas inteligentes capaces de realizar tareas físicas e interacción humana.",
+                        "La robótica combina la IA con la ingeniería mecánica para crear máquinas inteligentes capaces de realizar tareas físicas e interacción humana."
+                    ],
+                    "respuesta_correcta": "La robótica combina la IA con la ingeniería mecánica para crear máquinas inteligentes capaces de realizar tareas físicas e interacción humana.",
+                    "explicacion": "La Inteligencia Artificial (IA) es un campo de estudio y tecnología que se enfoca en crear máquinas inteligentes que puedan simular habilidades cognitivas humanas."
+                },
+                {
+                    "tipo": "alternativas",
+                    "pregunta": "Los coches autónomos emplean algoritmos de IA para la navegación y la detección de obstáculos.",
+                    "opciones": [
+                        "Los coches autónomos emplean algoritmos de IA para la navegación y la detección de [unused546].",
+                        "Los coches autónomos emplean algoritmos de IA para la navegación y la detección de obstáculos.",
+                        "Los coches autónomos emplean algoritmos de IA para la [unused598] y la detección de obstáculos.",
+                        "Los coches autónomos emplean algoritmos de IA para la navegación y la [unused598] de obstáculos."
+                    ],
+                    "respuesta_correcta": "Los coches autónomos emplean algoritmos de IA para la navegación y la detección de obstáculos.",
+                    "explicacion": "La robótica combina la IA con la ingeniería mecánica para crear máquinas inteligentes capaces de realizar tareas físicas e interacción humana."
+                },
+                {
+                    "tipo": "alternativas",
+                    "pregunta": "El aprendizaje automático es un componente clave de la IA, donde los algoritmos permiten a las computadoras aprender de los datos y mejorar su rendimiento con el tiempo sin programación explícita.",
+                    "opciones": [
+                        "El aprendizaje automático es un componente clave de la IA, donde los algoritmos permiten a las computadoras aprender de los datos y mejorar su rendimiento con el tiempo sin programación explícita.",
+                        "El aprendizaje automático es un componente clave de la IA, donde los algoritmos permiten a las computadoras aprender de los [unused93] y mejorar su rendimiento con el tiempo sin programación explícita.",
+                        "El aprendizaje automático es un componente clave de la IA, donde los algoritmos permiten a las computadoras aprender de los datos y mejorar su [unused211] con el tiempo sin programación explícita.",
+                        "El aprendizaje automático es un componente clave de la IA, donde los algoritmos permiten a las computadoras aprender de los datos y mejorar su rendimiento con el tiempo sin [CLS] explícita."
+                    ],
+                    "respuesta_correcta": "El aprendizaje automático es un componente clave de la IA, donde los algoritmos permiten a las computadoras aprender de los datos y mejorar su rendimiento con el tiempo sin programación explícita.",
+                    "explicacion": "Implica el desarrollo de sistemas informáticos y algoritmos capaces de realizar tareas que típicamente requieren inteligencia humana, como el reconocimiento de voz, la resolución de problemas, el aprendizaje, la toma de decisiones y el reconocimiento de patrones."
+                },
+                {
+                    "tipo": "alternativas",
+                    "pregunta": "La robótica combina la IA con la ingeniería mecánica para crear máquinas inteligentes capaces de realizar tareas físicas e interacción humana.",
+                    "opciones": [
+                        "La robótica combina la IA con la ingeniería mecánica para crear máquinas inteligentes [unused706] de realizar tareas físicas e interacción humana.",
+                        "La robótica combina la IA con la ingeniería mecánica para crear máquinas inteligentes capaces de realizar [unused93] físicas e interacción humana.",
+                        "La robótica combina la IA con la ingeniería mecánica para crear máquinas inteligentes capaces de realizar tareas físicas e interacción humana.",
+                        "La robótica combina la IA con la ingeniería mecánica para crear máquinas inteligentes capaces de realizar tareas [unused719] e interacción humana."
+                    ],
+                    "respuesta_correcta": "La robótica combina la IA con la ingeniería mecánica para crear máquinas inteligentes capaces de realizar tareas físicas e interacción humana.",
+                    "explicacion": "La Inteligencia Artificial (IA) es un campo de estudio y tecnología que se enfoca en crear máquinas inteligentes que puedan simular habilidades cognitivas humanas."
                 }
             ]
         },
@@ -421,88 +513,100 @@
             "fuente": "https://www.ibm.com/cloud/learn/machine-learning",
             "preguntas": [
                 {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "El agente recibe recompensas o penalizaciones en función de sus acciones y ajusta su [unused206] para maximizar la recompensa acumulada.",
+                    "respuesta_correcta": false,
+                    "explicacion": "El agente recibe recompensas o penalizaciones en función de sus acciones y ajusta su comportamiento para maximizar la recompensa acumulada."
+                },
+                {
                     "tipo": "alternativas",
-                    "pregunta": "¿qué consistir aprendizaje?",
+                    "pregunta": "El aprendizaje automático se puede dividir en tres tipos principales: aprendizaje supervisado, aprendizaje no supervisado y aprendizaje por refuerzo.",
                     "opciones": [
-                        "El aprendizaje por refuerzo se basa en el principio de aprendizaje a través de la interacción con un entorno.",
-                        "El aprendizaje supervisado es el más común y consiste en entrenar un modelo con un conjunto de datos etiquetados, donde cada entrada tiene una salida correspondiente.",
-                        "A diferencia de los enfoques tradicionales de programación, donde se definen reglas explícitas para cada tarea, el aprendizaje automático permite que los sistemas informáticos identifiquen patrones y relaciones en los datos, y hagan predicciones o tomen decisiones basadas en esos hallazgos.",
-                        "El objetivo es que el modelo aprenda a mapear las entradas a las salidas correctas y pueda generalizar este conocimiento a nuevos datos."
+                        "El aprendizaje automático se puede dividir en tres tipos principales: aprendizaje supervisado, aprendizaje no supervisado y aprendizaje por [unused211].",
+                        "El aprendizaje automático se puede [unused302] en tres tipos principales: aprendizaje supervisado, aprendizaje no supervisado y aprendizaje por refuerzo.",
+                        "El aprendizaje automático se puede dividir en tres tipos principales: aprendizaje supervisado, aprendizaje no supervisado y aprendizaje por refuerzo.",
+                        "El aprendizaje automático se puede dividir en tres tipos [unused77]: aprendizaje supervisado, aprendizaje no supervisado y aprendizaje por refuerzo."
                     ],
-                    "respuesta_correcta": "El aprendizaje supervisado es el más común y consiste en entrenar un modelo con un conjunto de datos etiquetados, donde cada entrada tiene una salida correspondiente.",
-                    "explicacion": "La respuesta correcta es: El aprendizaje supervisado es el más común y consiste en entrenar un modelo con un conjunto de datos etiquetados, donde cada entrada tiene una salida correspondiente."
+                    "respuesta_correcta": "El aprendizaje automático se puede dividir en tres tipos principales: aprendizaje supervisado, aprendizaje no supervisado y aprendizaje por refuerzo.",
+                    "explicacion": "El aprendizaje automático, también conocido como machine learning, es una rama de la inteligencia artificial que se centra en el desarrollo de algoritmos y modelos que permiten a las computadoras aprender de los datos."
                 },
                 {
-                    "tipo": "abierta",
-                    "pregunta": "¿qué aprendar objetivo?",
-                    "respuesta_correcta": "y el",
-                    "explicacion": "Una posible respuesta basada en el texto es: y el"
-                },
-                {
-                    "tipo": "abierta",
-                    "pregunta": "¿qué continuar investigación?",
-                    "respuesta_correcta": "y el",
-                    "explicacion": "Una posible respuesta basada en el texto es: y el"
+                    "tipo": "verdadero_falso",
+                    "pregunta": "El agente recibe recompensas o penalizaciones en función de sus [unused368] y ajusta su comportamiento para maximizar la recompensa acumulada.",
+                    "respuesta_correcta": false,
+                    "explicacion": "El agente recibe recompensas o penalizaciones en función de sus acciones y ajusta su comportamiento para maximizar la recompensa acumulada."
                 },
                 {
                     "tipo": "alternativas",
-                    "pregunta": "¿qué se puede decir sobre esta?",
+                    "pregunta": "Esta técnica es ampliamente utilizada en robótica y juegos.",
                     "opciones": [
-                        "En el aprendizaje no supervisado, el modelo se entrena con datos no etiquetados y debe identificar patrones o estructuras ocultas sin ninguna guía previa.",
-                        "Sin embargo, también plantea desafíos éticos y técnicos, como la interpretabilidad de los modelos, la equidad y el sesgo en los datos, y la privacidad de la información.",
-                        "Esta técnica es ampliamente utilizada en robótica y juegos.",
-                        "El aprendizaje automático tiene una amplia gama de aplicaciones, desde la detección de fraudes en finanzas hasta el reconocimiento de imágenes en visión por computadora, pasando por el diagnóstico médico y la recomendación de contenido en plataformas de streaming."
+                        "Esta técnica es ampliamente [unused684] en robótica y juegos.",
+                        "Esta técnica es ampliamente utilizada en robótica y [unused149].",
+                        "Esta [unused150] es ampliamente utilizada en robótica y juegos.",
+                        "Esta técnica es ampliamente utilizada en robótica y juegos."
                     ],
                     "respuesta_correcta": "Esta técnica es ampliamente utilizada en robótica y juegos.",
-                    "explicacion": "La respuesta correcta es: Esta técnica es ampliamente utilizada en robótica y juegos."
+                    "explicacion": "El aprendizaje automático, también conocido como machine learning, es una rama de la inteligencia artificial que se centra en el desarrollo de algoritmos y modelos que permiten a las computadoras aprender de los datos."
                 },
                 {
-                    "tipo": "abierta",
-                    "pregunta": "¿qué basar aprendizaje?",
-                    "respuesta_correcta": "y el",
-                    "explicacion": "Una posible respuesta basada en el texto es: y el"
-                },
-                {
-                    "tipo": "abierta",
-                    "pregunta": "¿qué tener aprendizaje?",
-                    "respuesta_correcta": "y el",
-                    "explicacion": "Una posible respuesta basada en el texto es: y el"
-                },
-                {
-                    "tipo": "abierta",
-                    "pregunta": "¿qué se puede decir sobre esta?",
-                    "respuesta_correcta": "y el",
-                    "explicacion": "Una posible respuesta basada en el texto es: y el"
+                    "tipo": "verdadero_falso",
+                    "pregunta": "El objetivo es que el modelo aprenda a mapear las entradas a las salidas correctas y pueda generalizar este [unused211] a nuevos datos.",
+                    "respuesta_correcta": false,
+                    "explicacion": "El objetivo es que el modelo aprenda a mapear las entradas a las salidas correctas y pueda generalizar este conocimiento a nuevos datos."
                 },
                 {
                     "tipo": "alternativas",
-                    "pregunta": "¿qué tener aprendizaje?",
+                    "pregunta": "El aprendizaje automático se puede dividir en tres tipos principales: aprendizaje supervisado, aprendizaje no supervisado y aprendizaje por refuerzo.",
                     "opciones": [
+                        "El aprendizaje automático se puede dividir en tres tipos principales: aprendizaje supervisado, aprendizaje no supervisado y aprendizaje por refuerzo.",
+                        "El [unused153] automático se puede dividir en tres tipos principales: [unused153] supervisado, [unused153] no supervisado y [unused153] por refuerzo.",
+                        "El aprendizaje [unused566] se puede dividir en tres tipos principales: aprendizaje supervisado, aprendizaje no supervisado y aprendizaje por refuerzo.",
+                        "El aprendizaje automático se puede [unused302] en tres tipos principales: aprendizaje supervisado, aprendizaje no supervisado y aprendizaje por refuerzo."
+                    ],
+                    "respuesta_correcta": "El aprendizaje automático se puede dividir en tres tipos principales: aprendizaje supervisado, aprendizaje no supervisado y aprendizaje por refuerzo.",
+                    "explicacion": "El aprendizaje automático, también conocido como machine learning, es una rama de la inteligencia artificial que se centra en el desarrollo de algoritmos y modelos que permiten a las computadoras aprender de los datos."
+                },
+                {
+                    "tipo": "alternativas",
+                    "pregunta": "El aprendizaje automático tiene una amplia gama de aplicaciones, desde la detección de fraudes en finanzas hasta el reconocimiento de imágenes en visión por computadora, pasando por el diagnóstico médico y la recomendación de contenido en plataformas de streaming.",
+                    "opciones": [
+                        "El aprendizaje automático tiene una amplia gama de aplicaciones, desde la detección de fraudes en finanzas hasta el reconocimiento de imágenes en visión por computadora, pasando por el [unused468] médico y la recomendación de contenido en plataformas de streaming.",
                         "El aprendizaje automático tiene una amplia gama de aplicaciones, desde la detección de fraudes en finanzas hasta el reconocimiento de imágenes en visión por computadora, pasando por el diagnóstico médico y la recomendación de contenido en plataformas de streaming.",
-                        "El aprendizaje por refuerzo se basa en el principio de aprendizaje a través de la interacción con un entorno.",
-                        "La investigación en este campo continúa avanzando rápidamente, con el objetivo de desarrollar algoritmos más eficientes, robustos y transparentes.",
-                        "El aprendizaje automático se puede dividir en tres tipos principales: aprendizaje supervisado, aprendizaje no supervisado y aprendizaje por refuerzo."
+                        "El aprendizaje automático tiene una [unused736] gama de aplicaciones, desde la detección de fraudes en finanzas hasta el reconocimiento de imágenes en visión por computadora, pasando por el diagnóstico médico y la recomendación de contenido en plataformas de streaming.",
+                        "El aprendizaje automático tiene una amplia gama de aplicaciones, desde la detección de fraudes en finanzas hasta el reconocimiento de imágenes en visión por computadora, [unused302] por el diagnóstico médico y la recomendación de contenido en plataformas de streaming."
                     ],
                     "respuesta_correcta": "El aprendizaje automático tiene una amplia gama de aplicaciones, desde la detección de fraudes en finanzas hasta el reconocimiento de imágenes en visión por computadora, pasando por el diagnóstico médico y la recomendación de contenido en plataformas de streaming.",
-                    "explicacion": "La respuesta correcta es: El aprendizaje automático tiene una amplia gama de aplicaciones, desde la detección de fraudes en finanzas hasta el reconocimiento de imágenes en visión por computadora, pasando por el diagnóstico médico y la recomendación de contenido en plataformas de streaming."
-                },
-                {
-                    "tipo": "abierta",
-                    "pregunta": "¿qué consistir aprendizaje?",
-                    "respuesta_correcta": "y el",
-                    "explicacion": "Una posible respuesta basada en el texto es: y el"
+                    "explicacion": "El aprendizaje automático, también conocido como machine learning, es una rama de la inteligencia artificial que se centra en el desarrollo de algoritmos y modelos que permiten a las computadoras aprender de los datos."
                 },
                 {
                     "tipo": "alternativas",
-                    "pregunta": "¿qué recibir agente?",
+                    "pregunta": "Esta técnica es ampliamente utilizada en robótica y juegos.",
                     "opciones": [
-                        "El agente recibe recompensas o penalizaciones en función de sus acciones y ajusta su comportamiento para maximizar la recompensa acumulada.",
-                        "La investigación en este campo continúa avanzando rápidamente, con el objetivo de desarrollar algoritmos más eficientes, robustos y transparentes.",
-                        "Esto es útil para tareas como la agrupación (clustering) y la reducción de dimensionalidad.",
+                        "Esta técnica es ampliamente utilizada en robótica y [unused149].",
+                        "Esta técnica es ampliamente utilizada en robótica y juegos.",
+                        "Esta técnica es ampliamente [unused684] en robótica y juegos.",
+                        "Esta [unused150] es ampliamente utilizada en robótica y juegos."
+                    ],
+                    "respuesta_correcta": "Esta técnica es ampliamente utilizada en robótica y juegos.",
+                    "explicacion": "El aprendizaje automático, también conocido como machine learning, es una rama de la inteligencia artificial que se centra en el desarrollo de algoritmos y modelos que permiten a las computadoras aprender de los datos."
+                },
+                {
+                    "tipo": "alternativas",
+                    "pregunta": "El aprendizaje por refuerzo se basa en el principio de aprendizaje a través de la interacción con un entorno.",
+                    "opciones": [
+                        "El aprendizaje por refuerzo se basa en el principio de aprendizaje a través de la interacción con un [unused546].",
+                        "El [unused118] por refuerzo se basa en el principio de [unused118] a través de la interacción con un entorno.",
+                        "El aprendizaje por refuerzo se basa en el principio de aprendizaje a [unused211] de la interacción con un entorno.",
                         "El aprendizaje por refuerzo se basa en el principio de aprendizaje a través de la interacción con un entorno."
                     ],
-                    "respuesta_correcta": "El agente recibe recompensas o penalizaciones en función de sus acciones y ajusta su comportamiento para maximizar la recompensa acumulada.",
-                    "explicacion": "La respuesta correcta es: El agente recibe recompensas o penalizaciones en función de sus acciones y ajusta su comportamiento para maximizar la recompensa acumulada."
+                    "respuesta_correcta": "El aprendizaje por refuerzo se basa en el principio de aprendizaje a través de la interacción con un entorno.",
+                    "explicacion": "El aprendizaje automático se puede dividir en tres tipos principales: aprendizaje supervisado, aprendizaje no supervisado y aprendizaje por refuerzo."
+                },
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "El aprendizaje por refuerzo se basa en el principio de aprendizaje a través de la interacción con un entorno.",
+                    "respuesta_correcta": true,
+                    "explicacion": "El aprendizaje automático se puede dividir en tres tipos principales: aprendizaje supervisado, aprendizaje no supervisado y aprendizaje por refuerzo."
                 }
             ]
         },
@@ -511,87 +615,81 @@
             "preguntas": [
                 {
                     "tipo": "verdadero_falso",
-                    "pregunta": "Una de las solo ventajas de Python es su amplia biblioteca estándar , que incluye módulos y paquetes para una variedad de tareas , desde el procesamiento de datos y la visualización hasta el desarrollo web y la inteligencia artificial .",
+                    "pregunta": "En resumen, la programación en Python ofrece una combinación única de simplicidad, potencia y versatilidad, lo que lo convierte en una opción ideal tanto para principiantes como para programadores experimentados que buscan expandir sus habilidades y capacidades.",
                     "respuesta_correcta": false,
-                    "explicacion": "Esta afirmación es incorrecta. La versión correcta es: Una de las principales ventajas de Python es su amplia biblioteca estándar, que incluye módulos y paquetes para una variedad de tareas, desde el procesamiento de datos y la visualización hasta el desarrollo web y la inteligencia artificial."
+                    "explicacion": "La programación en Python se ha convertido en una de las habilidades más buscadas en la industria de la tecnología debido a su versatilidad y facilidad de aprendizaje."
+                },
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "Una de las principales ventajas de Python es su amplia biblioteca estándar, que incluye módulos y paquetes para una variedad de tareas, desde el procesamiento de datos y la visualización hasta el desarrollo web y la inteligencia [unused127].",
+                    "respuesta_correcta": false,
+                    "explicacion": "Una de las principales ventajas de Python es su amplia biblioteca estándar, que incluye módulos y paquetes para una variedad de tareas, desde el procesamiento de datos y la visualización hasta el desarrollo web y la inteligencia artificial."
+                },
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "Python es especialmente popular en el campo de la ciencia de datos y el aprendizaje [unused201].",
+                    "respuesta_correcta": false,
+                    "explicacion": "Python es especialmente popular en el campo de la ciencia de datos y el aprendizaje automático."
                 },
                 {
                     "tipo": "alternativas",
-                    "pregunta": "¿qué permitir esto?",
+                    "pregunta": "Python es especialmente popular en el campo de la ciencia de datos y el aprendizaje automático.",
                     "opciones": [
-                        "Herramientas como Pandas, NumPy, y Matplotlib facilitan el análisis de datos y la creación de visualizaciones, mientras que bibliotecas como TensorFlow y PyTorch permiten el desarrollo de modelos de aprendizaje automático y redes neuronales.",
-                        "Los programadores pueden colaborar en proyectos de código abierto, participar en conferencias y acceder a una amplia gama de documentación y foros en línea.",
-                        "En resumen, la programación en Python ofrece una combinación única de simplicidad, potencia y versatilidad, lo que lo convierte en una opción ideal tanto para principiantes como para programadores experimentados que buscan expandir sus habilidades y capacidades.",
-                        "Esto permite a los desarrolladores realizar una amplia gama de proyectos sin necesidad de escribir mucho código desde cero."
-                    ],
-                    "respuesta_correcta": "Esto permite a los desarrolladores realizar una amplia gama de proyectos sin necesidad de escribir mucho código desde cero.",
-                    "explicacion": "La respuesta correcta es: Esto permite a los desarrolladores realizar una amplia gama de proyectos sin necesidad de escribir mucho código desde cero."
-                },
-                {
-                    "tipo": "abierta",
-                    "pregunta": "¿qué facilitar python?",
-                    "respuesta_correcta": "conferencias y acceder",
-                    "explicacion": "Una posible respuesta basada en el texto es: conferencias y acceder"
-                },
-                {
-                    "tipo": "alternativas",
-                    "pregunta": "¿qué desear aprender?",
-                    "opciones": [
+                        "Python es especialmente popular en el campo de la ciencia de [unused153] y el aprendizaje automático.",
                         "Python es especialmente popular en el campo de la ciencia de datos y el aprendizaje automático.",
-                        "Una de las principales ventajas de Python es su amplia biblioteca estándar, que incluye módulos y paquetes para una variedad de tareas, desde el procesamiento de datos y la visualización hasta el desarrollo web y la inteligencia artificial.",
-                        "Herramientas como Pandas, NumPy, y Matplotlib facilitan el análisis de datos y la creación de visualizaciones, mientras que bibliotecas como TensorFlow y PyTorch permiten el desarrollo de modelos de aprendizaje automático y redes neuronales.",
-                        "Aprender Python no solo es beneficioso para aquellos que desean una carrera en tecnología, sino también para profesionales de otras áreas que buscan automatizar tareas, analizar datos o desarrollar herramientas personalizadas."
+                        "Python es especialmente [unused8] en el campo de la ciencia de datos y el aprendizaje automático.",
+                        "Python es especialmente popular en el campo de la [unused174] de datos y el aprendizaje automático."
                     ],
-                    "respuesta_correcta": "Aprender Python no solo es beneficioso para aquellos que desean una carrera en tecnología, sino también para profesionales de otras áreas que buscan automatizar tareas, analizar datos o desarrollar herramientas personalizadas.",
-                    "explicacion": "La respuesta correcta es: Aprender Python no solo es beneficioso para aquellos que desean una carrera en tecnología, sino también para profesionales de otras áreas que buscan automatizar tareas, analizar datos o desarrollar herramientas personalizadas."
+                    "respuesta_correcta": "Python es especialmente popular en el campo de la ciencia de datos y el aprendizaje automático.",
+                    "explicacion": "Python es un lenguaje de programación de alto nivel, interpretado y orientado a objetos, conocido por su sintaxis simple y clara, lo que facilita su lectura y escritura."
+                },
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "Python es especialmente popular en el campo de la [unused174] de datos y el aprendizaje automático.",
+                    "respuesta_correcta": false,
+                    "explicacion": "Python es especialmente popular en el campo de la ciencia de datos y el aprendizaje automático."
                 },
                 {
                     "tipo": "alternativas",
-                    "pregunta": "¿qué permitir esto?",
+                    "pregunta": "Python es especialmente popular en el campo de la ciencia de datos y el aprendizaje automático.",
                     "opciones": [
-                        "Su aplicabilidad en diversas disciplinas lo convierte en una herramienta valiosa para científicos, ingenieros, analistas de datos, y muchos otros.",
-                        "Esto permite a los desarrolladores realizar una amplia gama de proyectos sin necesidad de escribir mucho código desde cero.",
-                        "Los programadores pueden colaborar en proyectos de código abierto, participar en conferencias y acceder a una amplia gama de documentación y foros en línea.",
-                        "La programación en Python se ha convertido en una de las habilidades más buscadas en la industria de la tecnología debido a su versatilidad y facilidad de aprendizaje."
+                        "Python es especialmente popular en el campo de la ciencia de datos y el aprendizaje [unused201].",
+                        "Python es especialmente popular en el campo de la ciencia de datos y el aprendizaje automático.",
+                        "Python es especialmente popular en el [unused77] de la ciencia de datos y el aprendizaje automático.",
+                        "Python es especialmente popular en el campo de la ciencia de datos y el [unused153] automático."
                     ],
-                    "respuesta_correcta": "Esto permite a los desarrolladores realizar una amplia gama de proyectos sin necesidad de escribir mucho código desde cero.",
-                    "explicacion": "La respuesta correcta es: Esto permite a los desarrolladores realizar una amplia gama de proyectos sin necesidad de escribir mucho código desde cero."
+                    "respuesta_correcta": "Python es especialmente popular en el campo de la ciencia de datos y el aprendizaje automático.",
+                    "explicacion": "Python es un lenguaje de programación de alto nivel, interpretado y orientado a objetos, conocido por su sintaxis simple y clara, lo que facilita su lectura y escritura."
                 },
                 {
                     "tipo": "verdadero_falso",
-                    "pregunta": "Esto permite a los desarrolladores realizar una amplia gama de proyectos sin necesidad de escribir mucho código desde cero.",
+                    "pregunta": "Python es especialmente popular en el campo de la ciencia de datos y el aprendizaje automático.",
                     "respuesta_correcta": true,
-                    "explicacion": "Esta afirmación es correcta según el texto."
+                    "explicacion": "Python es un lenguaje de programación de alto nivel, interpretado y orientado a objetos, conocido por su sintaxis simple y clara, lo que facilita su lectura y escritura."
                 },
                 {
                     "tipo": "verdadero_falso",
-                    "pregunta": "Flask es un lenguaje de programación de alto nivel , interpretado y orientado a objetos , conocido por su sintaxis simple y clara , lo que facilita su lectura y escritura .",
+                    "pregunta": "Esto permite a los desarrolladores realizar una amplia gama de proyectos sin necesidad de escribir mucho código desde [unused146].",
                     "respuesta_correcta": false,
-                    "explicacion": "Esta afirmación es incorrecta. La versión correcta es: Python es un lenguaje de programación de alto nivel, interpretado y orientado a objetos, conocido por su sintaxis simple y clara, lo que facilita su lectura y escritura."
+                    "explicacion": "Esto permite a los desarrolladores realizar una amplia gama de proyectos sin necesidad de escribir mucho código desde cero."
                 },
                 {
                     "tipo": "verdadero_falso",
-                    "pregunta": "Su aplicabilidad en diversas disciplinas lo convierte en una herramienta valiosa para científicos, ingenieros, analistas de datos, y muchos otros.",
-                    "respuesta_correcta": true,
-                    "explicacion": "Esta afirmación es correcta según el texto."
+                    "pregunta": "La programación en Python se ha convertido en una de las habilidades más buscadas en la industria de la [unused431] debido a su versatilidad y facilidad de aprendizaje.",
+                    "respuesta_correcta": false,
+                    "explicacion": "La programación en Python se ha convertido en una de las habilidades más buscadas en la industria de la tecnología debido a su versatilidad y facilidad de aprendizaje."
                 },
                 {
                     "tipo": "alternativas",
-                    "pregunta": "¿qué significar comunidad?",
+                    "pregunta": "Además, frameworks como Django y Flask se utilizan para el desarrollo de aplicaciones web, proporcionando estructuras robustas y escalables.",
                     "opciones": [
-                        "Además, frameworks como Django y Flask se utilizan para el desarrollo de aplicaciones web, proporcionando estructuras robustas y escalables.",
-                        "La programación en Python se ha convertido en una de las habilidades más buscadas en la industria de la tecnología debido a su versatilidad y facilidad de aprendizaje.",
-                        "Los programadores pueden colaborar en proyectos de código abierto, participar en conferencias y acceder a una amplia gama de documentación y foros en línea.",
-                        "La comunidad de Python es grande y activa, lo que significa que hay una abundancia de recursos, tutoriales y soporte disponible para los desarrolladores de todos los niveles."
+                        "Además, frameworks como Django y Flask se [unused251] para el desarrollo de aplicaciones web, proporcionando estructuras robustas y escalables.",
+                        "Además, frameworks como Django y Flask se utilizan para el desarrollo de aplicaciones web, [unused127] estructuras robustas y escalables.",
+                        "Además, frameworks como Django y Flask se utilizan para el desarrollo de aplicaciones web, proporcionando [unused93] robustas y escalables.",
+                        "Además, frameworks como Django y Flask se utilizan para el desarrollo de aplicaciones web, proporcionando estructuras robustas y escalables."
                     ],
-                    "respuesta_correcta": "La comunidad de Python es grande y activa, lo que significa que hay una abundancia de recursos, tutoriales y soporte disponible para los desarrolladores de todos los niveles.",
-                    "explicacion": "La respuesta correcta es: La comunidad de Python es grande y activa, lo que significa que hay una abundancia de recursos, tutoriales y soporte disponible para los desarrolladores de todos los niveles."
-                },
-                {
-                    "tipo": "verdadero_falso",
-                    "pregunta": "La profesionales en Python se ha convertido en una de las habilidades más buscadas en la industria de la tecnología debido a su versatilidad y facilidad de aprendizaje .",
-                    "respuesta_correcta": false,
-                    "explicacion": "Esta afirmación es incorrecta. La versión correcta es: La programación en Python se ha convertido en una de las habilidades más buscadas en la industria de la tecnología debido a su versatilidad y facilidad de aprendizaje."
+                    "respuesta_correcta": "Además, frameworks como Django y Flask se utilizan para el desarrollo de aplicaciones web, proporcionando estructuras robustas y escalables.",
+                    "explicacion": "Herramientas como Pandas, NumPy, y Matplotlib facilitan el análisis de datos y la creación de visualizaciones, mientras que bibliotecas como TensorFlow y PyTorch permiten el desarrollo de modelos de aprendizaje automático y redes neuronales."
                 }
             ]
         }
