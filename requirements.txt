@@ -119,7 +119,7 @@ python-Levenshtein==0.25.1
 python3-openid==3.2.0
 pyttsx3==2.90
 pytz==2024.1
-pywin32==306
+pywin32==306; platform_system == "Windows"
 PyYAML==6.0.1
 pyzmq==26.0.3
 rapidfuzz==3.9.4
