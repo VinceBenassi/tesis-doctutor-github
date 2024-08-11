@@ -106,7 +106,7 @@ pycparser==2.22
 pydantic==2.7.4
 pydantic_core==2.18.4
 pydub==0.25.1
-Pygments==2.3.1
+Pygments==2.18.0
 PyJWT==2.8.0
 pyodbc==5.1.0
 pytest==8.2.2
