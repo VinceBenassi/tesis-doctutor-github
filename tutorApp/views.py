@@ -1,7 +1,7 @@
 from .modelos.chatbot import predecir_clase_frase, obtener_respuesta, intentos
 from .modelos.traductor import escuchar_microfono
 from .modelos.clasificadorPDF import obtener_datos_materias
-from .modelos.generador_quizzes import cargar_datos_json, generar_cuestionarios
+from .modelos.generador_quizzes import cargar_datos_json, generar_cuestionarios, model, device
 from .models import MateriaCuestionario, TextoCuestionario, FormularioMateriaCuestionario, FormularioTextoCuestionario, PerfilUsuario, ResultadoCuestionario, CambiarPerfil, FotoPerfil
 from django.db.models import Avg
 from django.contrib import messages
@@ -21,7 +21,8 @@ historial_chatbot = []
 
 # Carga los cuestionarios una sola vez al iniciar la aplicación
 datos_json = cargar_datos_json('tutorApp/static/json/quiz.json')
-cuestionarios = generar_cuestionarios(datos_json)
+# Generar cuestionarios
+cuestionarios = generar_cuestionarios(datos_json, model, device)
 
 with open('tutorApp/static/json/cuestionarios_generados.json', 'w', encoding='utf-8') as archivo:
     json.dump(cuestionarios, archivo, ensure_ascii=False, indent=4)
