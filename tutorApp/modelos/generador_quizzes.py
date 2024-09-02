@@ -3,249 +3,279 @@
 import json
 import random
 import torch
-import torch.nn as nn
-import torch.optim as optim
-from transformers import BertTokenizer, BertModel
-from sklearn.model_selection import train_test_split
-import spacy
 import nltk
 from nltk.tokenize import sent_tokenize
+from nltk.corpus import stopwords
+from transformers import AutoTokenizer, BertForQuestionAnswering
+import torch.nn as nn
+import torch.optim as optim
+from torch.utils.data import DataLoader, TensorDataset
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
 
-nltk.download('punkt')
-nlp = spacy.load("es_core_news_sm")
+nltk.download('punkt', quiet=True)
+nltk.download('stopwords', quiet=True)
 
-# Cargar modelo BERT
-bert_tokenizer = BertTokenizer.from_pretrained("dccuchile/bert-base-spanish-wwm-uncased")
-bert_model = BertModel.from_pretrained("dccuchile/bert-base-spanish-wwm-uncased")
+modelo_nombre = "mrm8488/bert-base-spanish-wwm-cased-finetuned-spa-squad2-es"
+tokenizador = AutoTokenizer.from_pretrained(modelo_nombre)
+modelo_base = BertForQuestionAnswering.from_pretrained(modelo_nombre)
 
-# Definir la red neuronal convolucional
-class TextCNN(nn.Module):
-    def __init__(self, embedding_dim, n_filters, filter_sizes, output_dim, dropout):
-        super().__init__()
-        self.bert = bert_model
-        self.convs = nn.ModuleList([
-            nn.Conv1d(in_channels=embedding_dim, out_channels=n_filters, kernel_size=fs)
-            for fs in filter_sizes
-        ])
-        self.fc = nn.Linear(len(filter_sizes) * n_filters, output_dim)
-        self.dropout = nn.Dropout(dropout)
+class GeneradorCuestionarios(nn.Module):
+    def __init__(self, modelo_base):
+        super(GeneradorCuestionarios, self).__init__()
+        self.qa_model = modelo_base
+        self.capa_generacion = nn.Linear(self.qa_model.config.hidden_size, 1000)  # Reducimos el tamaño de salida
 
-    def forward(self, text):
-        with torch.no_grad():
-            embedded = self.bert(text)[0]
-        embedded = embedded.permute(0, 2, 1)
-        conved = [nn.functional.relu(conv(embedded)) for conv in self.convs]
-        pooled = [nn.functional.max_pool1d(conv, conv.shape[2]).squeeze(2) for conv in conved]
-        cat = self.dropout(torch.cat(pooled, dim=1))
-        return self.fc(cat)
+    def forward(self, input_ids, attention_mask):
+        salidas = self.qa_model(input_ids=input_ids, attention_mask=attention_mask, output_hidden_states=True)
+        start_logits, end_logits = salidas.start_logits, salidas.end_logits
+        secuencia_oculta = salidas.hidden_states[-1][:, 0, :]  # Solo tomamos el primer token
+        generacion = self.capa_generacion(secuencia_oculta)
+        return start_logits, end_logits, generacion
 
-# Función para entrenar el modelo
-def train_model(model, iterator, optimizer, criterion, device):
-    model.train()
-    for batch in iterator:
-        optimizer.zero_grad()
-        predictions = model(batch['input_ids'].to(device))
-        loss = criterion(predictions, batch['labels'].to(device))
-        loss.backward()
-        optimizer.step()
-
-# Función para evaluar el modelo
-def evaluate_model(model, iterator, criterion, device):
-    model.eval()
-    total_loss = 0
-    with torch.no_grad():
-        for batch in iterator:
-            predictions = model(batch['input_ids'].to(device))
-            loss = criterion(predictions, batch['labels'].to(device))
-            total_loss += loss.item()
-    return total_loss / len(iterator)
-
-# Función para cargar y preparar los datos
 def cargar_datos_json(ruta_archivo):
-    with open(ruta_archivo, 'r', encoding='utf-8') as archivo:
-        return json.load(archivo)
-
-# Función para preprocesar el texto
-def preprocesar_texto(texto):
-    doc = nlp(texto)
-    return [token.text.lower() for token in doc if not token.is_stop and not token.is_punct]
-
-# Función para generar preguntas
-def generar_pregunta(oracion, modelo_cnn, device):
-    tokens = bert_tokenizer(oracion, return_tensors='pt', padding=True, truncation=True, max_length=512).to(device)
-    with torch.no_grad():
-        outputs = modelo_cnn(tokens['input_ids'])
-    tipo_pregunta = torch.argmax(outputs).item()
+    try:
+        with open(ruta_archivo, 'r', encoding='utf-8') as archivo:
+            datos = json.load(archivo)
+        return datos
     
-    if tipo_pregunta == 0:  # Pregunta de alternativas
-        return generar_pregunta_alternativas(oracion)
-    else:  # Pregunta de verdadero/falso
-        return generar_pregunta_verdadero_falso(oracion)
+    except Exception as e:
+        print(f"Error al cargar el archivo JSON: {e}")
+        return None
 
-def generar_pregunta_alternativas(oracion):
-    doc = nlp(oracion)
+
+def preparar_datos(datos):
+    return [item['texto'] for item in datos['quiz']]
+
+
+def crear_y_entrenar_modelo(textos):
+    modelo = GeneradorCuestionarios(modelo_base)
     
-    sujeto = next((token for token in doc if token.dep_ == "nsubj"), None)
-    verbo = next((token for token in doc if token.pos_ == "VERB"), None)
-    objeto = next((token for token in doc if token.dep_ in ["dobj", "iobj"]), None)
+    entradas_codificadas = tokenizador(textos, padding=True, truncation=True, return_tensors="pt", max_length=256)  # Reducimos max_length
+    ids_entrada = entradas_codificadas['input_ids']
+    mascara_atencion = entradas_codificadas['attention_mask']
     
-    if sujeto and verbo:
-        if objeto:
-            pregunta = f"¿Qué {verbo.lemma_} {sujeto.text}?"
-        else:
-            pregunta = f"¿Qué hace {sujeto.text}?"
+    conjunto_datos = TensorDataset(ids_entrada, mascara_atencion)
+    cargador_datos = DataLoader(conjunto_datos, batch_size=2, shuffle=True)  # Reducimos el tamaño del lote
+    
+    optimizador = optim.AdamW(modelo.parameters(), lr=1e-5)  # Reducimos la tasa de aprendizaje
+    funcion_perdida = nn.CrossEntropyLoss()
+    
+    modelo.train()
+    num_epocas = 1
+
+    for epoca in range(num_epocas):
+        perdida_total = 0
+
+        for i, batch in enumerate(cargador_datos):
+            ids_batch, mascara_batch = batch
+            optimizador.zero_grad()
+            start_logits, end_logits, generacion = modelo(ids_batch, mascara_batch)
+            perdida = funcion_perdida(generacion, ids_batch[:, 0])  # Solo comparamos con el primer token
+            perdida.backward()
+            optimizador.step()
+            perdida_total += perdida.item()
+
+    return modelo
+
+def extraer_frases_clave(texto):
+    oraciones = sent_tokenize(texto)
+    stop_words = set(stopwords.words('spanish'))
+    vectorizador = TfidfVectorizer(stop_words=stop_words)
+    tfidf_matriz = vectorizador.fit_transform(oraciones)
+    
+    frases_clave = []
+    for i, oracion in enumerate(oraciones):
+        if len(oracion.split()) > 10:
+            puntuacion = tfidf_matriz[i].sum()
+            frases_clave.append((oracion, puntuacion))
+    
+    frases_clave.sort(key=lambda x: x[1], reverse=True)
+    return [frase for frase, _ in frases_clave[:10]]
+
+def generar_pregunta_alternativas(frase, modelo, tokenizador):
+    palabras = frase.split()
+    if len(palabras) < 10:
+        return None
+    
+    palabras_importantes = [p for p in palabras if p.lower() not in set(stopwords.words('spanish'))]
+    if len(palabras_importantes) < 3:
+        return None
+    
+    tipo_pregunta = random.choice(["completar", "funcion"])
+    
+    if tipo_pregunta == "completar":
+        palabra_clave = random.choice(palabras_importantes)
+        indice_palabra = palabras.index(palabra_clave)
+        
+        contexto = ' '.join(palabras[:indice_palabra] + ['[MASK]'] + palabras[indice_palabra+1:])
+        
+        entradas = tokenizador(contexto, return_tensors="pt", max_length=512, truncation=True)
+        with torch.no_grad():
+            start_logits, end_logits, generacion = modelo(**entradas)
+        
+        logits = generacion[0]
+        mascara_token_index = torch.where(entradas["input_ids"][0] == tokenizador.mask_token_id)[0]
+        predicciones = logits[mascara_token_index].topk(4)
+        
+        opciones = [tokenizador.decode([token_id.item()]).strip() for token_id in predicciones.indices[0]]
+        if palabra_clave not in opciones:
+            opciones[-1] = palabra_clave
+        random.shuffle(opciones)
+        
+        pregunta = f"¿Qué término completa mejor la siguiente afirmación? {contexto}"
     else:
-        entidades = [ent.text for ent in doc.ents]
-        if entidades:
-            entidad = random.choice(entidades)
-            pregunta = f"¿Qué se menciona sobre {entidad}?"
-        else:
-            pregunta = "¿Cuál es el tema principal de esta oración?"
-    
-    respuesta_correcta = oracion
-    distractores = generar_distractores(oracion)
+        sujeto = random.choice(palabras_importantes)
+        pregunta = f"¿Cuál es la función principal de {sujeto}?"
+        
+        entradas = tokenizador(frase, return_tensors="pt", max_length=512, truncation=True)
+        with torch.no_grad():
+            start_logits, end_logits, generacion = modelo(**entradas)
+        
+        respuesta_correcta = frase[torch.argmax(start_logits):torch.argmax(end_logits)].strip()
+        
+        opciones = [respuesta_correcta]
+        while len(opciones) < 4:
+            opcion = generar_opcion_aleatoria(frase, modelo, tokenizador)
+            if opcion not in opciones:
+                opciones.append(opcion)
+        
+        random.shuffle(opciones)
     
     return {
-        'tipo': 'alternativas',
-        'pregunta': pregunta,
-        'opciones': [respuesta_correcta] + distractores,
-        'respuesta_correcta': respuesta_correcta
+        "pregunta": pregunta,
+        "opciones": opciones,
+        "respuesta_correcta": palabra_clave if tipo_pregunta == "completar" else respuesta_correcta,
+        "tipo": "alternativas"
     }
 
-def generar_pregunta_verdadero_falso(oracion):
+def generar_opcion_aleatoria(frase, modelo, tokenizador):
+    palabras = frase.split()
+    indice_aleatorio = random.randint(0, len(palabras) - 1)
+    palabras[indice_aleatorio] = '[MASK]'
+    contexto_modificado = ' '.join(palabras)
+    
+    entradas = tokenizador(contexto_modificado, return_tensors="pt", max_length=512, truncation=True)
+    with torch.no_grad():
+        start_logits, end_logits, generacion = modelo(**entradas)
+    
+    logits = generacion[0]
+    mascara_token_index = torch.where(entradas["input_ids"][0] == tokenizador.mask_token_id)[0]
+    predicciones = logits[mascara_token_index].topk(1)
+    
+    return tokenizador.decode([predicciones.indices[0][0].item()]).strip()
+
+def generar_pregunta_verdadero_falso(frase, modelo, tokenizador):
+    palabras = frase.split()
+    if len(palabras) < 10:
+        return None
+    
+    palabras_importantes = [p for p in palabras if p.lower() not in set(stopwords.words('spanish'))]
+    if len(palabras_importantes) < 3:
+        return None
+    
     es_verdadero = random.choice([True, False])
     
     if es_verdadero:
-        pregunta = oracion
+        pregunta = frase
     else:
-        pregunta = modificar_oracion_falsa(oracion)
+        palabra_original = random.choice(palabras_importantes)
+        indice_palabra = palabras.index(palabra_original)
+        
+        entradas = tokenizador(frase, return_tensers="pt", max_length=512, truncation=True)
+        with torch.no_grad():
+            start_logits, end_logits, generacion = modelo(**entradas)
+        
+        logits = generacion[0]
+        predicciones = logits[indice_palabra].topk(5)
+        
+        palabra_generada = tokenizador.decode([predicciones.indices[random.randint(1, 4)].item()]).strip()
+        palabras[indice_palabra] = palabra_generada
+        pregunta = ' '.join(palabras)
     
     return {
-        'tipo': 'verdadero_falso',
-        'pregunta': pregunta,
-        'respuesta_correcta': es_verdadero
+        "pregunta": pregunta,
+        "respuesta_correcta": "Verdadero" if es_verdadero else "Falso",
+        "tipo": "verdadero_falso"
     }
 
-def modificar_oracion_falsa(oracion):
-    doc = nlp(oracion)
-    palabras_clave = [token for token in doc if token.pos_ in ["NOUN", "VERB", "ADJ", "NUM"]]
+def verificar_calidad_pregunta(pregunta, texto_original):
+    vectorizador = TfidfVectorizer()
+    vectores = vectorizador.fit_transform([pregunta['pregunta'], texto_original])
+    similitud = cosine_similarity(vectores[0], vectores[1])[0][0]
+    return similitud > 0.3
+
+def generar_pregunta(texto, modelo, tokenizador):
+    oraciones = sent_tokenize(texto)
+    if not oraciones:
+        return None
     
-    if palabras_clave:
-        palabra_a_modificar = random.choice(palabras_clave)
-        
-        if palabra_a_modificar.pos_ == "NUM":
-            try:
-                nuevo_valor = str(int(palabra_a_modificar.text) + random.choice([-1, 1]) * random.randint(1, 5))
-                oracion_modificada = oracion.replace(palabra_a_modificar.text, nuevo_valor)
-            except ValueError:
-                oracion_modificada = oracion.replace(palabra_a_modificar.text, "un número diferente")
-        elif palabra_a_modificar.pos_ == "NOUN":
-            antonyms = ["ausencia de " + palabra_a_modificar.text, "escasez de " + palabra_a_modificar.text]
-            oracion_modificada = oracion.replace(palabra_a_modificar.text, random.choice(antonyms))
-        elif palabra_a_modificar.pos_ in ["VERB", "ADJ"]:
-            antonyms = ["raramente " + palabra_a_modificar.text, "ocasionalmente " + palabra_a_modificar.text]
-            oracion_modificada = oracion.replace(palabra_a_modificar.text, random.choice(antonyms))
+    oracion = random.choice(oraciones)
+    palabras = oracion.split()
+    if len(palabras) < 5:
+        return None
+    
+    tipo_pregunta = random.choice(["verdadero_falso", "alternativas"])
+    
+    if tipo_pregunta == "verdadero_falso":
+        es_verdadero = random.choice([True, False])
+        if es_verdadero:
+            pregunta = oracion
         else:
-            oracion_modificada = oracion
+            indice_palabra = random.randint(0, len(palabras) - 1)
+            palabras[indice_palabra] = random.choice(palabras)  # Reemplazamos una palabra al azar
+            pregunta = ' '.join(palabras)
+        
+        return {
+            "pregunta": pregunta,
+            "respuesta_correcta": "Verdadero" if es_verdadero else "Falso",
+            "tipo": "verdadero_falso"
+        }
     else:
-        oracion_modificada = "La información presentada en el texto original no es precisa."
-    
-    return oracion_modificada
-
-def generar_distractores(oracion):
-    doc = nlp(oracion)
-    distractores = []
-    
-    entidades = list(doc.ents)
-    palabras_clave = [token for token in doc if token.pos_ in ["NOUN", "VERB", "ADJ", "NUM"]]
-    
-    for _ in range(3):
-        if entidades:
-            entidad = random.choice(entidades)
-            distractor = oracion.replace(entidad.text, "otra entidad")
-        elif palabras_clave:
-            palabra = random.choice(palabras_clave)
-            if palabra.pos_ == "NOUN":
-                distractor = oracion.replace(palabra.text, "otro concepto")
-            elif palabra.pos_ == "VERB":
-                distractor = oracion.replace(palabra.text, "otra acción")
-            elif palabra.pos_ == "ADJ":
-                distractor = oracion.replace(palabra.text, "otra característica")
-            else:
-                distractor = oracion.replace(palabra.text, "otro valor")
-        else:
-            distractor = "Esta información no se menciona en el texto original."
+        palabra_clave = random.choice(palabras)
+        indice_palabra = palabras.index(palabra_clave)
+        palabras[indice_palabra] = "____"
+        pregunta = ' '.join(palabras)
         
-        if distractor not in distractores and distractor != oracion:
-            distractores.append(distractor)
-    
-    while len(distractores) < 3:
-        distractor = "Esta información no se relaciona directamente con el texto original."
-        if distractor not in distractores:
-            distractores.append(distractor)
-    
-    return distractores[:3]
+        opciones = [palabra_clave]
+        while len(opciones) < 4:
+            opcion = random.choice(palabras)
+            if opcion not in opciones:
+                opciones.append(opcion)
+        random.shuffle(opciones)
+        
+        return {
+            "pregunta": f"¿Qué palabra completa correctamente la siguiente oración? {pregunta}",
+            "opciones": opciones,
+            "respuesta_correcta": palabra_clave,
+            "tipo": "alternativas"
+        }
 
-# Función principal para generar cuestionarios
-def generar_cuestionarios(datos_json, modelo_cnn, device):
+def generar_cuestionarios(datos, modelo, tokenizador):
     cuestionarios = {}
-    
-    for item in datos_json['quiz']:
-        categoria = item['materia']
-        texto = item['texto']
-        fuente = item['fuente']
+    for i, item in enumerate(datos['quiz']):
+        materia = item['materia']
         
-        if categoria not in cuestionarios:
-            cuestionarios[categoria] = []
+        if materia not in cuestionarios:
+            cuestionarios[materia] = []
         
-        oraciones = sent_tokenize(texto)
         preguntas = []
+        intentos = 0
+
+        while len(preguntas) < 10 and intentos < 30:
+            try:
+                pregunta = generar_pregunta(item['texto'], modelo, tokenizador)
+                
+                if pregunta:
+                    preguntas.append(pregunta)
+            except Exception as e:
+                print(f"Error al generar pregunta: {e}")
+            intentos += 1
         
-        for oracion in oraciones:
-            pregunta = generar_pregunta(oracion, modelo_cnn, device)
-            preguntas.append(pregunta)
-        
-        cuestionarios[categoria].append({
-            'fuente': fuente,
-            'preguntas': preguntas
+        cuestionarios[materia].append({
+            "texto": item['texto'],
+            "fuente": item['fuente'],
+            "preguntas": preguntas
         })
-    
+
     return cuestionarios
-
-# Configuración y entrenamiento del modelo
-device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-EMBEDDING_DIM = 768  # Dimensión de embeddings de BERT
-N_FILTERS = 100
-FILTER_SIZES = [3, 4, 5]
-OUTPUT_DIM = 2
-DROPOUT = 0.5
-
-model = TextCNN(EMBEDDING_DIM, N_FILTERS, FILTER_SIZES, OUTPUT_DIM, DROPOUT).to(device)
-optimizer = optim.Adam(model.parameters())
-criterion = nn.CrossEntropyLoss()
-
-# Cargar y preparar datos
-datos_json = cargar_datos_json('tutorApp/static/json/quiz.json')
-textos = [item['texto'] for item in datos_json['quiz']]
-etiquetas = [random.randint(0, 1) for _ in range(len(textos))]  # Etiquetas aleatorias para demostración
-
-# Tokenizar y codificar los textos
-encoded_texts = bert_tokenizer(textos, padding=True, truncation=True, max_length=512, return_tensors="pt")
-label_tensors = torch.tensor(etiquetas)
-
-# Crear dataset
-dataset = [{'input_ids': encoded_texts['input_ids'][i], 'labels': label_tensors[i]} for i in range(len(textos))]
-
-# Dividir datos en entrenamiento y prueba
-train_data, test_data = train_test_split(dataset, test_size=0.2, random_state=42)
-
-# Crear DataLoader
-train_loader = torch.utils.data.DataLoader(train_data, batch_size=16, shuffle=True)
-test_loader = torch.utils.data.DataLoader(test_data, batch_size=16)
-
-# Entrenar el modelo
-N_EPOCHS = 5
-for epoch in range(N_EPOCHS):
-    train_model(model, train_loader, optimizer, criterion, device)
-    valid_loss = evaluate_model(model, test_loader, criterion, device)
-    print(f'Epoch: {epoch+1:02}, Valid Loss: {valid_loss:.3f}')

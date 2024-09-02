@@ -64,15 +64,15 @@
 
     function verificarRespuesta() {
         const respuestaUsuario = document.querySelector('input[name="respuesta"]:checked')?.value || document.querySelector('input[name="respuesta"]')?.value;
-        
+
         if (!respuestaUsuario) {
             alert("Por favor, selecciona o ingresa una respuesta.");
             return;
         }
-    
+
         const pregunta = cuestionario.preguntas[preguntaActual];
         let esCorrecta;
-    
+
         if (pregunta.tipo === 'verdadero_falso') {
             esCorrecta = respuestaUsuario.toLowerCase() === pregunta.respuesta_correcta.toString().toLowerCase();
         } else if (pregunta.tipo === 'abierta') {
@@ -80,13 +80,13 @@
         } else {
             esCorrecta = respuestaUsuario.toLowerCase() === pregunta.respuesta_correcta.toLowerCase();
         }
-    
+
         const claseAlerta = esCorrecta ? 'alert-success' : 'alert-danger';
         const mensaje = esCorrecta ? '¡Correcto!' : 'Incorrecto.';
         respuestasCorrectas += esCorrecta ? 1 : 0;
-        
-        const htmlFuente = `<a href="${cuestionario.fuente}" class="source-link" data-preview="${cuestionario.fuente}">Ver fuente</a>`;
-        
+
+        const htmlFuente = `<a href="${pregunta.fuente}" class="source-link" data-preview="${pregunta.fuente}">Ver fuente</a>`;
+
         document.getElementById('question-container').innerHTML += `
             <div class="alert ${claseAlerta}" role="alert">
                 <h3>${mensaje}</h3>
@@ -95,25 +95,25 @@
                 Fuente: ${htmlFuente}
             </div>
         `;
-        
+
         document.getElementById('check-answer').style.display = 'none';
         document.getElementById('next-question').style.display = 'inline-block';
-    
+
         inicializarVistaPrevia();
     }
 
     function mostrarVistaPrevia(url) {
         const contenedorVistaPrevia = document.getElementById('previewContainer');
         const marcoVistaPrevia = document.getElementById('previewFrame');
-        
+
         marcoVistaPrevia.src = url;
         contenedorVistaPrevia.style.display = 'block';
-        
+
         document.getElementById('closePreview').onclick = function() {
             contenedorVistaPrevia.style.display = 'none';
         };
     }
-    
+
     function inicializarVistaPrevia() {
         const enlaces = document.querySelectorAll('.source-link');
         enlaces.forEach(enlace => {
@@ -139,7 +139,7 @@
         const totalPreguntas = cuestionario.preguntas.length;
         const puntaje = (respuestasCorrectas / totalPreguntas) * 100;
         const nota = calcularNota(puntaje);
-    
+
         document.getElementById('quiz-container').innerHTML = `
             <h2 class="text-center mb-4">¡Has completado el cuestionario!</h2>
             <p id="cuest_res" class="text-center mb-4">Respuestas correctas: <b>${respuestasCorrectas}</b> de <b>${totalPreguntas}</b></p>
@@ -174,7 +174,7 @@
 
     function obtenerCSRFToken() {
         let cookieValue = null;
-        
+
         if (document.cookie && document.cookie !== '') {
             const cookies = document.cookie.split(';');
             for (let i = 0; i < cookies.length; i++) {
@@ -185,7 +185,7 @@
                 }
             }
         }
-        
+
         return cookieValue;
     }
 
