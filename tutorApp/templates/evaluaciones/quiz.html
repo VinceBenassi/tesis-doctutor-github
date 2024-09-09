@@ -44,8 +44,8 @@
             html += '</div>';
         } else if (pregunta.tipo === 'verdadero_falso') {
             html += `
-                <input type="radio" name="respuesta" value="true" class="mb-3"> Verdadero<br>
-                <input type="radio" name="respuesta" value="false"> Falso
+                <input type="radio" name="respuesta" value="Verdadero" class="mb-3"> Verdadero<br>
+                <input type="radio" name="respuesta" value="Falso"> Falso
             `;
         } else if (pregunta.tipo === 'abierta') {
             html += '<input type="text" name="respuesta" placeholder="Tu respuesta" class="form-control mx-auto w-75 mb-4">';
@@ -90,9 +90,9 @@
         document.getElementById('question-container').innerHTML += `
             <div class="alert ${claseAlerta}" role="alert">
                 <h3>${mensaje}</h3>
-                La respuesta correcta es: ${pregunta.respuesta_correcta}<br>
-                Explicación: ${pregunta.explicacion}<br>
-                Fuente: ${htmlFuente}
+                <p>La respuesta correcta es: ${pregunta.respuesta_correcta}</p>
+                <p><strong>Explicación:</strong> ${pregunta.explicacion}</p>
+                <p>Fuente: ${htmlFuente}</p>
             </div>
         `;
 
