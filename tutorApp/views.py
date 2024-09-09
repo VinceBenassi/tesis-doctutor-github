@@ -465,13 +465,16 @@ def quiz(request, category, quiz_index):
             puntaje=puntaje
         )
         
-        perfil, _ = PerfilUsuario.objects.get_or_create(usuario=request.user)
         perfil.cuestionarios_completados += 1
         perfil.save()
         
         messages.success(request, "¡Cuestionario completado! Tu progreso ha sido guardado.")
         return redirect('perfil')
-    
+
+    for pregunta in quiz['preguntas']:
+        if 'explicacion' not in pregunta:
+            pregunta['explicacion'] = "No se proporcionó explicación para esta pregunta."
+
     quiz_json = json.dumps(quiz, ensure_ascii=False)
 
     return render(request, 'evaluaciones/quiz.html', {
