@@ -1,7 +1,7 @@
 from .modelos.chatbot import predecir_clase_frase, obtener_respuesta, intentos
 from .modelos.traductor import escuchar_microfono
 from .modelos.clasificadorPDF import obtener_datos_materias
-from .modelos.generador_quizzes import generar_cuestionarios, cargar_datos_json, preparar_datos, crear_y_entrenar_modelo, tokenizador
+from .modelos.generador_quizzes import generar_cuestionarios, cargar_datos_json, preparar_datos, crear_y_entrenar_modelo, tokenizador_generacion, tokenizador_qa
 from .models import MateriaCuestionario, TextoCuestionario, FormularioMateriaCuestionario, FormularioTextoCuestionario, PerfilUsuario, ResultadoCuestionario, CambiarPerfil, FotoPerfil
 from django.db.models import Avg
 from django.contrib import messages
@@ -23,7 +23,7 @@ historial_chatbot = []
 datos = cargar_datos_json('tutorApp/static/json/quiz.json')
 textos = preparar_datos(datos)
 modelo_entrenado = crear_y_entrenar_modelo(textos)
-cuestionarios = generar_cuestionarios(datos, modelo_entrenado, tokenizador)
+cuestionarios = generar_cuestionarios(datos, modelo_entrenado, tokenizador_qa, tokenizador_generacion)
 
 with open('tutorApp/static/json/cuestionarios_generados.json', 'w', encoding='utf-8') as archivo:
     json.dump(cuestionarios, archivo, ensure_ascii=False, indent=4)
@@ -312,7 +312,7 @@ def admin_evaluaciones(request):
     perfil, creado = PerfilUsuario.objects.get_or_create(usuario=request.user)
 
     if request.method == 'POST':
-        if 'agregar_categoria' in request.POST:
+        if 'agregar_materia' in request.POST:
             formulario_materia = FormularioMateriaCuestionario(request.POST)
             
             if formulario_materia.is_valid():
@@ -321,7 +321,7 @@ def admin_evaluaciones(request):
                 
                 return redirect('admin_evaluaciones')
         
-        elif 'eliminar_categoria' in request.POST:
+        elif 'eliminar_materia' in request.POST:
             materia_id = request.POST.get('materia_id')
             
             try:
@@ -417,15 +417,16 @@ def admin_evaluaciones(request):
 
 
 def actualizar_quiz_json():
-    import json
     data = {"quiz": []}
     textos = TextoCuestionario.objects.all().select_related('materia')
+    
     for texto in textos:
         data['quiz'].append({
             "texto": texto.texto,
             "fuente": texto.fuente,
             "materia": texto.materia.nombre
         })
+
     with open('tutorApp/static/json/quiz.json', 'w', encoding='utf-8') as file:
         json.dump(data, file, ensure_ascii=False, indent=4)
 
