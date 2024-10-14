@@ -9,6 +9,7 @@ from nltk.corpus import stopwords
 from transformers import AutoTokenizer, BertForQuestionAnswering, BertForMaskedLM
 import torch.nn as nn
 import torch.optim as optim
+from collections import Counter
 from torch.utils.data import DataLoader, TensorDataset
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
@@ -87,10 +88,15 @@ def crear_y_entrenar_modelo(textos):
 
 
 
-def extraer_palabras_clave(frase):
+def extraer_palabras_clave(texto):
+    # Implementar una función para extraer palabras clave del texto
+    # Esto podría usar TF-IDF, conteo de frecuencias, o técnicas más avanzadas de NLP
+    # Por ahora, usaremos una implementación simple basada en la frecuencia de palabras
+    palabras = texto.lower().split()
     stop_words = set(stopwords.words('spanish'))
-    palabras = [palabra for palabra in frase.split() if palabra.lower() not in stop_words]
-    return sorted(set(palabras), key=lambda x: -len(x))[:5]
+    palabras_filtradas = [palabra for palabra in palabras if palabra not in stop_words and palabra.isalnum()]
+    frecuencia = Counter(palabras_filtradas)
+    return [palabra for palabra, _ in frecuencia.most_common(5)]
 
 
 
@@ -132,19 +138,19 @@ def generar_contexto_adicional(frase, modelo_mlm, tokenizador):
 
 
 
-def generar_explicacion(frase, modelo, tokenizador):
-    entradas = tokenizador(frase, return_tensors="pt", max_length=512, truncation=True)
-    with torch.no_grad():
-        salidas = modelo(**entradas, output_hidden_states=True)
+def generar_explicacion(texto, modelo, tokenizador):
+    # Generar una explicación basada en el texto y la pregunta
+    plantillas_explicacion = [
+        "Esta pregunta evalúa la comprensión del tema principal del texto, que se centra en {}.",
+        "La respuesta correcta se basa en la idea central del pasaje, que trata sobre {}.",
+        "Para responder correctamente, es importante entender que el texto aborda principalmente {}.",
+        "La clave para esta pregunta está en reconocer que el autor enfatiza {} en el texto."
+    ]
     
-    secuencia_oculta = salidas.hidden_states[-1][:, 0, :]
-    logits_explicacion = modelo.capa_explicacion(secuencia_oculta)
+    palabras_clave = extraer_palabras_clave(texto)
+    tema_principal = " y ".join(palabras_clave[:2])
     
-    palabras_clave = extraer_palabras_clave(frase)
-    explicacion = f"Esta afirmación se refiere a {', '.join(palabras_clave[:3])}. "
-    explicacion += f"Es importante porque {generar_importancia(frase, modelo_mlm, tokenizador)}. "
-    explicacion += f"Además, {generar_contexto_adicional(frase, modelo_mlm, tokenizador)}."
-    
+    explicacion = random.choice(plantillas_explicacion).format(tema_principal)
     return explicacion
 
 
@@ -166,61 +172,54 @@ def extraer_frases_clave(texto):
 
 
 
-def generar_pregunta_alternativas(frase, modelo, tokenizador):
-    palabras = frase.split()
-    if len(palabras) < 10:
-        return None
+def generar_pregunta_alternativas(texto, modelo, tokenizador):
+    # Extraer conceptos clave del texto
+    palabras_importantes = extraer_palabras_clave(texto)
     
-    palabras_importantes = [p for p in palabras if p.lower() not in set(stopwords.words('spanish'))]
     if len(palabras_importantes) < 3:
         return None
     
-    tipo_pregunta = random.choice(["completar", "funcion"])
+    # Generar una pregunta de análisis
+    plantillas_preguntas = [
+        "¿Cuál es el concepto principal abordado en el texto?",
+        "¿Qué idea central se desarrolla en este pasaje?",
+        "¿Cuál es la implicación más importante de la información presentada?",
+        "¿Qué conclusión se puede extraer de este texto?",
+        "¿Cuál es el propósito principal del autor en este pasaje?"
+    ]
+    pregunta = random.choice(plantillas_preguntas)
     
-    if tipo_pregunta == "completar":
-        palabra_clave = random.choice(palabras_importantes)
-        indice_palabra = palabras.index(palabra_clave)
+    # Generar opciones coherentes
+    entradas = tokenizador(texto, return_tensors="pt", max_length=512, truncation=True)
+    with torch.no_grad():
+        salidas = modelo(**entradas, output_hidden_states=True)
+    
+    ultima_capa = salidas.hidden_states[-1]
+    logits = modelo.capa_generacion(ultima_capa[:, 0, :])
+    
+    # Generar opciones usando el modelo y conceptos del texto
+    opciones = set()
+    while len(opciones) < 4:
+        if random.random() < 0.5:  # 50% de probabilidad de usar palabras importantes del texto
+            opcion = " ".join(random.sample(palabras_importantes, min(3, len(palabras_importantes))))
+        else:  # 50% de probabilidad de generar una nueva opción con el modelo
+            indices_prediccion = torch.topk(logits, k=3).indices[0]
+            opcion = tokenizador.decode(indices_prediccion).strip()
         
-        contexto = ' '.join(palabras[:indice_palabra] + ['[MASK]'] + palabras[indice_palabra+1:])
-        
-        entradas = tokenizador(contexto, return_tensors="pt", max_length=512, truncation=True)
-        with torch.no_grad():
-            start_logits, end_logits, generacion = modelo(**entradas)
-        
-        logits = generacion[0]
-        mascara_token_index = torch.where(entradas["input_ids"][0] == tokenizador.mask_token_id)[0]
-        predicciones = logits[mascara_token_index].topk(4)
-        
-        opciones = [tokenizador.decode([token_id.item()]).strip() for token_id in predicciones.indices[0]]
-        if palabra_clave not in opciones:
-            opciones[-1] = palabra_clave
-        random.shuffle(opciones)
-        
-        pregunta = f"¿Qué término completa mejor la siguiente afirmación? {contexto}"
-    else:
-        sujeto = random.choice(palabras_importantes)
-        pregunta = f"¿Cuál es la función principal de {sujeto}?"
-        
-        entradas = tokenizador(frase, return_tensors="pt", max_length=512, truncation=True)
-        with torch.no_grad():
-            start_logits, end_logits, generacion = modelo(**entradas)
-        
-        respuesta_correcta = frase[torch.argmax(start_logits):torch.argmax(end_logits)].strip()
-        
-        opciones = [respuesta_correcta]
-        while len(opciones) < 4:
-            opcion = generar_opcion_aleatoria(frase, modelo, tokenizador)
-            if opcion not in opciones:
-                opciones.append(opcion)
-        
-        random.shuffle(opciones)
-
-    explicacion = generar_explicacion(frase, modelo, tokenizador)
+        if opcion and len(opcion.split()) <= 3:
+            opciones.add(opcion)
+    
+    opciones = list(opciones)
+    
+    # Seleccionar la respuesta correcta
+    respuesta_correcta = random.choice(opciones)
+    
+    explicacion = generar_explicacion(texto, palabras_importantes)
     
     return {
         "pregunta": pregunta,
         "opciones": opciones,
-        "respuesta_correcta": palabra_clave if tipo_pregunta == "completar" else respuesta_correcta,
+        "respuesta_correcta": respuesta_correcta,
         "tipo": "alternativas",
         "explicacion": explicacion
     }
