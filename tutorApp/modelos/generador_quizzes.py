@@ -224,23 +224,26 @@ def generar_pregunta_alternativas(texto, modelo, tokenizador):
         "explicacion": explicacion
     }
 
+def generar_explicacion(texto, palabras_clave):
+    # Generar una explicación basada en el texto y la pregunta
+    plantillas_explicacion = [
+        "Esta pregunta evalúa la comprensión del tema principal del texto, que se centra en {}.",
+        "La respuesta correcta se basa en la idea central del pasaje, que trata sobre {}.",
+        "Para responder correctamente, es importante entender que el texto aborda principalmente {}.",
+        "La clave para esta pregunta está en reconocer que el autor enfatiza {} en el texto."
+    ]
+    
+    tema_principal = " y ".join(palabras_clave[:2])
+    
+    explicacion = random.choice(plantillas_explicacion).format(tema_principal)
+    return explicacion
 
-
-def generar_opcion_aleatoria(frase, modelo, tokenizador):
-    palabras = frase.split()
-    indice_aleatorio = random.randint(0, len(palabras) - 1)
-    palabras[indice_aleatorio] = '[MASK]'
-    contexto_modificado = ' '.join(palabras)
-    
-    entradas = tokenizador(contexto_modificado, return_tensors="pt", max_length=512, truncation=True)
-    with torch.no_grad():
-        start_logits, end_logits, generacion = modelo(**entradas)
-    
-    logits = generacion[0]
-    mascara_token_index = torch.where(entradas["input_ids"][0] == tokenizador.mask_token_id)[0]
-    predicciones = logits[mascara_token_index].topk(1)
-    
-    return tokenizador.decode([predicciones.indices[0][0].item()]).strip()
+def extraer_palabras_clave(texto):
+    palabras = texto.lower().split()
+    stop_words = set(stopwords.words('spanish'))
+    palabras_filtradas = [palabra for palabra in palabras if palabra not in stop_words and palabra.isalnum()]
+    frecuencia = Counter(palabras_filtradas)
+    return [palabra for palabra, _ in frecuencia.most_common(5)]
 
 
 

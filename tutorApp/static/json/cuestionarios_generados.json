@@ -5,82 +5,70 @@
             "fuente": "https://www.unbosque.edu.co/blog-universidad-el-bosque/que-es-la-medicina",
             "preguntas": [
                 {
-                    "pregunta": "¿Qué palabra completa correctamente la siguiente oración? Después del parto: se practican múltiples exámenes al recién ____ para diagnosticar en él su correcto desarrollo y condiciones de salud.",
+                    "pregunta": "¿Qué palabra completa correctamente la siguiente oración? Al crecer: los niños, desde su nacimiento y hasta los 6 años, son atendidos por médicos pediatras, quienes explican ____ alimentarlos, cuidarlos y controlar y chequear su salud.",
                     "opciones": [
-                        "se",
-                        "su",
-                        "____",
-                        "nacido,"
+                        "6",
+                        "hasta",
+                        "cómo",
+                        "quienes"
                     ],
-                    "respuesta_correcta": "nacido,",
+                    "respuesta_correcta": "cómo",
                     "tipo": "alternativas"
                 },
                 {
-                    "pregunta": "¿Qué palabra completa correctamente la siguiente oración? La vocación viene con nosotros desde que llegamos al mundo y, con el paso de los años, vamos ____ cada vez más.",
-                    "opciones": [
-                        "____",
-                        "desarrollándola",
-                        "mundo",
-                        "años,"
-                    ],
-                    "respuesta_correcta": "desarrollándola",
-                    "tipo": "alternativas"
-                },
-                {
-                    "pregunta": "una una de las profesiones que atiende y protege la salud de las personas desde antes de nacer hasta el día de su muerte.",
+                    "pregunta": "En este caso, la medicina está este y tratando un problema de naturaleza.",
                     "respuesta_correcta": "Falso",
                     "tipo": "verdadero_falso"
                 },
                 {
-                    "pregunta": "¿Qué palabra completa correctamente la siguiente oración? Durante el embarazo: con la Medicina se protege tanto a la madre como al embrión y al feto, dándole a conocer a la ____ madre los cuidados que debe tener, la dieta y los ejercicios que deberá manejar luego de convertirse en mamá.",
+                    "pregunta": "En este caso, la medicina está superando y tratando un problema problema naturaleza.",
+                    "respuesta_correcta": "Falso",
+                    "tipo": "verdadero_falso"
+                },
+                {
+                    "pregunta": "Durante el parto: se atiende a la madre y su hijo, bien sea por cesárea o parto natural.",
+                    "respuesta_correcta": "Verdadero",
+                    "tipo": "verdadero_falso"
+                },
+                {
+                    "pregunta": "¿Qué palabra completa correctamente la siguiente oración? Todos, desde que somos pequeños, damos señales de lo que ____ gusta y lo que nos disgusta.",
                     "opciones": [
-                        "embarazo:",
-                        "futura",
                         "que",
-                        "con"
-                    ],
-                    "respuesta_correcta": "futura",
-                    "tipo": "alternativas"
-                },
-                {
-                    "pregunta": "¿Qué palabra completa correctamente la siguiente oración? Todos, desde que ____ pequeños, damos señales de lo que nos gusta y lo que nos disgusta.",
-                    "opciones": [
-                        "somos",
-                        "nos",
                         "y",
-                        "damos"
+                        "somos",
+                        "nos"
                     ],
-                    "respuesta_correcta": "somos",
+                    "respuesta_correcta": "nos",
                     "tipo": "alternativas"
                 },
                 {
-                    "pregunta": "¿Qué palabra completa correctamente la siguiente oración? Por eso, conocerás sobre la Medicina y su importancia: El término medicina proviene del latín medicina y hace referencia a la ciencia ____ permite prevenir y curar las enfermedades del cuerpo humano.",
-                    "opciones": [
-                        "referencia",
-                        "a",
-                        "ciencia",
-                        "que"
-                    ],
-                    "respuesta_correcta": "que",
-                    "tipo": "alternativas"
-                },
-                {
-                    "pregunta": "En la concepción: en el caso de una pareja con esterilidad, la medicina les ofrece a ambos la oportunidad de tener hijos propios.",
-                    "respuesta_correcta": "Verdadero",
-                    "tipo": "verdadero_falso"
-                },
-                {
-                    "pregunta": "Así mismo, se mantiene el embarazo en constante chequeo durante los 9 meses de su duración, se le hacen sus ecografías de se prepara todo lo concerniente para un parto saludable y sin contratiempos.",
+                    "pregunta": "En la adultez: en los casos de enfermedad y de forma de prevención, la medicina busca la mejoría y curación, mediante tratamientos quirúrgicos o médicos.",
                     "respuesta_correcta": "Falso",
                     "tipo": "verdadero_falso"
                 },
                 {
-                    "pregunta": "Medicina también se utiliza como sinónimo de medicamento (del latín medicamentum), que es la sustancia que permite prevenir, aliviar o curar las enfermedades o sus secuelas.",
+                    "pregunta": "Durante la infancia y adolescencia: se hacen seguimientos periódicos que permitan tener una vida saludable, también se pueden descubrir enfermedades genéticas y tratarlas a tiempo.",
                     "respuesta_correcta": "Verdadero",
                     "tipo": "verdadero_falso"
                 },
                 {
-                    "pregunta": "Para algunos es más clara que para otros, por lo de si todavía no sabes cuál es tu vocación, solo es necesario que la descubras y conozcas de cerca tu pasión para que puedas dedicar los mejores años de tu vida en hacer lo que amas.",
+                    "pregunta": "¿Qué palabra completa correctamente la siguiente oración? Por eso, conocerás sobre ____ Medicina y su importancia: El término medicina proviene del latín medicina y hace referencia a la ciencia que permite prevenir y curar las enfermedades del cuerpo humano.",
+                    "opciones": [
+                        "la",
+                        "Medicina",
+                        "conocerás",
+                        "sobre"
+                    ],
+                    "respuesta_correcta": "la",
+                    "tipo": "alternativas"
+                },
+                {
+                    "pregunta": "Como si claro, fuera claro, la medicina juega un papel fundamental en la sociedad.",
+                    "respuesta_correcta": "Falso",
+                    "tipo": "verdadero_falso"
+                },
+                {
+                    "pregunta": "Por su conocerás sobre la Medicina y su importancia: El término medicina proviene del latín medicina y hace referencia a la ciencia que permite prevenir y curar las enfermedades del cuerpo humano.",
                     "respuesta_correcta": "Falso",
                     "tipo": "verdadero_falso"
                 }
@@ -91,83 +79,83 @@
             "fuente": "https://www.hopkinsmedicine.org/health/treatment-tests-and-therapies/types-of-surgery",
             "preguntas": [
                 {
-                    "pregunta": "¿Qué palabra completa correctamente la siguiente oración? Durante la residencia, ____ médicos reciben capacitación intensiva en técnicas quirúrgicas, cuidados pre y postoperatorios, y manejo de complicaciones.",
-                    "opciones": [
-                        "cuidados",
-                        "los",
-                        "la",
-                        "médicos"
-                    ],
-                    "respuesta_correcta": "los",
-                    "tipo": "alternativas"
+                    "pregunta": "Las innovaciones en técnicas quirúrgicas, anestesia y tecnología médica han mejorado la seguridad y la eficacia de los procedimientos quirúrgicos, permitiendo tratar una amplia gama de enfermedades y condiciones de manera más efectiva.",
+                    "respuesta_correcta": "Verdadero",
+                    "tipo": "verdadero_falso"
                 },
                 {
-                    "pregunta": "¿Qué palabra completa correctamente la siguiente oración? La cirugía robótica es una evolución de la cirugía mínimamente invasiva, donde los cirujanos utilizan brazos robóticos controlados por computadora ____ realizar procedimientos con alta precisión.",
-                    "opciones": [
-                        "robóticos",
-                        "para",
-                        "brazos",
-                        "evolución"
-                    ],
-                    "respuesta_correcta": "para",
-                    "tipo": "alternativas"
-                },
-                {
-                    "pregunta": "Algunos cirujanos optan por subespecializarse en áreas específicas como la neurocirugía, la cirugía cardiovascular, la cirugía ortopédica, la cirugía plástica, entre otras.",
+                    "pregunta": "La cirugía puede ser mínimamente invasiva, utilizando técnicas como la laparoscopia, que implica pequeñas incisiones y el uso de uso cámara para guiar el procedimiento, lo que reduce el tiempo de recuperación y el riesgo de complicaciones.",
                     "respuesta_correcta": "Falso",
                     "tipo": "verdadero_falso"
                 },
                 {
-                    "pregunta": "La cirugía es una parte vital del sistema de salud y con avanzado significativamente con el tiempo.",
-                    "respuesta_correcta": "Falso",
-                    "tipo": "verdadero_falso"
+                    "pregunta": "¿Qué palabra completa correctamente la siguiente oración? La cirugía es una parte vital del sistema de salud y ____ avanzado significativamente con el tiempo.",
+                    "opciones": [
+                        "significativamente",
+                        "salud",
+                        "ha",
+                        "el"
+                    ],
+                    "respuesta_correcta": "ha",
+                    "tipo": "alternativas"
                 },
                 {
-                    "pregunta": "¿Qué palabra completa correctamente la siguiente oración? La ____ electiva, por otro lado, se planifica con antelación y no es de urgencia, como una cirugía estética o una reparación de hernia.",
+                    "pregunta": "¿Qué palabra completa correctamente la siguiente oración? Algunos cirujanos optan por ____ en áreas específicas como la neurocirugía, la cirugía cardiovascular, la cirugía ortopédica, la cirugía plástica, entre otras.",
                     "opciones": [
+                        "otras.",
                         "cirugía",
-                        "o",
-                        "urgencia,",
-                        "reparación"
+                        "subespecializarse",
+                        "cirujanos"
                     ],
-                    "respuesta_correcta": "cirugía",
+                    "respuesta_correcta": "subespecializarse",
                     "tipo": "alternativas"
                 },
                 {
-                    "pregunta": "Algunos cirujanos optan por subespecializarse en áreas específicas como la neurocirugía, la cirugía cardiovascular, la cirugía otras. la cirugía plástica, entre otras.",
+                    "pregunta": "¿Qué palabra completa correctamente la siguiente oración? Durante la residencia, los médicos reciben capacitación intensiva ____ técnicas quirúrgicas, cuidados pre y postoperatorios, y manejo de complicaciones.",
+                    "opciones": [
+                        "los",
+                        "en",
+                        "____",
+                        "Durante"
+                    ],
+                    "respuesta_correcta": "en",
+                    "tipo": "alternativas"
+                },
+                {
+                    "pregunta": "La cirugía puede ser mínimamente invasiva, utilizando técnicas como la laparoscopia, que implica pequeñas incisiones y el uso de una cámara para guiar el procedimiento, lo que reduce el tiempo de recuperación y el riesgo de complicaciones.",
+                    "respuesta_correcta": "Verdadero",
+                    "tipo": "verdadero_falso"
+                },
+                {
+                    "pregunta": "Los cirujanos utilizan una variedad de técnicas quirúrgicas para acceder al interior del cuerpo humano, reparar tejidos dañados, extraer tumores o corregir anomalías.",
+                    "respuesta_correcta": "Verdadero",
+                    "tipo": "verdadero_falso"
+                },
+                {
+                    "pregunta": "La cirugía robótica es una evolución de la cirugía mínimamente invasiva, donde los cirujanos utilizan brazos robóticos controlados por es para realizar procedimientos con alta precisión.",
                     "respuesta_correcta": "Falso",
                     "tipo": "verdadero_falso"
                 },
                 {
-                    "pregunta": "La cirugía robótica es una evolución de la cirugía mínimamente invasiva, donde los cirujanos utilizan brazos robóticos controlados por computadora para realizar procedimientos con alta precisión.",
-                    "respuesta_correcta": "Verdadero",
-                    "tipo": "verdadero_falso"
-                },
-                {
-                    "pregunta": "La cirugía robótica es una evolución de la cirugía mínimamente invasiva, donde los cirujanos utilizan brazos robóticos controlados por computadora para realizar procedimientos con alta precisión.",
-                    "respuesta_correcta": "Verdadero",
-                    "tipo": "verdadero_falso"
-                },
-                {
-                    "pregunta": "¿Qué palabra completa correctamente la siguiente oración? ____ cirugía es una especialidad médica que implica la intervención física para diagnosticar, tratar o prevenir enfermedades y condiciones.",
+                    "pregunta": "¿Qué palabra completa correctamente la siguiente oración? La cirugía de emergencia se realiza inmediatamente para salvar la vida ____ paciente, como en el caso de un trauma grave o una apendicitis aguda.",
                     "opciones": [
+                        "el",
+                        "del",
                         "____",
-                        "es",
-                        "una",
-                        "La"
+                        "realiza"
                     ],
-                    "respuesta_correcta": "La",
+                    "respuesta_correcta": "del",
                     "tipo": "alternativas"
                 },
                 {
-                    "pregunta": "¿Qué palabra completa correctamente la siguiente oración? La cirugía puede ser mínimamente invasiva, utilizando técnicas como la laparoscopia, que implica pequeñas incisiones y el ____ de una cámara para guiar el procedimiento, lo que reduce el tiempo de recuperación y el riesgo de complicaciones.",
+                    "pregunta": "¿Qué palabra completa correctamente la siguiente oración? La formación de un cirujano ____ rigurosa y extensa.",
                     "opciones": [
-                        "uso",
-                        "que",
-                        "recuperación",
-                        "riesgo"
+                        "es",
+                        "formación",
+                        "rigurosa",
+                        "un"
                     ],
-                    "respuesta_correcta": "uso",
+                    "respuesta_correcta": "es",
                     "tipo": "alternativas"
                 }
             ]
@@ -179,101 +167,89 @@
             "fuente": "https://educacion.udp.cl/carreras/pedagogia-en-ingles/",
             "preguntas": [
                 {
-                    "pregunta": "¿Qué palabra completa correctamente la siguiente oración? La carrera ofrecerá ____ ambiente de estudio y de convivencia donde se hable inglés y donde también habrá oportunidades de interactuar y de aprender con personas cuya lengua nativa es el inglés.",
+                    "pregunta": "¿Qué palabra completa correctamente la siguiente oración? Programa de formación El plan de estudio de la carrera tiene un enfoque comunicativo que integra progresivamente el desarrollo de las habilidades de comprensión lectora, comprensión auditiva, expresión oral y expresión escrita, y aborda el aprendizaje de la ____ desde una perspectiva aplicada.",
                     "opciones": [
-                        "ofrecerá",
-                        "un",
-                        "es",
-                        "nativa"
-                    ],
-                    "respuesta_correcta": "un",
-                    "tipo": "alternativas"
-                },
-                {
-                    "pregunta": "¿Qué palabra completa correctamente la siguiente oración? Estas serán algunas de las preguntas que orientarán el ____ de enseñanza de la lengua y que serán abordadas en asignaturas como metodología, evaluación y planificación curricular entre otras.",
-                    "opciones": [
-                        "curricular",
-                        "otras.",
-                        "y",
-                        "eje"
-                    ],
-                    "respuesta_correcta": "eje",
-                    "tipo": "alternativas"
-                },
-                {
-                    "pregunta": "¿Qué palabra completa correctamente la siguiente oración? Formación General: Aborda el conocimiento, comprensión y aplicación de valores como el respecto a los derechos humanos, ejercicio de la ciudadanía, temas relacionados a la diversidad, a la inclusión y a la equidad, que son ____ para la formación de un docente con altas expectativas de todos sus estudiantes.",
-                    "opciones": [
-                        "claves",
-                        "Formación",
-                        "altas",
-                        "ejercicio"
-                    ],
-                    "respuesta_correcta": "claves",
-                    "tipo": "alternativas"
-                },
-                {
-                    "pregunta": "¿Qué palabra completa correctamente la siguiente oración? Formación Profesional y Práctica: La carrera desarrolla competencias para ____ formación práctica a través de toda la carrera.",
-                    "opciones": [
-                        "través",
-                        "la",
-                        "____",
-                        "Práctica:"
-                    ],
-                    "respuesta_correcta": "la",
-                    "tipo": "alternativas"
-                },
-                {
-                    "pregunta": "¿Qué palabra completa correctamente la siguiente oración? Se nutre de la experiencia internacional y de la investigación sobre adquisición de la lengua como idioma extranjero, y de ____ estudios sobre procesos cognitivos, entre otros ámbitos.",
-                    "opciones": [
+                        "auditiva,",
+                        "expresión",
                         "de",
-                        "la",
-                        "los",
+                        "lingüística"
+                    ],
+                    "respuesta_correcta": "lingüística",
+                    "tipo": "alternativas"
+                },
+                {
+                    "pregunta": "Enseñanza de la Lengua: ¿Cómo enseñar inglés?",
+                    "respuesta_correcta": "Falso",
+                    "tipo": "verdadero_falso"
+                },
+                {
+                    "pregunta": "¿Qué palabra completa correctamente la siguiente oración? Programa de formación El plan de estudio de la carrera tiene un enfoque comunicativo que integra progresivamente el desarrollo de las habilidades de ____ lectora, comprensión auditiva, expresión oral y expresión escrita, y aborda el aprendizaje de la lingüística desde una perspectiva aplicada.",
+                    "opciones": [
+                        "habilidades",
+                        "escrita,",
+                        "comprensión",
+                        "oral"
+                    ],
+                    "respuesta_correcta": "comprensión",
+                    "tipo": "alternativas"
+                },
+                {
+                    "pregunta": "¿Qué palabra completa correctamente la siguiente oración? Programa de formación El plan de estudio de la carrera tiene un enfoque comunicativo que integra progresivamente el desarrollo de las habilidades de comprensión lectora, comprensión auditiva, expresión oral ____ expresión escrita, y aborda el aprendizaje de la lingüística desde una perspectiva aplicada.",
+                    "opciones": [
+                        "estudio",
+                        "comunicativo",
+                        "escrita,",
                         "y"
-                    ],
-                    "respuesta_correcta": "los",
-                    "tipo": "alternativas"
-                },
-                {
-                    "pregunta": "La malla curricular se estructura de acuerdo a 5 ejes o líneas de formación: Aprendizaje de la Lengua: Tiene como propósito desarrollar las competencias de la comunicación en inglés avanzado (nivel C1, del Common European Framework), su conocimiento formal y los aspectos culturales asociados a la lengua.",
-                    "respuesta_correcta": "Verdadero",
-                    "tipo": "verdadero_falso"
-                },
-                {
-                    "pregunta": "La carrera de Pedagogía en Inglés tiene como propósito formar profesionales integrales, versátiles y comprometidos, para promover el aprendizaje de niños/as y jóvenes a través del idioma inglés.",
-                    "respuesta_correcta": "Verdadero",
-                    "tipo": "verdadero_falso"
-                },
-                {
-                    "pregunta": "¿Qué palabra completa correctamente la siguiente oración? Se nutre de la experiencia internacional y de la investigación sobre adquisición de la lengua ____ idioma extranjero, y de los estudios sobre procesos cognitivos, entre otros ámbitos.",
-                    "opciones": [
-                        "como",
-                        "estudios",
-                        "de",
-                        "lengua"
-                    ],
-                    "respuesta_correcta": "como",
-                    "tipo": "alternativas"
-                },
-                {
-                    "pregunta": "¿Qué palabra completa correctamente la siguiente oración? Su foco radica en el aprendizaje ____ enseñanza de la lengua inglesa en el contexto escolar nacional y de acuerdo con el Marco Curricular del Mineduc.",
-                    "opciones": [
-                        "y",
-                        "____",
-                        "nacional",
-                        "el"
                     ],
                     "respuesta_correcta": "y",
                     "tipo": "alternativas"
                 },
                 {
-                    "pregunta": "¿Qué palabra completa correctamente la siguiente oración? ¿Cómo y qué evaluar en ____",
+                    "pregunta": "La carrera de Pedagogía en Inglés tiene como propósito formar profesionales integrales, versátiles y comprometidos, para promover jóvenes aprendizaje de niños/as y jóvenes a través del idioma inglés.",
+                    "respuesta_correcta": "Falso",
+                    "tipo": "verdadero_falso"
+                },
+                {
+                    "pregunta": "¿Cómo motivar a que los estudiantes participen activamente en el aprendizaje de inglés?",
+                    "respuesta_correcta": "Verdadero",
+                    "tipo": "verdadero_falso"
+                },
+                {
+                    "pregunta": "¿Qué palabra completa correctamente la siguiente oración? ¿Cómo motivar a que los estudiantes ____ activamente en el aprendizaje de inglés?",
                     "opciones": [
-                        "en",
-                        "evaluar",
-                        "qué",
-                        "inglés?"
+                        "activamente",
+                        "participen",
+                        "los",
+                        "de"
                     ],
-                    "respuesta_correcta": "inglés?",
+                    "respuesta_correcta": "participen",
+                    "tipo": "alternativas"
+                },
+                {
+                    "pregunta": "¿Qué palabra completa correctamente la siguiente oración? ____ integrar inglés al quehacer escolar?",
+                    "opciones": [
+                        "inglés",
+                        "quehacer",
+                        "integrar",
+                        "¿Cómo"
+                    ],
+                    "respuesta_correcta": "¿Cómo",
+                    "tipo": "alternativas"
+                },
+                {
+                    "pregunta": "Formación Profesional y Práctica: La carrera desarrolla competencias para la formación práctica a través de toda toda carrera.",
+                    "respuesta_correcta": "Falso",
+                    "tipo": "verdadero_falso"
+                },
+                {
+                    "pregunta": "¿Qué palabra completa correctamente la siguiente oración? Indagación: Este eje de formación está orientado a desarrollar competencias para la recolección de evidencia relevante sobre los estudiantes y su aprendizaje de ____",
+                    "opciones": [
+                        "____",
+                        "Este",
+                        "inglés.",
+                        "desarrollar"
+                    ],
+                    "respuesta_correcta": "inglés.",
                     "tipo": "alternativas"
                 }
             ]
@@ -283,39 +259,23 @@
             "fuente": "https://www.teachingenglish.org.uk/article/digital-literacy",
             "preguntas": [
                 {
-                    "pregunta": "¿Qué palabra completa correctamente la siguiente oración? Esto puede incluir la creación de contenido digital, la colaboración en línea y la comunicación a través de redes ____",
-                    "opciones": [
-                        "sociales.",
-                        "incluir",
-                        "creación",
-                        "a"
-                    ],
-                    "respuesta_correcta": "sociales.",
-                    "tipo": "alternativas"
-                },
-                {
-                    "pregunta": "Esto puede incluir la contenido de contenido digital, la colaboración en línea y la comunicación a través de redes sociales.",
+                    "pregunta": "Esto puede incluir la creación de contenido y la colaboración en línea y la comunicación a través de redes sociales.",
                     "respuesta_correcta": "Falso",
                     "tipo": "verdadero_falso"
                 },
                 {
-                    "pregunta": "¿Qué palabra completa correctamente la siguiente oración? Esto puede incluir la ____ de contenido digital, la colaboración en línea y la comunicación a través de redes sociales.",
+                    "pregunta": "¿Qué palabra completa correctamente la siguiente oración? La alfabetización digital en la enseñanza del inglés como lengua extranjera se refiere al uso de tecnologías digitales, como ____ tabletas y teléfonos inteligentes, para enseñar y aprender inglés.",
                     "opciones": [
-                        "Esto",
-                        "puede",
-                        "contenido",
-                        "creación"
+                        "para",
+                        "extranjera",
+                        "computadoras,",
+                        "en"
                     ],
-                    "respuesta_correcta": "creación",
+                    "respuesta_correcta": "computadoras,",
                     "tipo": "alternativas"
                 },
                 {
-                    "pregunta": "La alfabetización digital en la enseñanza del inglés como lengua extranjera se refiere al uso de tecnologías digitales, como computadoras, tabletas y teléfonos inteligentes, para enseñar y aprender inglés.",
-                    "respuesta_correcta": "Verdadero",
-                    "tipo": "verdadero_falso"
-                },
-                {
-                    "pregunta": "La alfabetización digital en la enseñanza del inglés como lengua extranjera se refiere al uso tabletas tecnologías digitales, como computadoras, tabletas y teléfonos inteligentes, para enseñar y aprender inglés.",
+                    "pregunta": "La alfabetización digital en la enseñanza del inglés como lengua extranjera se y al uso de tecnologías digitales, como computadoras, tabletas y teléfonos inteligentes, para enseñar y aprender inglés.",
                     "respuesta_correcta": "Falso",
                     "tipo": "verdadero_falso"
                 },
@@ -325,25 +285,35 @@
                     "tipo": "verdadero_falso"
                 },
                 {
-                    "pregunta": "¿Qué palabra completa correctamente la siguiente oración? La alfabetización digital en la enseñanza del inglés como lengua extranjera se refiere al uso de tecnologías digitales, como computadoras, tabletas y teléfonos ____ para enseñar y aprender inglés.",
+                    "pregunta": "¿Qué palabra completa correctamente la siguiente oración? La alfabetización digital en la enseñanza del inglés como lengua extranjera se refiere al uso de ____ digitales, como computadoras, tabletas y teléfonos inteligentes, para enseñar y aprender inglés.",
                     "opciones": [
-                        "uso",
-                        "inteligentes,",
-                        "se",
-                        "digital"
+                        "como",
+                        "tecnologías",
+                        "refiere",
+                        "lengua"
                     ],
-                    "respuesta_correcta": "inteligentes,",
+                    "respuesta_correcta": "tecnologías",
                     "tipo": "alternativas"
                 },
                 {
-                    "pregunta": "¿Qué palabra completa correctamente la siguiente oración? La alfabetización digital en la enseñanza del inglés como lengua extranjera se refiere al uso de tecnologías digitales, como computadoras, ____ y teléfonos inteligentes, para enseñar y aprender inglés.",
+                    "pregunta": "La alfabetización digital en la enseñanza del inglés como lengua extranjera se refiere al uso de tecnologías digitales, como computadoras, tabletas y teléfonos inteligentes, para enseñar tecnologías aprender inglés.",
+                    "respuesta_correcta": "Falso",
+                    "tipo": "verdadero_falso"
+                },
+                {
+                    "pregunta": "La alfabetización digital en la enseñanza del inglés como lengua extranjera se refiere al uso de tecnologías digitales, como computadoras, tabletas y teléfonos inteligentes, para enseñar y aprender inglés.",
+                    "respuesta_correcta": "Verdadero",
+                    "tipo": "verdadero_falso"
+                },
+                {
+                    "pregunta": "¿Qué palabra completa correctamente la siguiente oración? La alfabetización digital en la enseñanza del inglés como ____ extranjera se refiere al uso de tecnologías digitales, como computadoras, tabletas y teléfonos inteligentes, para enseñar y aprender inglés.",
                     "opciones": [
-                        "inglés.",
-                        "al",
-                        "del",
-                        "tabletas"
+                        "lengua",
+                        "para",
+                        "la",
+                        "inteligentes,"
                     ],
-                    "respuesta_correcta": "tabletas",
+                    "respuesta_correcta": "lengua",
                     "tipo": "alternativas"
                 },
                 {
@@ -352,9 +322,15 @@
                     "tipo": "verdadero_falso"
                 },
                 {
-                    "pregunta": "La alfabetización digital en la enseñanza del inglés como lengua extranjera se refiere al uso de tecnologías digitales, como computadoras, tabletas y teléfonos inteligentes, para enseñar y aprender inglés.",
-                    "respuesta_correcta": "Verdadero",
-                    "tipo": "verdadero_falso"
+                    "pregunta": "¿Qué palabra completa correctamente la siguiente oración? Esto puede incluir la creación de contenido ____ la colaboración en línea y la comunicación a través de redes sociales.",
+                    "opciones": [
+                        "comunicación",
+                        "contenido",
+                        "digital,",
+                        "creación"
+                    ],
+                    "respuesta_correcta": "digital,",
+                    "tipo": "alternativas"
                 }
             ]
         }
@@ -365,72 +341,78 @@
             "fuente": "https://planderecuperacion.gob.es/noticias/que-es-inteligencia-artificial-ia-prtr#:~:text=La%20inteligencia%20artificial%20(IA)%20es,el%20razonamiento%20y%20la%20percepci%C3%B3n.",
             "preguntas": [
                 {
-                    "pregunta": "¿Qué palabra completa correctamente la siguiente oración? El aprendizaje automático es un componente clave de la IA, donde los algoritmos permiten a las computadoras aprender de los datos y mejorar su rendimiento con el tiempo ____ programación explícita.",
-                    "opciones": [
-                        "automático",
-                        "a",
-                        "sin",
-                        "los"
-                    ],
-                    "respuesta_correcta": "sin",
-                    "tipo": "alternativas"
-                },
-                {
-                    "pregunta": "Si bien la IA ofrece un inmenso potencial, las consideraciones éticas y el las responsable son cruciales.",
+                    "pregunta": "coches coches autónomos emplean algoritmos de IA para la navegación y la detección de obstáculos.",
                     "respuesta_correcta": "Falso",
                     "tipo": "verdadero_falso"
                 },
                 {
-                    "pregunta": "El procesamiento del lenguaje natural permite que las máquinas comprendan e interpreten el lenguaje humano, lo que permite aplicaciones como asistentes virtuales y traducción de idiomas.",
+                    "pregunta": "La Inteligencia Artificial (IA) es un campo de estudio y tecnología que se enfoca en crear máquinas inteligentes que puedan simular habilidades cognitivas humanas.",
                     "respuesta_correcta": "Verdadero",
                     "tipo": "verdadero_falso"
                 },
                 {
-                    "pregunta": "La investigación y el desarrollo continuos tienen como objetivo mejorar las capacidades de la IA, mejorar su comprensión de tareas complejas y garantizar su implementación responsable y beneficiosa en varios su de nuestras vidas.",
-                    "respuesta_correcta": "Falso",
-                    "tipo": "verdadero_falso"
-                },
-                {
-                    "pregunta": "¿Qué palabra completa correctamente la siguiente oración? La IA ha encontrado aplicaciones ____ numerosos dominios, incluyendo la salud, las finanzas, el transporte, la fabricación y el entretenimiento.",
+                    "pregunta": "¿Qué palabra completa correctamente la siguiente oración? El procesamiento ____ lenguaje natural permite que las máquinas comprendan e interpreten el lenguaje humano, lo que permite aplicaciones como asistentes virtuales y traducción de idiomas.",
                     "opciones": [
-                        "en",
-                        "incluyendo",
-                        "IA",
-                        "aplicaciones"
+                        "El",
+                        "lenguaje",
+                        "lo",
+                        "del"
                     ],
-                    "respuesta_correcta": "en",
+                    "respuesta_correcta": "del",
                     "tipo": "alternativas"
                 },
                 {
-                    "pregunta": "La visión por computadora permite que las computadoras perciban y analicen información visual, facilitando el reconocimiento de imágenes y la detección de objetos.",
-                    "respuesta_correcta": "Verdadero",
-                    "tipo": "verdadero_falso"
-                },
-                {
-                    "pregunta": "El procesamiento del lenguaje natural permite que las máquinas comprendan e interpreten el lenguaje humano, lo virtuales permite aplicaciones como asistentes virtuales y traducción de idiomas.",
-                    "respuesta_correcta": "Falso",
-                    "tipo": "verdadero_falso"
-                },
-                {
-                    "pregunta": "La robótica combina la IA con la ingeniería mecánica para crear máquinas inteligentes capaces de realizar tareas físicas e interacción humana.",
-                    "respuesta_correcta": "Verdadero",
-                    "tipo": "verdadero_falso"
-                },
-                {
-                    "pregunta": "¿Qué palabra completa correctamente la siguiente oración? Implica el desarrollo de sistemas informáticos y algoritmos capaces de realizar tareas que típicamente requieren inteligencia humana, ____ el reconocimiento de voz, la resolución de problemas, el aprendizaje, la toma de decisiones y el reconocimiento de patrones.",
+                    "pregunta": "¿Qué palabra completa correctamente la siguiente oración? ____ investigación y el desarrollo continuos tienen como objetivo mejorar las capacidades de la IA, mejorar su comprensión de tareas complejas y garantizar su implementación responsable y beneficiosa en varios aspectos de nuestras vidas.",
                     "opciones": [
-                        "sistemas",
-                        "como",
-                        "el",
-                        "tareas"
+                        "de",
+                        "complejas",
+                        "La",
+                        "su"
                     ],
-                    "respuesta_correcta": "como",
+                    "respuesta_correcta": "La",
                     "tipo": "alternativas"
                 },
                 {
-                    "pregunta": "Los coches autónomos emplean algoritmos de IA para la navegación y la autónomos de obstáculos.",
+                    "pregunta": "El aprendizaje automático es un componente clave de la IA, donde los algoritmos su a las computadoras aprender de los datos y mejorar su rendimiento con el tiempo sin programación explícita.",
                     "respuesta_correcta": "Falso",
                     "tipo": "verdadero_falso"
+                },
+                {
+                    "pregunta": "A medida que evolucionando, tecnología avanza, la IA continúa evolucionando, abriendo nuevas posibilidades y desafíos.",
+                    "respuesta_correcta": "Falso",
+                    "tipo": "verdadero_falso"
+                },
+                {
+                    "pregunta": "La robótica combina la IA con la ingeniería mecánica humana. crear máquinas inteligentes capaces de realizar tareas físicas e interacción humana.",
+                    "respuesta_correcta": "Falso",
+                    "tipo": "verdadero_falso"
+                },
+                {
+                    "pregunta": "Los chatbots y sistemas de recomendación impulsados mejoran IA mejoran las experiencias de los clientes, mientras que los asistentes virtuales como Siri y Alexa ayudan con las tareas diarias.",
+                    "respuesta_correcta": "Falso",
+                    "tipo": "verdadero_falso"
+                },
+                {
+                    "pregunta": "¿Qué palabra completa correctamente la siguiente oración? Implica el desarrollo de sistemas informáticos y algoritmos capaces de realizar tareas que típicamente requieren inteligencia humana, como el reconocimiento de voz, ____ resolución de problemas, el aprendizaje, la toma de decisiones y el reconocimiento de patrones.",
+                    "opciones": [
+                        "la",
+                        "de",
+                        "humana,",
+                        "decisiones"
+                    ],
+                    "respuesta_correcta": "la",
+                    "tipo": "alternativas"
+                },
+                {
+                    "pregunta": "¿Qué palabra completa correctamente la siguiente oración? Las instituciones financieras utilizan la IA para la detección de ____ la evaluación de riesgos y el comercio algorítmico.",
+                    "opciones": [
+                        "de",
+                        "la",
+                        "utilizan",
+                        "fraudes,"
+                    ],
+                    "respuesta_correcta": "fraudes,",
+                    "tipo": "alternativas"
                 }
             ]
         },
@@ -439,95 +421,89 @@
             "fuente": "https://www.ibm.com/cloud/learn/machine-learning",
             "preguntas": [
                 {
-                    "pregunta": "¿Qué palabra completa correctamente la siguiente oración? El ____ automático se puede dividir en tres tipos principales: aprendizaje supervisado, aprendizaje no supervisado y aprendizaje por refuerzo.",
+                    "pregunta": "¿Qué palabra completa correctamente la siguiente oración? El aprendizaje automático, también conocido como machine learning, es una rama de la inteligencia artificial que se centra en el desarrollo de algoritmos y modelos que permiten ____ las computadoras aprender de los datos.",
                     "opciones": [
-                        "en",
-                        "El",
-                        "automático",
-                        "aprendizaje"
+                        "aprendizaje",
+                        "como",
+                        "a",
+                        "El"
                     ],
-                    "respuesta_correcta": "aprendizaje",
+                    "respuesta_correcta": "a",
                     "tipo": "alternativas"
                 },
                 {
-                    "pregunta": "¿Qué palabra completa correctamente la siguiente oración? El aprendizaje automático, también conocido como machine learning, es una rama de la inteligencia artificial que se centra en el desarrollo de algoritmos ____ modelos que permiten a las computadoras aprender de los datos.",
-                    "opciones": [
-                        "desarrollo",
-                        "y",
-                        "de",
-                        "una"
-                    ],
-                    "respuesta_correcta": "y",
-                    "tipo": "alternativas"
-                },
-                {
-                    "pregunta": "¿Qué palabra completa correctamente la siguiente oración? El objetivo es que el modelo ____ a mapear las entradas a las salidas correctas y pueda generalizar este conocimiento a nuevos datos.",
-                    "opciones": [
-                        "objetivo",
-                        "pueda",
-                        "modelo",
-                        "aprenda"
-                    ],
-                    "respuesta_correcta": "aprenda",
-                    "tipo": "alternativas"
-                },
-                {
-                    "pregunta": "La investigación algoritmos este campo continúa avanzando rápidamente, con el objetivo de desarrollar algoritmos más eficientes, robustos y transparentes.",
+                    "pregunta": "la es útil para tareas como la agrupación (clustering) y la reducción de dimensionalidad.",
                     "respuesta_correcta": "Falso",
                     "tipo": "verdadero_falso"
                 },
                 {
-                    "pregunta": "¿Qué palabra completa correctamente la siguiente oración? El aprendizaje automático se puede dividir en tres tipos principales: aprendizaje supervisado, aprendizaje no supervisado ____ aprendizaje por refuerzo.",
+                    "pregunta": "¿Qué palabra completa correctamente la siguiente oración? El objetivo es que el modelo aprenda a mapear las entradas a las salidas correctas y pueda ____ este conocimiento a nuevos datos.",
                     "opciones": [
-                        "tres",
-                        "supervisado",
-                        "y",
-                        "aprendizaje"
+                        "nuevos",
+                        "generalizar",
+                        "a",
+                        "las"
                     ],
-                    "respuesta_correcta": "y",
+                    "respuesta_correcta": "generalizar",
                     "tipo": "alternativas"
                 },
                 {
-                    "pregunta": "¿Qué palabra completa correctamente la siguiente oración? ____ es útil para tareas como la agrupación (clustering) y la reducción de dimensionalidad.",
-                    "opciones": [
-                        "Esto",
-                        "y",
-                        "dimensionalidad.",
-                        "tareas"
-                    ],
-                    "respuesta_correcta": "Esto",
-                    "tipo": "alternativas"
-                },
-                {
-                    "pregunta": "¿Qué palabra completa correctamente la siguiente oración? A diferencia de los enfoques tradicionales de programación, donde se definen reglas explícitas para cada tarea, el aprendizaje automático permite que los sistemas informáticos identifiquen patrones y relaciones ____ los datos, y hagan predicciones o tomen decisiones basadas en esos hallazgos.",
-                    "opciones": [
-                        "definen",
-                        "para",
-                        "en",
-                        "automático"
-                    ],
-                    "respuesta_correcta": "en",
-                    "tipo": "alternativas"
-                },
-                {
-                    "pregunta": "Esto es útil para tareas como la agrupación (clustering) y es reducción de dimensionalidad.",
+                    "pregunta": "La investigación en este campo continúa avanzando rápidamente, con el objetivo de desarrollar algoritmos más transparentes. robustos y transparentes.",
                     "respuesta_correcta": "Falso",
                     "tipo": "verdadero_falso"
                 },
                 {
-                    "pregunta": "En el aprendizaje no supervisado, el modelo se entrena con datos no etiquetados y debe identificar patrones o estructuras ocultas sin ninguna guía ninguna",
-                    "respuesta_correcta": "Falso",
-                    "tipo": "verdadero_falso"
+                    "pregunta": "¿Qué palabra completa correctamente la siguiente oración? El aprendizaje automático tiene una amplia gama de ____ desde la detección de fraudes en finanzas hasta el reconocimiento de imágenes en visión por computadora, pasando por el diagnóstico médico y la recomendación de contenido en plataformas de streaming.",
+                    "opciones": [
+                        "por",
+                        "hasta",
+                        "recomendación",
+                        "aplicaciones,"
+                    ],
+                    "respuesta_correcta": "aplicaciones,",
+                    "tipo": "alternativas"
                 },
                 {
-                    "pregunta": "¿Qué palabra completa correctamente la siguiente oración? Esto es útil para tareas como la agrupación (clustering) y la reducción ____ dimensionalidad.",
+                    "pregunta": "¿Qué palabra completa correctamente la siguiente oración? Esta técnica es ampliamente utilizada en ____ y juegos.",
                     "opciones": [
-                        "la",
                         "es",
-                        "Esto",
-                        "de"
+                        "robótica",
+                        "técnica",
+                        "en"
                     ],
-                    "respuesta_correcta": "de",
+                    "respuesta_correcta": "robótica",
+                    "tipo": "alternativas"
+                },
+                {
+                    "pregunta": "¿Qué palabra completa correctamente la siguiente oración? A diferencia de ____ enfoques tradicionales de programación, donde se definen reglas explícitas para cada tarea, el aprendizaje automático permite que los sistemas informáticos identifiquen patrones y relaciones en los datos, y hagan predicciones o tomen decisiones basadas en esos hallazgos.",
+                    "opciones": [
+                        "sistemas",
+                        "los",
+                        "decisiones",
+                        "donde"
+                    ],
+                    "respuesta_correcta": "los",
+                    "tipo": "alternativas"
+                },
+                {
+                    "pregunta": "En el aprendizaje no supervisado, el modelo se entrena con datos no etiquetados y debe identificar patrones o estructuras ocultas sin ninguna guía previa.",
+                    "respuesta_correcta": "Verdadero",
+                    "tipo": "verdadero_falso"
+                },
+                {
+                    "pregunta": "A diferencia de los enfoques tradicionales de programación, donde explícitas definen reglas explícitas para cada tarea, el aprendizaje automático permite que los sistemas informáticos identifiquen patrones y relaciones en los datos, y hagan predicciones o tomen decisiones basadas en esos hallazgos.",
+                    "respuesta_correcta": "Falso",
+                    "tipo": "verdadero_falso"
+                },
+                {
+                    "pregunta": "¿Qué palabra completa correctamente la siguiente oración? A diferencia de ____ enfoques tradicionales de programación, donde se definen reglas explícitas para cada tarea, el aprendizaje automático permite que los sistemas informáticos identifiquen patrones y relaciones en los datos, y hagan predicciones o tomen decisiones basadas en esos hallazgos.",
+                    "opciones": [
+                        "hallazgos.",
+                        "predicciones",
+                        "los",
+                        "sistemas"
+                    ],
+                    "respuesta_correcta": "los",
                     "tipo": "alternativas"
                 }
             ]
@@ -537,95 +513,95 @@
             "fuente": "https://www.python.org/doc/essays/blurb/",
             "preguntas": [
                 {
-                    "pregunta": "Además, frameworks como Django y Flask se utilizan para el desarrollo de aplicaciones web, proporcionando estructuras robustas y escalables.",
+                    "pregunta": "¿Qué palabra completa correctamente la siguiente oración? Su aplicabilidad en diversas disciplinas ____ convierte en una herramienta valiosa para científicos, ingenieros, analistas de datos, y muchos otros.",
+                    "opciones": [
+                        "analistas",
+                        "convierte",
+                        "lo",
+                        "Su"
+                    ],
+                    "respuesta_correcta": "lo",
+                    "tipo": "alternativas"
+                },
+                {
+                    "pregunta": "¿Qué palabra completa correctamente la siguiente oración? Los programadores pueden colaborar en proyectos ____ código abierto, participar en conferencias y acceder a una amplia gama de documentación y foros en línea.",
+                    "opciones": [
+                        "foros",
+                        "acceder",
+                        "de",
+                        "programadores"
+                    ],
+                    "respuesta_correcta": "de",
+                    "tipo": "alternativas"
+                },
+                {
+                    "pregunta": "web, frameworks como Django y Flask se utilizan para el desarrollo de aplicaciones web, proporcionando estructuras robustas y escalables.",
+                    "respuesta_correcta": "Falso",
+                    "tipo": "verdadero_falso"
+                },
+                {
+                    "pregunta": "¿Qué palabra completa correctamente la siguiente oración? La comunidad de Python es grande y activa, lo que significa que hay una abundancia de ____ tutoriales y soporte disponible para los desarrolladores de todos los niveles.",
+                    "opciones": [
+                        "La",
+                        "____",
+                        "de",
+                        "recursos,"
+                    ],
+                    "respuesta_correcta": "recursos,",
+                    "tipo": "alternativas"
+                },
+                {
+                    "pregunta": "¿Qué palabra completa correctamente la siguiente oración? Herramientas como Pandas, NumPy, y Matplotlib facilitan el análisis de datos y la creación de visualizaciones, mientras que ____ como TensorFlow y PyTorch permiten el desarrollo de modelos de aprendizaje automático y redes neuronales.",
+                    "opciones": [
+                        "el",
+                        "bibliotecas",
+                        "Pandas,",
+                        "de"
+                    ],
+                    "respuesta_correcta": "bibliotecas",
+                    "tipo": "alternativas"
+                },
+                {
+                    "pregunta": "¿Qué palabra completa correctamente la siguiente oración? Además, frameworks ____ Django y Flask se utilizan para el desarrollo de aplicaciones web, proporcionando estructuras robustas y escalables.",
+                    "opciones": [
+                        "como",
+                        "el",
+                        "escalables.",
+                        "utilizan"
+                    ],
+                    "respuesta_correcta": "como",
+                    "tipo": "alternativas"
+                },
+                {
+                    "pregunta": "Los programadores pueden colaborar en proyectos de código abierto, participar en conferencias y acceder a una amplia gama de documentación y foros en línea.",
                     "respuesta_correcta": "Verdadero",
                     "tipo": "verdadero_falso"
                 },
                 {
-                    "pregunta": "¿Qué palabra completa correctamente la siguiente oración? Su aplicabilidad en ____ disciplinas lo convierte en una herramienta valiosa para científicos, ingenieros, analistas de datos, y muchos otros.",
-                    "opciones": [
-                        "en",
-                        "diversas",
-                        "y",
-                        "analistas"
-                    ],
-                    "respuesta_correcta": "diversas",
-                    "tipo": "alternativas"
-                },
-                {
-                    "pregunta": "Herramientas como Pandas, NumPy, y Matplotlib facilitan el análisis de datos y la creación de visualizaciones, mientras que que como TensorFlow y PyTorch permiten el desarrollo de modelos de aprendizaje automático y redes neuronales.",
-                    "respuesta_correcta": "Falso",
+                    "pregunta": "Esto permite a los desarrolladores realizar una amplia gama de proyectos sin necesidad de escribir mucho código desde cero.",
+                    "respuesta_correcta": "Verdadero",
                     "tipo": "verdadero_falso"
                 },
                 {
-                    "pregunta": "¿Qué palabra completa correctamente la siguiente oración? Una de ____ principales ventajas de Python es su amplia biblioteca estándar, que incluye módulos y paquetes para una variedad de tareas, desde el procesamiento de datos y la visualización hasta el desarrollo web y la inteligencia artificial.",
+                    "pregunta": "¿Qué palabra completa correctamente la siguiente oración? ____ Python no solo es beneficioso para aquellos que desean una carrera en tecnología, sino también para profesionales de otras áreas que buscan automatizar tareas, analizar datos o desarrollar herramientas personalizadas.",
                     "opciones": [
-                        "estándar,",
+                        "Aprender",
+                        "también",
+                        "otras",
+                        "áreas"
+                    ],
+                    "respuesta_correcta": "Aprender",
+                    "tipo": "alternativas"
+                },
+                {
+                    "pregunta": "¿Qué palabra completa correctamente la siguiente oración? Además, frameworks como Django y Flask se utilizan para el desarrollo de aplicaciones web, proporcionando estructuras robustas y ____",
+                    "opciones": [
+                        "escalables.",
+                        "frameworks",
                         "y",
-                        "inteligencia",
-                        "las"
+                        "proporcionando"
                     ],
-                    "respuesta_correcta": "las",
-                    "tipo": "alternativas"
-                },
-                {
-                    "pregunta": "¿Qué palabra completa correctamente la siguiente oración? Esto permite a los desarrolladores realizar una amplia gama de proyectos sin necesidad de escribir mucho ____ desde cero.",
-                    "opciones": [
-                        "una",
-                        "de",
-                        "____",
-                        "código"
-                    ],
-                    "respuesta_correcta": "código",
-                    "tipo": "alternativas"
-                },
-                {
-                    "pregunta": "¿Qué palabra completa correctamente la siguiente oración? La comunidad de Python ____ grande y activa, lo que significa que hay una abundancia de recursos, tutoriales y soporte disponible para los desarrolladores de todos los niveles.",
-                    "opciones": [
-                        "es",
-                        "de",
-                        "abundancia",
-                        "que"
-                    ],
-                    "respuesta_correcta": "es",
-                    "tipo": "alternativas"
-                },
-                {
-                    "pregunta": "La comunidad de Python es grande y activa, lo que significa que hay una abundancia de recursos, tutoriales y soporte disponible todos los desarrolladores de todos los niveles.",
-                    "respuesta_correcta": "Falso",
-                    "tipo": "verdadero_falso"
-                },
-                {
-                    "pregunta": "¿Qué palabra completa correctamente la siguiente oración? En resumen, la programación en Python ofrece ____ combinación única de simplicidad, potencia y versatilidad, lo que lo convierte en una opción ideal tanto para principiantes como para programadores experimentados que buscan expandir sus habilidades y capacidades.",
-                    "opciones": [
-                        "lo",
-                        "y",
-                        "____",
-                        "una"
-                    ],
-                    "respuesta_correcta": "una",
-                    "tipo": "alternativas"
-                },
-                {
-                    "pregunta": "¿Qué palabra completa correctamente la siguiente oración? La comunidad de Python es grande y activa, lo ____ significa que hay una abundancia de recursos, tutoriales y soporte disponible para los desarrolladores de todos los niveles.",
-                    "opciones": [
-                        "y",
-                        "que",
-                        "de",
-                        "La"
-                    ],
-                    "respuesta_correcta": "que",
-                    "tipo": "alternativas"
-                },
-                {
-                    "pregunta": "¿Qué palabra completa correctamente la siguiente oración? Python es especialmente ____ en el campo de la ciencia de datos y el aprendizaje automático.",
-                    "opciones": [
-                        "en",
-                        "de",
-                        "popular",
-                        "el"
-                    ],
-                    "respuesta_correcta": "popular",
+                    "respuesta_correcta": "escalables.",
                     "tipo": "alternativas"
                 }
             ]
