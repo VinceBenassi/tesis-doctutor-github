@@ -1,368 +1,268 @@
 # Generador de Quizzes
 # por Franco Benassi
+import torch
+from transformers import (
+    AutoTokenizer, 
+    AutoModelForQuestionAnswering,
+    AutoModelForSequenceClassification,
+    T5ForConditionalGeneration, 
+    pipeline
+)
+import spacy
 import json
 import random
-import torch
-import nltk
-from nltk.tokenize import sent_tokenize
-from nltk.corpus import stopwords
-from transformers import AutoTokenizer, BertForQuestionAnswering, BertForMaskedLM
-import torch.nn as nn
-import torch.optim as optim
-from collections import Counter
-from torch.utils.data import DataLoader, TensorDataset
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.metrics.pairwise import cosine_similarity
+from typing import List, Dict, Tuple
+import numpy as np
 
-nltk.download('punkt', quiet=True)
-nltk.download('stopwords', quiet=True)
+class GeneradorPreguntas:
+    def __init__(self):
+        # Cargar modelo T5 multilingüe para generación de preguntas
+        self.tokenizer = AutoTokenizer.from_pretrained("google/mt5-small")
+        self.question_generator = T5ForConditionalGeneration.from_pretrained("google/mt5-small")
+        
+        # Pipeline de question-answering en español
+        self.qa_pipeline = pipeline(
+            "question-answering",
+            model="mrm8488/bert-spanish-cased-finetuned-squadv1-es",
+            tokenizer="mrm8488/bert-spanish-cased-finetuned-squadv1-es"
+        )
+        
+        # Modelo para clasificación de relevancia de respuestas
+        self.classifier = AutoModelForSequenceClassification.from_pretrained(
+            "bertin-project/bertin-roberta-base-spanish"
+        )
+        
+        # Spacy para procesamiento de texto en español
+        self.nlp = spacy.load("es_core_news_lg")
+        
+    def extraer_temas_principales(self, texto: str) -> List[str]:
+        """Extrae los temas principales del texto usando análisis NLP"""
+        doc = self.nlp(texto)
+        temas = []
+        
+        # Extraer frases nominales importantes
+        for chunk in doc.noun_chunks:
+            if len(chunk.text.split()) <= 4:
+                temas.append(chunk.text)
+        
+        # Extraer entidades relevantes
+        for ent in doc.ents:
+            if ent.label_ in ['PER', 'ORG', 'LOC', 'CONCEPT']:
+                temas.append(ent.text)
+        
+        return list(set(temas))
+    
+    def generar_pregunta_analisis(self, tema: str, contexto: str) -> Tuple[str, str]:
+        """Genera una pregunta de análisis sobre un tema específico"""
+        # Preparar prompt para T5
+        prompt = f"genera una pregunta de análisis sobre: {tema}\ncontexto: {contexto}"
+        inputs = self.tokenizer(prompt, return_tensors="pt", max_length=512, truncation=True)
+        
+        # Generar pregunta
+        outputs = self.question_generator.generate(
+            inputs["input_ids"],
+            max_length=64,
+            num_beams=4,
+            no_repeat_ngram_size=2
+        )
+        pregunta = self.tokenizer.decode(outputs[0], skip_special_tokens=True)
+        
+        # Obtener respuesta usando QA pipeline
+        respuesta = self.qa_pipeline(question=pregunta, context=contexto)
+        return pregunta, respuesta['answer']
+    
+    def generar_alternativas_coherentes(self, respuesta_correcta: str, contexto: str) -> List[str]:
+        """Genera alternativas coherentes pero incorrectas"""
+        doc = self.nlp(contexto)
+        alternativas = [respuesta_correcta]
+        
+        # Extraer candidatos semánticamente similares
+        candidatos = []
+        for sent in doc.sents:
+            # Calcular similitud semántica
+            similitud = sent.similarity(self.nlp(respuesta_correcta))
+            if 0.5 < similitud < 0.9:  # Lo suficientemente similar pero no idéntico
+                candidatos.append(sent.text)
+        
+        # Seleccionar las mejores alternativas
+        for candidato in sorted(candidatos, key=len)[:3]:  # Tomar las 3 más cortas
+            if self.es_alternativa_valida(candidato, alternativas):
+                alternativas.append(self.refinar_alternativa(candidato))
+        
+        # Si no hay suficientes alternativas, generar algunas
+        while len(alternativas) < 4:
+            nueva_alt = self.generar_alternativa_similar(respuesta_correcta)
+            if nueva_alt and self.es_alternativa_valida(nueva_alt, alternativas):
+                alternativas.append(nueva_alt)
+        
+        random.shuffle(alternativas)
+        return alternativas, alternativas.index(respuesta_correcta)
+    
+    def es_alternativa_valida(self, candidato: str, existentes: List[str]) -> bool:
+        """Verifica si una alternativa es válida y coherente"""
+        if not candidato or len(candidato.split()) > 15:
+            return False
+            
+        # Verificar que no sea muy similar a las existentes
+        for existente in existentes:
+            if self.nlp(candidato).similarity(self.nlp(existente)) > 0.8:
+                return False
+        
+        # Verificar que tenga estructura gramatical válida
+        doc = self.nlp(candidato)
+        return any(token.pos_ in ['NOUN', 'VERB', 'ADJ'] for token in doc)
+    
+    def refinar_alternativa(self, texto: str) -> str:
+        """Refina una alternativa para hacerla más concisa y coherente"""
+        doc = self.nlp(texto)
+        
+        # Extraer la parte más relevante si es muy larga
+        if len(doc) > 10:
+            chunks = list(doc.noun_chunks)
+            if chunks:
+                return chunks[0].text
+        return texto
+    
+    def generar_alternativa_similar(self, texto: str) -> str:
+        """Genera una alternativa similar pero incorrecta"""
+        doc = self.nlp(texto)
+        palabras = [token.text for token in doc if token.pos_ in ['NOUN', 'VERB', 'ADJ']]
+        
+        if not palabras:
+            return None
+            
+        # Reemplazar una palabra clave por un sinónimo o término relacionado
+        palabra = random.choice(palabras)
+        similares = []
+        
+        # Buscar términos similares usando los vectores de palabra
+        vector = self.nlp(palabra).vector
+        for token in self.nlp.vocab:
+            if token.has_vector:
+                similitud = np.dot(token.vector, vector) / (np.linalg.norm(token.vector) * np.linalg.norm(vector))
+                if 0.5 < similitud < 0.9:
+                    similares.append(token.text)
+        
+        if similares:
+            return texto.replace(palabra, random.choice(similares))
+        return None
 
-modelo_nombre = "mrm8488/bert-base-spanish-wwm-cased-finetuned-spa-squad2-es"
-tokenizador = AutoTokenizer.from_pretrained(modelo_nombre)
-modelo_base = BertForQuestionAnswering.from_pretrained(modelo_nombre)
-modelo_mlm = BertForMaskedLM.from_pretrained(modelo_nombre)
+    def generar_pregunta_verdadero_falso(self, texto: str) -> Tuple[str, str]:
+        """Genera una pregunta de verdadero/falso"""
+        doc = self.nlp(texto)
+        oraciones = list(doc.sents)
+        
+        if not oraciones:
+            return None, None
+            
+        # Seleccionar una oración informativa
+        oracion = max(oraciones, key=lambda x: len([t for t in x if t.pos_ in ['NOUN', 'VERB']]))
+        es_verdadero = random.choice([True, False])
+        
+        if es_verdadero:
+            return f"¿Es correcto que {oracion.text.strip()}?", "Verdadero"
+        else:
+            # Modificar la oración para hacerla falsa pero plausible
+            oracion_modificada = self.modificar_oracion_para_falso(oracion.text)
+            return f"¿Es correcto que {oracion_modificada}?", "Falso"
+    
+    def modificar_oracion_para_falso(self, oracion: str) -> str:
+        """Modifica una oración para hacerla falsa pero plausible"""
+        doc = self.nlp(oracion)
+        
+        # Estrategias de modificación
+        estrategias = [
+            self._negar_afirmacion,
+            self._cambiar_entidad,
+            self._modificar_cantidad
+        ]
+        
+        return random.choice(estrategias)(doc)
+    
+    def _negar_afirmacion(self, doc) -> str:
+        """Niega la afirmación principal"""
+        texto = doc.text
+        for token in doc:
+            if token.pos_ == "VERB" and token.dep_ == "ROOT":
+                return texto.replace(token.text, f"no {token.text}")
+        return texto
+    
+    def _cambiar_entidad(self, doc) -> str:
+        """Cambia una entidad por otra del mismo tipo"""
+        texto = doc.text
+        for ent in doc.ents:
+            if ent.label_ in ['PER', 'ORG', 'LOC']:
+                # Usar una entidad diferente del mismo tipo
+                otras_entidades = [e.text for e in self.nlp.vocab.vectors if e.has_vector]
+                if otras_entidades:
+                    return texto.replace(ent.text, random.choice(otras_entidades))
+        return texto
+    
+    def _modificar_cantidad(self, doc) -> str:
+        """Modifica números o cantidades"""
+        texto = doc.text
+        for token in doc:
+            if token.like_num:
+                try:
+                    num = int(token.text)
+                    nuevo_num = num * 2 if num < 100 else num // 2
+                    return texto.replace(token.text, str(nuevo_num))
+                except ValueError:
+                    pass
+        return texto
 
-class GeneradorCuestionarios(nn.Module):
-    def __init__(self, modelo_base):
-        super(GeneradorCuestionarios, self).__init__()
-        self.qa_model = modelo_base
-        self.capa_generacion = nn.Linear(self.qa_model.config.hidden_size, 1000)
-        self.capa_explicacion = nn.Linear(self.qa_model.config.hidden_size, 1000)
-
-    def forward(self, input_ids, attention_mask):
-        salidas = self.qa_model(input_ids=input_ids, attention_mask=attention_mask, output_hidden_states=True)
-        start_logits, end_logits = salidas.start_logits, salidas.end_logits
-        secuencia_oculta = salidas.hidden_states[-1][:, 0, :]
-        generacion = self.capa_generacion(secuencia_oculta)
-        explicacion = self.capa_explicacion(secuencia_oculta)
-        return start_logits, end_logits, generacion, explicacion
-
-
-
-def cargar_datos_json(ruta_archivo):
+def generar_cuestionario(ruta_archivo: str) -> Dict:
+    """Genera un cuestionario completo a partir del archivo JSON"""
     try:
         with open(ruta_archivo, 'r', encoding='utf-8') as archivo:
             datos = json.load(archivo)
-        return datos
-    
     except Exception as e:
         print(f"Error al cargar el archivo JSON: {e}")
         return None
 
-
-
-def preparar_datos(datos):
-    return [item['texto'] for item in datos['quiz']]
-
-
-
-def crear_y_entrenar_modelo(textos):
-    modelo = GeneradorCuestionarios(modelo_base)
-    
-    entradas_codificadas = tokenizador(textos, padding=True, truncation=True, return_tensors="pt", max_length=256)
-    ids_entrada = entradas_codificadas['input_ids']
-    mascara_atencion = entradas_codificadas['attention_mask']
-    
-    conjunto_datos = TensorDataset(ids_entrada, mascara_atencion)
-    cargador_datos = DataLoader(conjunto_datos, batch_size=2, shuffle=True)
-    
-    optimizador = optim.AdamW(modelo.parameters(), lr=1e-5)
-    funcion_perdida = nn.CrossEntropyLoss()
-    
-    modelo.train()
-    num_epocas = 1
-
-    for epoca in range(num_epocas):
-        perdida_total = 0
-
-        for i, batch in enumerate(cargador_datos):
-            ids_batch, mascara_batch = batch
-            optimizador.zero_grad()
-            start_logits, end_logits, generacion, explicacion = modelo(ids_batch, mascara_batch)  # Modificado aquí
-            perdida = funcion_perdida(generacion, ids_batch[:, 0])  # Solo comparamos con el primer token
-            perdida.backward()
-            optimizador.step()
-            perdida_total += perdida.item()
-
-    return modelo
-
-
-
-def extraer_palabras_clave(texto):
-    # Implementar una función para extraer palabras clave del texto
-    # Esto podría usar TF-IDF, conteo de frecuencias, o técnicas más avanzadas de NLP
-    # Por ahora, usaremos una implementación simple basada en la frecuencia de palabras
-    palabras = texto.lower().split()
-    stop_words = set(stopwords.words('spanish'))
-    palabras_filtradas = [palabra for palabra in palabras if palabra not in stop_words and palabra.isalnum()]
-    frecuencia = Counter(palabras_filtradas)
-    return [palabra for palabra, _ in frecuencia.most_common(5)]
-
-
-
-def generar_importancia(frase, modelo_mlm, tokenizador):
-    plantillas = [
-        "Esta información es crucial porque [MASK].",
-        "El concepto es relevante ya que [MASK].",
-        "Entender esto es fundamental para [MASK]."
-    ]
-    plantilla = random.choice(plantillas)
-    entradas = tokenizador(plantilla, return_tensors="pt")
-    with torch.no_grad():
-        salidas = modelo_mlm(**entradas)
-    
-    logits = salidas.logits
-    mascara_token_index = torch.where(entradas["input_ids"][0] == tokenizador.mask_token_id)[0]
-    predicciones = logits[0, mascara_token_index].topk(1)
-    
-    return tokenizador.decode(predicciones.indices[0]).strip()
-
-
-
-def generar_contexto_adicional(frase, modelo_mlm, tokenizador):
-    plantillas = [
-        "Se relaciona con [MASK] en un contexto más amplio.",
-        "Tiene implicaciones en [MASK] que son importantes de considerar.",
-        "Este concepto es fundamental en el campo de [MASK]."
-    ]
-    plantilla = random.choice(plantillas)
-    entradas = tokenizador(plantilla, return_tensors="pt")
-    with torch.no_grad():
-        salidas = modelo_mlm(**entradas)
-    
-    logits = salidas.logits
-    mascara_token_index = torch.where(entradas["input_ids"][0] == tokenizador.mask_token_id)[0]
-    predicciones = logits[0, mascara_token_index].topk(1)
-    
-    return tokenizador.decode(predicciones.indices[0]).strip()
-
-
-
-def generar_explicacion(texto, modelo, tokenizador):
-    # Generar una explicación basada en el texto y la pregunta
-    plantillas_explicacion = [
-        "Esta pregunta evalúa la comprensión del tema principal del texto, que se centra en {}.",
-        "La respuesta correcta se basa en la idea central del pasaje, que trata sobre {}.",
-        "Para responder correctamente, es importante entender que el texto aborda principalmente {}.",
-        "La clave para esta pregunta está en reconocer que el autor enfatiza {} en el texto."
-    ]
-    
-    palabras_clave = extraer_palabras_clave(texto)
-    tema_principal = " y ".join(palabras_clave[:2])
-    
-    explicacion = random.choice(plantillas_explicacion).format(tema_principal)
-    return explicacion
-
-
-
-def extraer_frases_clave(texto):
-    oraciones = sent_tokenize(texto)
-    stop_words = set(stopwords.words('spanish'))
-    vectorizador = TfidfVectorizer(stop_words=stop_words)
-    tfidf_matriz = vectorizador.fit_transform(oraciones)
-    
-    frases_clave = []
-    for i, oracion in enumerate(oraciones):
-        if len(oracion.split()) > 10:
-            puntuacion = tfidf_matriz[i].sum()
-            frases_clave.append((oracion, puntuacion))
-    
-    frases_clave.sort(key=lambda x: x[1], reverse=True)
-    return [frase for frase, _ in frases_clave[:10]]
-
-
-
-def generar_pregunta_alternativas(texto, modelo, tokenizador):
-    # Extraer conceptos clave del texto
-    palabras_importantes = extraer_palabras_clave(texto)
-    
-    if len(palabras_importantes) < 3:
-        return None
-    
-    # Generar una pregunta de análisis
-    plantillas_preguntas = [
-        "¿Cuál es el concepto principal abordado en el texto?",
-        "¿Qué idea central se desarrolla en este pasaje?",
-        "¿Cuál es la implicación más importante de la información presentada?",
-        "¿Qué conclusión se puede extraer de este texto?",
-        "¿Cuál es el propósito principal del autor en este pasaje?"
-    ]
-    pregunta = random.choice(plantillas_preguntas)
-    
-    # Generar opciones coherentes
-    entradas = tokenizador(texto, return_tensors="pt", max_length=512, truncation=True)
-    with torch.no_grad():
-        salidas = modelo(**entradas, output_hidden_states=True)
-    
-    ultima_capa = salidas.hidden_states[-1]
-    logits = modelo.capa_generacion(ultima_capa[:, 0, :])
-    
-    # Generar opciones usando el modelo y conceptos del texto
-    opciones = set()
-    while len(opciones) < 4:
-        if random.random() < 0.5:  # 50% de probabilidad de usar palabras importantes del texto
-            opcion = " ".join(random.sample(palabras_importantes, min(3, len(palabras_importantes))))
-        else:  # 50% de probabilidad de generar una nueva opción con el modelo
-            indices_prediccion = torch.topk(logits, k=3).indices[0]
-            opcion = tokenizador.decode(indices_prediccion).strip()
-        
-        if opcion and len(opcion.split()) <= 3:
-            opciones.add(opcion)
-    
-    opciones = list(opciones)
-    
-    # Seleccionar la respuesta correcta
-    respuesta_correcta = random.choice(opciones)
-    
-    explicacion = generar_explicacion(texto, palabras_importantes)
-    
-    return {
-        "pregunta": pregunta,
-        "opciones": opciones,
-        "respuesta_correcta": respuesta_correcta,
-        "tipo": "alternativas",
-        "explicacion": explicacion
-    }
-
-def generar_explicacion(texto, palabras_clave):
-    # Generar una explicación basada en el texto y la pregunta
-    plantillas_explicacion = [
-        "Esta pregunta evalúa la comprensión del tema principal del texto, que se centra en {}.",
-        "La respuesta correcta se basa en la idea central del pasaje, que trata sobre {}.",
-        "Para responder correctamente, es importante entender que el texto aborda principalmente {}.",
-        "La clave para esta pregunta está en reconocer que el autor enfatiza {} en el texto."
-    ]
-    
-    tema_principal = " y ".join(palabras_clave[:2])
-    
-    explicacion = random.choice(plantillas_explicacion).format(tema_principal)
-    return explicacion
-
-def extraer_palabras_clave(texto):
-    palabras = texto.lower().split()
-    stop_words = set(stopwords.words('spanish'))
-    palabras_filtradas = [palabra for palabra in palabras if palabra not in stop_words and palabra.isalnum()]
-    frecuencia = Counter(palabras_filtradas)
-    return [palabra for palabra, _ in frecuencia.most_common(5)]
-
-
-
-def generar_pregunta_verdadero_falso(frase, modelo, tokenizador):
-    palabras = frase.split()
-    if len(palabras) < 10:
-        return None
-    
-    palabras_importantes = [p for p in palabras if p.lower() not in set(stopwords.words('spanish'))]
-    if len(palabras_importantes) < 3:
-        return None
-    
-    es_verdadero = random.choice([True, False])
-    
-    if es_verdadero:
-        pregunta = frase
-    else:
-        palabra_original = random.choice(palabras_importantes)
-        indice_palabra = palabras.index(palabra_original)
-        
-        entradas = tokenizador(frase, return_tensers="pt", max_length=512, truncation=True)
-        with torch.no_grad():
-            start_logits, end_logits, generacion = modelo(**entradas)
-        
-        logits = generacion[0]
-        predicciones = logits[indice_palabra].topk(5)
-        
-        palabra_generada = tokenizador.decode([predicciones.indices[random.randint(1, 4)].item()]).strip()
-        palabras[indice_palabra] = palabra_generada
-        pregunta = ' '.join(palabras)
-
-    explicacion = generar_explicacion(frase, modelo, tokenizador)
-    
-    return {
-        "pregunta": pregunta,
-        "respuesta_correcta": "Verdadero" if es_verdadero else "Falso",
-        "tipo": "verdadero_falso",
-        "explicacion": explicacion
-    }
-
-
-
-def verificar_calidad_pregunta(pregunta, texto_original):
-    vectorizador = TfidfVectorizer()
-    vectores = vectorizador.fit_transform([pregunta['pregunta'], texto_original])
-    similitud = cosine_similarity(vectores[0], vectores[1])[0][0]
-    return similitud > 0.3
-
-
-
-def generar_pregunta(texto, modelo, tokenizador):
-    oraciones = sent_tokenize(texto)
-    if not oraciones:
-        return None
-    
-    oracion = random.choice(oraciones)
-    palabras = oracion.split()
-    if len(palabras) < 5:
-        return None
-    
-    tipo_pregunta = random.choice(["verdadero_falso", "alternativas"])
-    
-    if tipo_pregunta == "verdadero_falso":
-        es_verdadero = random.choice([True, False])
-        if es_verdadero:
-            pregunta = oracion
-        else:
-            indice_palabra = random.randint(0, len(palabras) - 1)
-            palabras[indice_palabra] = random.choice(palabras)  # Reemplazamos una palabra al azar
-            pregunta = ' '.join(palabras)
-        
-        return {
-            "pregunta": pregunta,
-            "respuesta_correcta": "Verdadero" if es_verdadero else "Falso",
-            "tipo": "verdadero_falso"
-        }
-    else:
-        palabra_clave = random.choice(palabras)
-        indice_palabra = palabras.index(palabra_clave)
-        palabras[indice_palabra] = "____"
-        pregunta = ' '.join(palabras)
-        
-        opciones = [palabra_clave]
-        while len(opciones) < 4:
-            opcion = random.choice(palabras)
-            if opcion not in opciones:
-                opciones.append(opcion)
-        random.shuffle(opciones)
-        
-        return {
-            "pregunta": f"¿Qué palabra completa correctamente la siguiente oración? {pregunta}",
-            "opciones": opciones,
-            "respuesta_correcta": palabra_clave,
-            "tipo": "alternativas"
-        }
-
-def generar_cuestionarios(datos, modelo, tokenizador):
+    generador = GeneradorPreguntas()
     cuestionarios = {}
-    for i, item in enumerate(datos['quiz']):
+
+    for item in datos['quiz']:
         materia = item['materia']
-        
         if materia not in cuestionarios:
             cuestionarios[materia] = []
-        
-        preguntas = []
-        intentos = 0
 
-        while len(preguntas) < 10 and intentos < 30:
-            try:
-                pregunta = generar_pregunta(item['texto'], modelo, tokenizador)
-                
-                if pregunta:
-                    preguntas.append(pregunta)
-            except Exception as e:
-                print(f"Error al generar pregunta: {e}")
-            intentos += 1
+        texto = item['texto']
+        preguntas = []
         
+        # Extraer temas principales
+        temas = generador.extraer_temas_principales(texto)
+        
+        # Generar preguntas de análisis
+        for _ in range(7):
+            if temas:
+                tema = random.choice(temas)
+                pregunta, respuesta = generador.generar_pregunta_analisis(tema, texto)
+                if pregunta and respuesta:
+                    alternativas, indice_correcto = generador.generar_alternativas_coherentes(
+                        respuesta, texto
+                    )
+                    preguntas.append({
+                        "pregunta": pregunta,
+                        "opciones": alternativas,
+                        "respuesta_correcta": alternativas[indice_correcto],
+                        "tipo": "alternativas"
+                    })
+
+        # Generar preguntas de verdadero/falso
+        for _ in range(3):
+            pregunta, respuesta = generador.generar_pregunta_verdadero_falso(texto)
+            if pregunta and respuesta:
+                preguntas.append({
+                    "pregunta": pregunta,
+                    "opciones": ["Verdadero", "Falso"],
+                    "respuesta_correcta": respuesta,
+                    "tipo": "verdadero_falso"
+                })
+
         cuestionarios[materia].append({
-            "texto": item['texto'],
+            "texto": texto,
             "fuente": item['fuente'],
             "preguntas": preguntas
         })
