@@ -10,310 +10,340 @@ from transformers import (
 import spacy
 import json
 import random
-from typing import List, Dict, Tuple
+from typing import List, Dict, Any
+import numpy as np
 
-class GeneradorCuestionariosIA:
+class GeneradorCuestionarios:
     def __init__(self):
-        # Modelo T5 para generación de preguntas en español
-        self.modelo_preguntas = "google/flan-t5-large"
-        self.tokenizer_preguntas = AutoTokenizer.from_pretrained(self.modelo_preguntas)
-        self.modelo_gen_preguntas = AutoModelForSeq2SeqLM.from_pretrained(self.modelo_preguntas)
+        print("Inicializando modelos...")
         
-        # Modelo para question-answering en español (usando PyTorch)
+        # Modelo FLAN-T5 para generación de preguntas y respuestas
+        self.gen_model_name = "google/flan-t5-large"
+        self.gen_tokenizer = AutoTokenizer.from_pretrained(self.gen_model_name)
+        self.gen_model = AutoModelForSeq2SeqLM.from_pretrained(self.gen_model_name)
+        
+        # Modelo multilingüe para verificación de respuestas
+        self.qa_model_name = "deepset/xlm-roberta-large-squad2"
         self.qa_pipeline = pipeline(
             "question-answering",
-            model="PlanTL-GOB-ES/roberta-large-bne-sqac",
-            tokenizer="PlanTL-GOB-ES/roberta-large-bne-sqac",
-            framework="pt"  # Especificamos PyTorch como framework
+            model=self.qa_model_name,
+            tokenizer=self.qa_model_name
         )
         
-        # Modelo BERT multilingüe para procesamiento de texto
-        self.tokenizer_bert = AutoTokenizer.from_pretrained("dccuchile/bert-base-spanish-wwm-uncased")
-        
-        # Modelo spaCy para análisis de texto en español
+        # Modelo SpaCy para análisis semántico
         self.nlp = spacy.load("es_core_news_lg")
-
-    def generar_pregunta_analisis(self, texto: str) -> Tuple[str, List[str], str]:
-        """Genera una pregunta de análisis con alternativas"""
+        
+    def _extraer_temas_principales(self, texto: str) -> List[Dict[str, Any]]:
+        """Extrae los temas principales y conceptos relevantes del texto"""
         doc = self.nlp(texto)
         
-        # Extraer conceptos clave y entidades
-        entidades = [ent.text for ent in doc.ents]
-        frases_clave = [chunk.text for chunk in doc.noun_chunks]
+        # Identificar oraciones importantes usando criterios lingüísticos
+        temas = []
+        for sent in doc.sents:
+            # Analizar la estructura de la oración
+            sujetos = [chunk for chunk in sent.noun_chunks 
+                      if chunk.root.dep_ in ['nsubj', 'nsubjpass']]
+            verbos = [token for token in sent if token.pos_ == 'VERB']
+            objetos = [chunk for chunk in sent.noun_chunks 
+                      if chunk.root.dep_ in ['dobj', 'pobj']]
+            
+            if sujetos and verbos:
+                tema = {
+                    'oración': sent.text,
+                    'sujetos': [s.text for s in sujetos],
+                    'verbos': [v.text for v in verbos],
+                    'objetos': [o.text for o in objetos],
+                    'importancia': len(sujetos) + len(verbos) + len(objetos)
+                }
+                temas.append(tema)
         
-        # Generar la pregunta
-        prompt = f"Genera una pregunta de análisis sobre: {texto[:500]}"
-        inputs = self.tokenizer_preguntas(prompt, return_tensors="pt", max_length=512, truncation=True)
+        return sorted(temas, key=lambda x: x['importancia'], reverse=True)
+
+    def _generar_pregunta_analítica(self, tema: Dict[str, Any], texto_completo: str) -> Dict:
+        """Genera una pregunta analítica basada en el tema identificado"""
+        # Construir prompt para generar pregunta
+        elementos = tema['sujetos'] + tema['objetos']
+        if not elementos:
+            return None
+            
+        concepto = random.choice(elementos)
         
-        outputs = self.modelo_gen_preguntas.generate(
-            inputs["input_ids"],
-            max_length=128,
-            num_beams=4,
-            temperature=0.7
-        )
+        prompt = f"""
+        Genera una pregunta analítica en español sobre este tema: {tema['oración']}
         
-        pregunta = self.tokenizer_preguntas.decode(outputs[0], skip_special_tokens=True)
+        La pregunta debe:
+        1. Requerir análisis y comprensión
+        2. Estar relacionada con: {concepto}
+        3. Tener una respuesta específica
+        4. Ser clara y bien formulada
+        5. No ser una pregunta de completar espacios
+        6. No ser una pregunta trivial
         
-        # Obtener respuesta usando QA
+        Formato: Solo la pregunta
+        """
+        
         try:
-            qa_result = self.qa_pipeline(
+            # Generar pregunta
+            inputs = self.gen_tokenizer(prompt, return_tensors="pt", max_length=512, truncation=True)
+            outputs = self.gen_model.generate(
+                inputs.input_ids,
+                max_length=128,
+                temperature=0.7,
+                num_beams=4,
+                no_repeat_ngram_size=2
+            )
+            pregunta = self.gen_tokenizer.decode(outputs[0], skip_special_tokens=True)
+            
+            # Obtener respuesta correcta usando QA
+            resultado_qa = self.qa_pipeline(
                 question=pregunta,
-                context=texto,
-                max_answer_length=50
+                context=texto_completo
             )
-            respuesta_correcta = qa_result['answer']
             
-            # Generar alternativas
-            alternativas = self._generar_alternativas(
+            if resultado_qa['score'] < 0.5 or len(resultado_qa['answer'].split()) < 2:
+                return None
+                
+            respuesta_correcta = resultado_qa['answer']
+            
+            # Generar alternativas plausibles
+            alternativas = self._generar_alternativas_coherentes(
                 pregunta, 
-                respuesta_correcta, 
-                texto, 
-                entidades, 
-                frases_clave
+                respuesta_correcta,
+                tema,
+                texto_completo
             )
             
-            return pregunta, alternativas, respuesta_correcta
+            if len(alternativas) < 4:
+                return None
+                
+            return {
+                "pregunta": pregunta,
+                "opciones": alternativas,
+                "respuesta_correcta": respuesta_correcta,
+                "tipo": "alternativas"
+            }
             
         except Exception as e:
-            print(f"Error en generación de pregunta: {e}")
-            return None, None, None
+            print(f"Error al generar pregunta analítica: {str(e)}")
+            return None
 
-    def _generar_alternativas(self, pregunta: str, respuesta_correcta: str, 
-                            texto: str, entidades: List[str], frases_clave: List[str]) -> List[str]:
-        """Genera alternativas coherentes para una pregunta"""
-        alternativas = [respuesta_correcta]
+    def _generar_alternativas_coherentes(
+        self, 
+        pregunta: str, 
+        respuesta_correcta: str, 
+        tema: Dict[str, Any],
+        texto_completo: str
+    ) -> List[str]:
+        """Genera alternativas coherentes y plausibles"""
+        prompt = f"""
+        Pregunta: {pregunta}
+        Respuesta correcta: {respuesta_correcta}
+        Contexto: {tema['oración']}
         
-        # Analizar el tipo de respuesta esperada
-        resp_doc = self.nlp(respuesta_correcta)
-        tipo_respuesta = self._determinar_tipo_respuesta(resp_doc)
+        Genera tres alternativas incorrectas que:
+        1. Sean del mismo tipo que la respuesta correcta
+        2. Estén relacionadas con el tema
+        3. Sean plausibles pero claramente incorrectas
+        4. Tengan longitud y estilo similar
+        5. Sean lógicamente posibles
         
-        # Seleccionar candidatos según el tipo de respuesta
-        candidatos = self._seleccionar_candidatos(
-            tipo_respuesta, 
-            texto, 
-            entidades, 
-            frases_clave, 
-            respuesta_correcta
-        )
+        Formato: Una alternativa por línea
+        """
         
-        # Filtrar y procesar candidatos
-        for candidato in candidatos:
-            if len(alternativas) >= 4:
-                break
-                
-            if self._es_alternativa_valida(candidato, respuesta_correcta, pregunta):
-                alternativas.append(candidato)
-        
-        # Si no hay suficientes alternativas, generar algunas
-        while len(alternativas) < 4:
-            nueva_alt = self._generar_alternativa_similar(
-                respuesta_correcta, 
-                tipo_respuesta
-            )
-            if nueva_alt and nueva_alt not in alternativas:
-                alternativas.append(nueva_alt)
-        
-        random.shuffle(alternativas)
-        return alternativas[:4]
-
-    def _determinar_tipo_respuesta(self, doc) -> str:
-        """Determina el tipo de respuesta esperada"""
-        if any(ent.label_ in ['PER', 'ORG'] for ent in doc.ents):
-            return 'ENTIDAD'
-        elif any(token.pos_ == 'NUM' for token in doc):
-            return 'NUMERICO'
-        elif len(doc) <= 3:
-            return 'CONCEPTO'
-        else:
-            return 'EXPLICACION'
-
-    def _seleccionar_candidatos(self, tipo: str, texto: str, 
-                              entidades: List[str], frases: List[str], 
-                              respuesta: str) -> List[str]:
-        """Selecciona candidatos para alternativas según el tipo"""
-        doc = self.nlp(texto)
-        candidatos = []
-        
-        if tipo == 'ENTIDAD':
-            candidatos = [ent.text for ent in doc.ents 
-                         if ent.text != respuesta and len(ent.text.split()) <= 3]
-        elif tipo == 'NUMERICO':
-            # Extraer números y modificarlos ligeramente
-            nums = [token.text for token in doc if token.like_num]
-            candidatos = [self._modificar_numero(num) for num in nums]
-        elif tipo == 'CONCEPTO':
-            candidatos = [chunk.text for chunk in doc.noun_chunks 
-                         if len(chunk.text.split()) <= 3]
-        else:
-            candidatos = [sent.text for sent in doc.sents 
-                         if len(sent.text.split()) <= 10]
-        
-        return list(set(candidatos))
-
-    def _modificar_numero(self, num_str: str) -> str:
-        """Modifica un número para crear una alternativa plausible"""
         try:
-            num = float(num_str)
-            factor = random.uniform(0.8, 1.2)
-            return str(round(num * factor, 2))
-        except:
-            return num_str
+            inputs = self.gen_tokenizer(prompt, return_tensors="pt", max_length=512, truncation=True)
+            outputs = self.gen_model.generate(
+                inputs.input_ids,
+                max_length=256,
+                num_return_sequences=3,
+                temperature=0.8,
+                num_beams=4,
+                no_repeat_ngram_size=2
+            )
+            
+            alternativas = [respuesta_correcta]
+            for output in outputs:
+                alt = self.gen_tokenizer.decode(output, skip_special_tokens=True).strip()
+                # Verificar que la alternativa sea única y coherente
+                if (alt and 
+                    len(alt.split()) >= 2 and
+                    self._es_alternativa_válida(alt, alternativas, pregunta)):
+                    alternativas.append(alt)
+            
+            # Asegurar que tenemos 4 alternativas únicas
+            while len(alternativas) < 4:
+                nueva_alt = self._generar_alternativa_individual(
+                    pregunta, respuesta_correcta, tema
+                )
+                if nueva_alt and self._es_alternativa_válida(nueva_alt, alternativas, pregunta):
+                    alternativas.append(nueva_alt)
+            
+            random.shuffle(alternativas)
+            return alternativas[:4]
+            
+        except Exception as e:
+            print(f"Error al generar alternativas: {str(e)}")
+            return []
 
-    def _es_alternativa_valida(self, alternativa: str, respuesta: str, pregunta: str) -> bool:
+    def _es_alternativa_válida(
+        self, 
+        alternativa: str, 
+        alternativas_existentes: List[str],
+        pregunta: str
+    ) -> bool:
         """Verifica si una alternativa es válida y coherente"""
-        if not alternativa or alternativa.strip() == respuesta.strip():
+        if not alternativa or len(alternativa.split()) < 2:
             return False
-        
+            
+        # Verificar similitud con pregunta y otras alternativas
         alt_doc = self.nlp(alternativa)
-        resp_doc = self.nlp(respuesta)
         
-        # Verificar similitud semántica
-        similitud = alt_doc.similarity(resp_doc)
-        if similitud > 0.9 or similitud < 0.1:
+        # No debe ser muy similar a la pregunta
+        if self.nlp(pregunta).similarity(alt_doc) > 0.8:
             return False
-        
-        # Verificar longitud y complejidad
-        if len(alternativa.split()) > 2 * len(respuesta.split()):
-            return False
+            
+        # No debe ser muy similar a otras alternativas
+        for existente in alternativas_existentes:
+            if self.nlp(existente).similarity(alt_doc) > 0.7:
+                return False
         
         return True
 
-    def _generar_alternativa_similar(self, respuesta: str, tipo: str) -> str:
-        """Genera una alternativa similar pero incorrecta"""
-        doc = self.nlp(respuesta)
+    def _generar_alternativa_individual(
+        self, 
+        pregunta: str, 
+        respuesta_correcta: str, 
+        tema: Dict[str, Any]
+    ) -> str:
+        """Genera una alternativa individual plausible"""
+        prompt = f"""
+        Pregunta: {pregunta}
+        Respuesta correcta: {respuesta_correcta}
         
-        if tipo == 'NUMERICO':
-            nums = [token.text for token in doc if token.like_num]
-            if nums:
-                return self._modificar_numero(nums[0])
+        Genera una respuesta incorrecta pero plausible que:
+        1. Sea del mismo tipo que la respuesta correcta
+        2. Esté relacionada con: {' '.join(tema['sujetos'])}
+        3. Sea específica y clara
+        4. Tenga longitud similar a la respuesta correcta
         
-        palabras = respuesta.split()
-        if len(palabras) <= 3:
-            return ' '.join(random.sample(palabras, len(palabras)))
+        Formato: Solo la respuesta
+        """
         
-        return None
+        try:
+            inputs = self.gen_tokenizer(prompt, return_tensors="pt", max_length=512, truncation=True)
+            outputs = self.gen_model.generate(
+                inputs.input_ids,
+                max_length=128,
+                temperature=0.8,
+                num_beams=4
+            )
+            
+            return self.gen_tokenizer.decode(outputs[0], skip_special_tokens=True).strip()
+            
+        except Exception as e:
+            print(f"Error al generar alternativa individual: {str(e)}")
+            return None
 
-    def generar_pregunta_vf(self, texto: str) -> Tuple[str, str]:
-        """Genera una pregunta de verdadero/falso"""
-        doc = self.nlp(texto)
+    def _generar_pregunta_vf(self, tema: Dict[str, Any], texto_completo: str) -> Dict:
+        """Genera una pregunta de verdadero/falso analítica"""
+        prompt = f"""
+        Genera una afirmación analítica en español sobre: {tema['oración']}
         
-        # Seleccionar una oración informativa
-        oraciones = [sent.text for sent in doc.sents 
-                    if len(sent.text.split()) > 5 and len(sent.text.split()) < 20]
+        La afirmación debe:
+        1. Ser específica y verificable
+        2. Requerir comprensión del tema
+        3. No ser obvia
+        4. Estar relacionada con: {' '.join(tema['sujetos'] + tema['objetos'])}
+        5. Ser autocontenida (no referirse a elementos externos)
         
-        if not oraciones:
-            return None, None
+        Formato: Solo la afirmación
+        """
         
-        oracion = random.choice(oraciones)
-        es_verdadero = random.choice([True, False])
+        try:
+            inputs = self.gen_tokenizer(prompt, return_tensors="pt", max_length=512, truncation=True)
+            outputs = self.gen_model.generate(
+                inputs.input_ids,
+                max_length=128,
+                temperature=0.7,
+                num_beams=4
+            )
+            
+            afirmación = self.gen_tokenizer.decode(outputs[0], skip_special_tokens=True)
+            
+            # Verificar si la afirmación es verdadera
+            resultado = self.qa_pipeline(
+                question=f"¿Es verdadera esta afirmación? {afirmación}",
+                context=texto_completo
+            )
+            
+            if resultado['score'] < 0.6:
+                return None
+                
+            es_verdadero = resultado['score'] > 0.8
+            
+            return {
+                "pregunta": afirmación,
+                "opciones": ["Verdadero", "Falso"],
+                "respuesta_correcta": "Verdadero" if es_verdadero else "Falso",
+                "tipo": "verdadero_falso"
+            }
+            
+        except Exception as e:
+            print(f"Error al generar pregunta V/F: {str(e)}")
+            return None
+
+    def generar_cuestionario(self, ruta_archivo: str) -> Dict:
+        """Genera el cuestionario completo a partir del archivo JSON"""
+        try:
+            with open(ruta_archivo, 'r', encoding='utf-8') as archivo:
+                datos = json.load(archivo)
+        except Exception as e:
+            print(f"Error al cargar el archivo JSON: {str(e)}")
+            return None
+
+        cuestionarios = {}
         
-        if es_verdadero:
-            pregunta = f"¿Es correcto afirmar que {oracion}?"
-            return pregunta, "Verdadero"
-        else:
-            oracion_modificada = self._modificar_oracion(oracion)
-            pregunta = f"¿Es correcto afirmar que {oracion_modificada}?"
-            return pregunta, "Falso"
-
-    def _modificar_oracion(self, oracion: str) -> str:
-        """Modifica una oración para hacerla falsa pero plausible"""
-        doc = self.nlp(oracion)
+        for item in datos['quiz']:
+            materia = item['materia']
+            texto = item['texto']
+            
+            if materia not in cuestionarios:
+                cuestionarios[materia] = []
+            
+            # Extraer temas principales
+            temas = self._extraer_temas_principales(texto)
+            preguntas = []
+            
+            # Generar preguntas de alternativas (7)
+            intentos_alternativas = 0
+            while len([p for p in preguntas if p['tipo'] == 'alternativas']) < 7 and intentos_alternativas < 14:
+                tema = random.choice(temas)
+                pregunta = self._generar_pregunta_analítica(tema, texto)
+                if pregunta and self._es_pregunta_única(pregunta, preguntas):
+                    preguntas.append(pregunta)
+                intentos_alternativas += 1
+            
+            # Generar preguntas de verdadero/falso (3)
+            intentos_vf = 0
+            while len([p for p in preguntas if p['tipo'] == 'verdadero_falso']) < 3 and intentos_vf < 6:
+                tema = random.choice(temas)
+                pregunta = self._generar_pregunta_vf(tema, texto)
+                if pregunta and self._es_pregunta_única(pregunta, preguntas):
+                    preguntas.append(pregunta)
+                intentos_vf += 1
+            
+            if preguntas:
+                cuestionarios[materia].extend(preguntas)
         
-        # Estrategias de modificación
-        modificaciones = [
-            self._cambiar_sujeto,
-            self._cambiar_verbo,
-            self._agregar_negacion,
-            self._cambiar_objeto
-        ]
-        
-        modificacion = random.choice(modificaciones)
-        oracion_modificada = modificacion(doc)
-        
-        return oracion_modificada if oracion_modificada else oracion
+        return cuestionarios
 
-    def _cambiar_sujeto(self, doc) -> str:
-        """Cambia el sujeto de la oración"""
-        for token in doc:
-            if token.dep_ == 'nsubj':
-                return doc.text.replace(token.text, random.choice(['alguien', 'nadie', 'otro']))
-        return None
-
-    def _cambiar_verbo(self, doc) -> str:
-        """Cambia el verbo principal por su opuesto o similar"""
-        verbos_opuestos = {
-            'es': 'no es',
-            'puede': 'no puede',
-            'tiene': 'carece de',
-            'está': 'no está'
-        }
-        
-        for token in doc:
-            if token.pos_ == 'VERB':
-                return doc.text.replace(token.text, verbos_opuestos.get(token.text, f"no {token.text}"))
-        return None
-
-    def _agregar_negacion(self, doc) -> str:
-        """Agrega o quita una negación"""
-        texto = doc.text
-        if 'no' in texto.lower():
-            return texto.replace('no ', '').replace('No ', '')
-        return f"no {texto}"
-
-    def _cambiar_objeto(self, doc) -> str:
-        """Cambia el objeto directo de la oración"""
-        for token in doc:
-            if token.dep_ == 'obj':
-                return doc.text.replace(token.text, 'otra cosa')
-        return None
-
-def generar_cuestionario(ruta_archivo: str) -> Dict:
-    """Genera un cuestionario completo a partir del archivo JSON"""
-    try:
-        with open(ruta_archivo, 'r', encoding='utf-8') as archivo:
-            datos = json.load(archivo)
-    except Exception as e:
-        print(f"Error al cargar el archivo JSON: {e}")
-        return None
-
-    generador = GeneradorCuestionariosIA()
-    cuestionarios = {}
-
-    for item in datos['quiz']:
-        materia = item['materia']
-        if materia not in cuestionarios:
-            cuestionarios[materia] = []
-
-        texto = item['texto']
-        preguntas = []
-        
-        # Generar preguntas de alternativas
-        for _ in range(7):  # Intentar generar 7 preguntas de alternativas
-            pregunta, alternativas, respuesta = generador.generar_pregunta_analisis(texto)
-            if pregunta and alternativas and respuesta:
-                preguntas.append({
-                    "pregunta": pregunta,
-                    "opciones": alternativas,
-                    "respuesta_correcta": respuesta,
-                    "tipo": "alternativas"
-                })
-
-        # Generar preguntas de verdadero/falso
-        for _ in range(3):  # Intentar generar 3 preguntas de V/F
-            pregunta, respuesta = generador.generar_pregunta_vf(texto)
-            if pregunta and respuesta:
-                preguntas.append({
-                    "pregunta": pregunta,
-                    "opciones": ["Verdadero", "Falso"],
-                    "respuesta_correcta": respuesta,
-                    "tipo": "verdadero_falso"
-                })
-
-        if preguntas:
-            cuestionarios[materia].append({
-                "texto": texto,
-                "fuente": item['fuente'],
-                "preguntas": preguntas
-            })
-
-    return cuestionarios
+    def _es_pregunta_única(self, pregunta: Dict, preguntas: List[Dict]) -> bool:
+        """Verifica si una pregunta es única en el conjunto"""
+        if not pregunta:
+            return False
+            
+        pregunta_doc = self.nlp(pregunta['pregunta'])
+        for p in preguntas:
+            if self.nlp(p['pregunta']).similarity(pregunta_doc) > 0.7:
+                return False
+        return True
