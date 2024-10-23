@@ -11,265 +11,321 @@ import spacy
 import json
 import random
 from typing import List, Dict, Any
+import numpy as np
 
 class GeneradorCuestionarios:
     def __init__(self):
         print("Inicializando modelos...")
         
-        # Modelo FLAN-T5 para generación de preguntas analíticas
-        self.qa_model_name = "google/flan-t5-xl"
+        # Modelo T5 multilingüe para generación de preguntas
+        self.qa_model_name = "google/mt5-large"
         self.qa_tokenizer = AutoTokenizer.from_pretrained(self.qa_model_name)
         self.qa_model = T5ForConditionalGeneration.from_pretrained(self.qa_model_name)
         
-        # DeBERTa multilingüe para verificación semántica
+        # Pipeline de BERT multilingüe para verificación de respuestas
         self.verifier = pipeline(
             "question-answering",
-            model="microsoft/mdeberta-v3-base",
-            tokenizer="microsoft/mdeberta-v3-base"
+            model="mrm8488/bert-multilingual-uncased-question-answering",
+            tokenizer="mrm8488/bert-multilingual-uncased-question-answering"
         )
         
-        # SpaCy para análisis semántico en español
+        # Modelo T5 para generar alternativas 
+        self.alt_model_name = "google/flan-t5-large"
+        self.alt_tokenizer = AutoTokenizer.from_pretrained(self.alt_model_name)
+        self.alt_model = T5ForConditionalGeneration.from_pretrained(self.alt_model_name)
+        
+        # SpaCy para análisis semántico
         self.nlp = spacy.load("es_core_news_lg")
 
-    def _extraer_contextos(self, texto: str) -> List[Dict]:
-        """Extrae contextos relevantes del texto para generar preguntas"""
+    def _analizar_texto(self, texto: str) -> List[Dict]:
+        """Extrae conceptos y relaciones clave del texto"""
         doc = self.nlp(texto)
-        contextos = []
+        conceptos = []
         
-        # Identificar párrafos relevantes
-        parrafos = texto.split('\n\n')
-        for parrafo in parrafos:
-            if len(parrafo.split()) > 20:  # Párrafos sustanciales
-                doc_parrafo = self.nlp(parrafo)
-                
-                # Extraer entidades y conceptos clave
+        for sent in doc.sents:
+            if len(sent.text.split()) > 8:
+                # Identificar entidades y conceptos principales
                 entidades = []
-                conceptos = []
-                relaciones = []
-                
-                for ent in doc_parrafo.ents:
-                    if ent.label_ in ['PER', 'ORG', 'LOC', 'MISC']:
+                for ent in sent.ents:
+                    if ent.label_ in ['ORG', 'PERSON', 'LOC', 'MISC']:
                         entidades.append({
                             'texto': ent.text,
                             'tipo': ent.label_
                         })
                 
-                for token in doc_parrafo:
-                    if token.pos_ in ['NOUN', 'VERB', 'ADJ'] and not token.is_stop:
-                        conceptos.append({
-                            'texto': token.text,
-                            'tipo': token.pos_,
-                            'importancia': token.vector_norm
-                        })
-                    
-                    if token.dep_ in ['nsubj', 'dobj', 'pobj']:
-                        relaciones.append({
-                            'origen': token.head.text,
-                            'tipo': token.dep_,
-                            'destino': token.text
-                        })
+                # Identificar verbos y sus argumentos
+                verbos = []
+                for token in sent:
+                    if token.pos_ == 'VERB':
+                        argumentos = []
+                        for child in token.children:
+                            if child.dep_ in ['nsubj', 'dobj', 'iobj']:
+                                argumentos.append({
+                                    'texto': child.text,
+                                    'rol': child.dep_
+                                })
+                        if argumentos:
+                            verbos.append({
+                                'verbo': token.text,
+                                'argumentos': argumentos
+                            })
                 
-                if entidades or conceptos:
-                    contextos.append({
-                        'texto': parrafo,
+                if entidades or verbos:
+                    conceptos.append({
+                        'oracion': sent.text,
                         'entidades': entidades,
-                        'conceptos': conceptos,
-                        'relaciones': relaciones
+                        'verbos': verbos
                     })
         
-        return contextos
+        return conceptos
 
-    def _generar_pregunta_analitica(self, contexto: Dict) -> Dict:
-        """Genera una pregunta analítica con alternativas coherentes"""
+    def _generar_pregunta(self, concepto: Dict, texto_completo: str) -> Dict:
+        """Genera una pregunta analítica basada en el concepto"""
         try:
-            # Construir prompt para generar pregunta
-            conceptos_str = ", ".join([c['texto'] for c in contexto['conceptos']])
-            prompt = f"""
-            Genera una pregunta de análisis en español sobre este texto:
-            {contexto['texto']}
+            # Construir prompt específico según el tipo de concepto
+            if concepto['entidades']:
+                entidad = random.choice(concepto['entidades'])
+                prompt = f"""
+                Contexto: {concepto['oracion']}
+                
+                Genera una pregunta analítica sobre {entidad['texto']} que:
+                1. Requiera comprensión profunda del tema
+                2. Tenga múltiples respuestas posibles pero una clara correcta
+                3. Se enfoque en las relaciones, causas o efectos
+                4. No se pueda responder con una sola palabra
+                """
+            elif concepto['verbos']:
+                verbo = random.choice(concepto['verbos'])
+                prompt = f"""
+                Contexto: {concepto['oracion']}
+                
+                Genera una pregunta analítica sobre la acción '{verbo['verbo']}' que:
+                1. Explore las consecuencias o implicaciones
+                2. Requiera análisis y razonamiento
+                3. Relacione múltiples conceptos del texto
+                4. Tenga una respuesta específica pero no obvia
+                """
             
-            La pregunta debe:
-            1. Requerir comprensión y análisis
-            2. Relacionar estos conceptos: {conceptos_str}
-            3. Tener una respuesta específica pero no obvia
-            4. Ser clara y bien formulada
-            
-            Formato: Pregunta?|Respuesta correcta
-            """
-            
-            # Generar pregunta y respuesta correcta
+            # Generar pregunta
             inputs = self.qa_tokenizer(prompt, return_tensors="pt", max_length=512, 
-                                   truncation=True, padding=True)
+                                   truncation=True)
             outputs = self.qa_model.generate(
                 inputs.input_ids,
                 max_length=150,
                 num_beams=5,
+                temperature=0.8,
                 do_sample=True,
-                temperature=0.7,
                 top_p=0.9
             )
-            resultado = self.qa_tokenizer.decode(outputs[0], skip_special_tokens=True)
+            pregunta = self.qa_tokenizer.decode(outputs[0], skip_special_tokens=True)
             
-            # Separar pregunta y respuesta
-            partes = resultado.split('|')
-            if len(partes) != 2:
-                return None
-                
-            pregunta, respuesta_correcta = partes
+            # Obtener respuesta correcta usando el verificador
+            respuesta = self.verifier(
+                question=pregunta,
+                context=texto_completo
+            )
             
-            # Generar alternativas incorrectas pero plausibles
-            alternativas = [respuesta_correcta]
+            # Generar alternativas plausibles
+            alternativas = self._generar_alternativas(
+                pregunta,
+                respuesta['answer'],
+                concepto,
+                texto_completo
+            )
             
-            # Prompt para alternativas
-            prompt_alt = f"""
-            Pregunta: {pregunta}
-            Respuesta correcta: {respuesta_correcta}
-            
-            Genera una respuesta incorrecta pero plausible que:
-            1. Use conceptos relacionados: {conceptos_str}
-            2. Tenga un nivel similar de detalle
-            3. Pueda parecer correcta a primera vista
-            4. Sea diferente a: {', '.join(alternativas)}
-            """
-            
-            for _ in range(4):  # Generar más alternativas de las necesarias
-                inputs = self.qa_tokenizer(prompt_alt, return_tensors="pt", 
-                                       max_length=512, truncation=True)
-                outputs = self.qa_model.generate(
-                    inputs.input_ids,
-                    max_length=100,
-                    do_sample=True,
-                    temperature=0.8,
-                    top_p=0.9,
-                    num_beams=4
-                )
-                
-                alternativa = self.qa_tokenizer.decode(outputs[0], skip_special_tokens=True)
-                
-                # Validar calidad de la alternativa
-                if self._validar_alternativa(alternativa, alternativas, pregunta, contexto):
-                    alternativas.append(alternativa)
-                
-                if len(alternativas) >= 4:
-                    break
-            
-            if len(alternativas) >= 4:
-                random.shuffle(alternativas)
+            if alternativas and len(alternativas) >= 4:
                 return {
-                    "pregunta": pregunta.strip(),
-                    "opciones": alternativas,
-                    "respuesta_correcta": respuesta_correcta,
-                    "tipo": "alternativas"
+                    'pregunta': pregunta,
+                    'opciones': alternativas[:4],
+                    'respuesta_correcta': respuesta['answer'],
+                    'tipo': 'alternativas'
                 }
             
             return None
             
         except Exception as e:
-            print(f"Error al generar pregunta analítica: {str(e)}")
+            print(f"Error generando pregunta: {str(e)}")
             return None
+
+    def _generar_alternativas(
+        self,
+        pregunta: str,
+        respuesta_correcta: str,
+        concepto: Dict,
+        texto: str
+    ) -> List[str]:
+        """Genera alternativas coherentes y plausibles"""
+        alternativas = [respuesta_correcta]
+        
+        # Construir prompt para generar alternativas engañosas
+        prompt = f"""
+        Pregunta: {pregunta}
+        Respuesta correcta: {respuesta_correcta}
+        Contexto: {concepto['oracion']}
+        
+        Genera una respuesta alternativa que:
+        1. Sea incorrecta pero parezca plausible
+        2. Use conceptos relacionados al tema
+        3. Sea del mismo tipo y estilo que la respuesta correcta
+        4. Pueda confundir a alguien que no conoce bien el tema
+        5. Sea gramaticalmente correcta y tenga sentido
+        """
+        
+        try:
+            # Generar múltiples alternativas
+            for _ in range(5):
+                inputs = self.alt_tokenizer(prompt, return_tensors="pt", 
+                                        max_length=512, truncation=True)
+                outputs = self.alt_model.generate(
+                    inputs.input_ids,
+                    max_length=100,
+                    temperature=0.9,
+                    do_sample=True,
+                    top_p=0.9,
+                    num_return_sequences=1,
+                    no_repeat_ngram_size=2
+                )
+                
+                alternativa = self.alt_tokenizer.decode(outputs[0], 
+                                                    skip_special_tokens=True)
+                
+                # Validar calidad de la alternativa
+                if self._validar_alternativa(alternativa, alternativas, pregunta):
+                    alternativas.append(alternativa)
+                
+                if len(alternativas) >= 4:
+                    break
+            
+            random.shuffle(alternativas)
+            return alternativas
+            
+        except Exception as e:
+            print(f"Error generando alternativas: {str(e)}")
+            return []
 
     def _validar_alternativa(
         self,
         alternativa: str,
-        alternativas_existentes: List[str],
-        pregunta: str,
-        contexto: Dict
+        existentes: List[str],
+        pregunta: str
     ) -> bool:
-        """Valida que una alternativa sea coherente y única"""
-        if not alternativa or len(alternativa.split()) < 4:
+        """Valida la coherencia y uniqueness de una alternativa"""
+        if not alternativa or len(alternativa.split()) < 3:
             return False
             
-        doc_alt = self.nlp(alternativa)
-        
-        # Verificar coherencia gramatical
-        tiene_sentido = False
-        for token in doc_alt:
-            if token.pos_ == 'VERB':
-                tiene_sentido = True
-                break
-                
-        if not tiene_sentido:
+        # Verificar gramática básica
+        doc = self.nlp(alternativa)
+        if not any(token.pos_ == 'VERB' for token in doc):
             return False
             
-        # Verificar similitud con otras alternativas
-        for existente in alternativas_existentes:
-            doc_existente = self.nlp(existente)
-            similitud = doc_alt.similarity(doc_existente)
+        # Verificar que no sea muy similar a otras alternativas
+        for existente in existentes:
+            similitud = self.nlp(existente).similarity(doc)
             if similitud > 0.7:  # Muy similar
                 return False
-        
-        # Verificar relación con el contexto
-        conceptos_texto = " ".join([c['texto'] for c in contexto['conceptos']])
-        similitud_contexto = self.nlp(conceptos_texto).similarity(doc_alt)
-        if similitud_contexto < 0.3:  # Poco relacionada
+                
+        # Verificar relación con la pregunta
+        similitud_pregunta = self.nlp(pregunta).similarity(doc)
+        if similitud_pregunta < 0.3:  # Poco relacionada
             return False
             
-        return True
+        # Verificar coherencia semántica
+        tiene_sentido = True
+        for token in doc:
+            if token.dep_ == 'ROOT':  # Verbo principal
+                tiene_argumentos = False
+                for child in token.children:
+                    if child.dep_ in ['nsubj', 'dobj']:
+                        tiene_argumentos = True
+                        break
+                if not tiene_argumentos:
+                    tiene_sentido = False
+                    
+        return tiene_sentido
 
-    def _generar_pregunta_vf(self, contexto: Dict) -> Dict:
+    def _generar_pregunta_vf(self, concepto: Dict, texto: str) -> Dict:
         """Genera una pregunta de verdadero/falso analítica"""
         try:
             # Construir prompt para generar afirmación
             prompt = f"""
-            Basado en este texto:
-            {contexto['texto']}
+            Contexto: {concepto['oracion']}
             
-            Genera una afirmación en español que:
+            Genera una afirmación sobre este texto que:
             1. Sea específica y verificable
-            2. Requiera comprensión del texto
-            3. No sea obviamente verdadera o falsa
-            4. Use estos conceptos: {', '.join([c['texto'] for c in contexto['conceptos']])}
-            
-            Formato: Afirmación|Verdadero/Falso|Explicación
+            2. No sea trivialmente verdadera o falsa
+            3. Requiera analizar la información del texto
+            4. Se relacione con los conceptos principales
+            5. Sea clara y bien redactada
             """
             
             inputs = self.qa_tokenizer(prompt, return_tensors="pt", max_length=512, 
                                    truncation=True)
             outputs = self.qa_model.generate(
                 inputs.input_ids,
-                max_length=150,
-                do_sample=True,
-                temperature=0.7,
-                num_beams=4
+                max_length=100,
+                temperature=0.8,
+                num_beams=4,
+                do_sample=True
             )
             
-            resultado = self.qa_tokenizer.decode(outputs[0], skip_special_tokens=True)
-            partes = resultado.split('|')
+            afirmacion = self.qa_tokenizer.decode(outputs[0], skip_special_tokens=True)
             
-            if len(partes) != 3:
-                return None
-                
-            afirmacion, es_verdadero, explicacion = partes
-            
-            # Validar con el verificador
-            verificacion = self.verifier(
+            # Verificar veracidad
+            resultado = self.verifier(
                 question=afirmacion,
-                context=contexto['texto']
+                context=texto
             )
             
-            # Solo usar si hay alta confianza
-            if verificacion['score'] > 0.7:
+            es_verdadero = resultado['score'] > 0.7
+            
+            # Validar calidad de la afirmación
+            if self._validar_afirmacion_vf(afirmacion, texto):
                 return {
-                    "pregunta": afirmacion.strip(),
+                    "pregunta": afirmacion,
                     "opciones": ["Verdadero", "Falso"],
-                    "respuesta_correcta": es_verdadero.strip(),
-                    "explicacion": explicacion.strip(),
+                    "respuesta_correcta": "Verdadero" if es_verdadero else "Falso",
                     "tipo": "verdadero_falso"
                 }
             
             return None
             
         except Exception as e:
-            print(f"Error al generar pregunta V/F: {str(e)}")
+            print(f"Error generando pregunta V/F: {str(e)}")
             return None
 
+    def _validar_afirmacion_vf(self, afirmacion: str, texto: str) -> bool:
+        """Valida que una afirmación V/F sea apropiada"""
+        if not afirmacion or len(afirmacion.split()) < 5:
+            return False
+            
+        doc = self.nlp(afirmacion)
+        
+        # Verificar estructura gramatical
+        tiene_sujeto = False
+        tiene_verbo = False
+        for token in doc:
+            if token.dep_ == 'nsubj':
+                tiene_sujeto = True
+            elif token.pos_ == 'VERB':
+                tiene_verbo = True
+                
+        if not (tiene_sujeto and tiene_verbo):
+            return False
+            
+        # Verificar relación con el texto
+        similitud = doc.similarity(self.nlp(texto))
+        if similitud < 0.3:  # Poco relacionada
+            return False
+            
+        return True
+
     def generar_cuestionario(self, ruta_archivo: str) -> Dict:
-        """Genera el cuestionario completo a partir del archivo JSON"""
+        """Genera el cuestionario completo"""
         try:
             with open(ruta_archivo, 'r', encoding='utf-8') as archivo:
                 datos = json.load(archivo)
         except Exception as e:
-            print(f"Error al cargar el archivo JSON: {str(e)}")
+            print(f"Error al cargar archivo: {str(e)}")
             return None
 
         cuestionarios = {}
@@ -281,235 +337,155 @@ class GeneradorCuestionarios:
             if materia not in cuestionarios:
                 cuestionarios[materia] = []
             
-            # Extraer contextos relevantes
-            contextos = self._extraer_contextos(texto)
-            if not contextos:
-                print(f"No se pudieron extraer contextos para {materia}")
+            # Analizar texto y extraer conceptos
+            conceptos = self._analizar_texto(texto)
+            if not conceptos:
+                print(f"No se pudieron extraer conceptos de {materia}")
                 continue
             
             preguntas = []
             intentos = 0
             max_intentos = 20
             
-            # Generar preguntas de alternativas (7)
+            # Generar preguntas de alternativas
             while len([p for p in preguntas if p['tipo'] == 'alternativas']) < 7 and intentos < max_intentos:
-                contexto = random.choice(contextos)
-                pregunta = self._generar_pregunta_analitica(contexto)
-                if pregunta and self._es_pregunta_valida(pregunta, preguntas):
+                concepto = random.choice(conceptos)
+                pregunta = self._generar_pregunta(concepto, texto)
+                if pregunta and self._validar_pregunta(pregunta, preguntas):
                     preguntas.append(pregunta)
                 intentos += 1
             
-            # Generar preguntas de verdadero/falso (3)
+            # Generar preguntas V/F
             intentos = 0
             while len([p for p in preguntas if p['tipo'] == 'verdadero_falso']) < 3 and intentos < max_intentos:
-                contexto = random.choice(contextos)
-                pregunta = self._generar_pregunta_vf(contexto)
-                if pregunta and self._es_pregunta_valida(pregunta, preguntas):
+                concepto = random.choice(conceptos)
+                pregunta = self._generar_pregunta_vf(concepto, texto)
+                if pregunta and self._validar_pregunta(pregunta, preguntas):
                     preguntas.append(pregunta)
                 intentos += 1
             
-            # Validar y seleccionar mejores preguntas
-            if len(preguntas) >= 8:
-                preguntas_validadas = self._validar_cuestionario(preguntas)
-                if len(preguntas_validadas) >= 10:
-                    cuestionarios[materia].extend(preguntas_validadas[:10])
-                else:
-                    print(f"No se generaron suficientes preguntas válidas para {materia}")
+            # Verificar calidad final
+            preguntas_validas = [p for p in preguntas if self._validar_ortografia(p)]
+            
+            if len(preguntas_validas) >= 8:
+                random.shuffle(preguntas_validas)
+                cuestionarios[materia].extend(preguntas_validas[:10])
             else:
-                print(f"No se generaron suficientes preguntas para {materia}")
+                print(f"No se generaron suficientes preguntas válidas para {materia}")
         
         return cuestionarios
 
-    def _es_pregunta_valida(self, pregunta: Dict, preguntas_existentes: List[Dict]) -> bool:
-        """Verifica si una pregunta es válida y única"""
+    def _validar_pregunta(self, pregunta: Dict, existentes: List[Dict]) -> bool:
+        """Valida una pregunta completa"""
         if not pregunta:
             return False
             
         # Verificar duplicados aproximados
         doc_pregunta = self.nlp(pregunta['pregunta'])
-        for p in preguntas_existentes:
-            similitud = self.nlp(p['pregunta']).similarity(doc_pregunta)
-            if similitud > 0.6:
+        for p in existentes:
+            if self.nlp(p['pregunta']).similarity(doc_pregunta) > 0.7:
                 return False
         
-        # Verificar estructura gramatical
+        # Validar estructura
         doc = self.nlp(pregunta['pregunta'])
-        tiene_estructura = False
+        
+        # Debe tener estructura gramatical básica
+        tiene_verbo = False
+        tiene_sujeto = False
         for token in doc:
-            if token.dep_ == 'ROOT' and token.pos_ == 'VERB':
-                tiene_estructura = True
-                break
+            if token.pos_ == 'VERB':
+                tiene_verbo = True
+            elif token.dep_ == 'nsubj':
+                tiene_sujeto = True
                 
-        if not tiene_estructura:
+        if not (tiene_verbo and tiene_sujeto):
             return False
             
-        # Verificar longitud mínima
-        if len(pregunta['pregunta'].split()) < 5:
+        # Verificar longitud adecuada
+        palabras = len(pregunta['pregunta'].split())
+        if palabras < 5 or palabras > 50:
             return False
             
-        # Verificar ortografía básica
-        if not self._verificar_ortografia(pregunta['pregunta']):
-            return False
-            
-        return True
-
-    def _validar_cuestionario(self, preguntas: List[Dict]) -> List[Dict]:
-        """Valida y selecciona las mejores preguntas del cuestionario"""
-        preguntas_validadas = []
-        
-        for pregunta in preguntas:
-            # Validar formato y coherencia
-            if not self._verificar_ortografia(pregunta['pregunta']):
-                continue
+        # Para preguntas de alternativas
+        if pregunta['tipo'] == 'alternativas':
+            # Verificar cantidad de opciones
+            if len(pregunta['opciones']) != 4:
+                return False
                 
-            # Validar opciones
-            if pregunta['tipo'] == 'alternativas':
-                opciones_validas = True
-                for opcion in pregunta['opciones']:
-                    if not self._verificar_ortografia(opcion) or len(opcion.split()) < 3:
-                        opciones_validas = False
-                        break
-                        
-                if not opciones_validas:
-                    continue
-                    
-                # Verificar respuesta correcta
-                if pregunta['respuesta_correcta'] not in pregunta['opciones']:
-                    continue
-            
-            preguntas_validadas.append(pregunta)
-        
-        # Ordenar por calidad (podría implementarse un scoring más complejo)
-        random.shuffle(preguntas_validadas)
-        return preguntas_validadas
-
-    def _verificar_ortografia(self, texto: str) -> bool:
-        """Realiza verificaciones básicas de ortografía y formato"""
-        if not texto:
-            return False
-            
-        # Verificar caracteres básicos
-        if not all(c.isalnum() or c.isspace() or c in '.,;:¿?¡!()[]' for c in texto):
-            return False
-            
-        # Verificar signos de puntuación balanceados
-        if texto.count('(') != texto.count(')'):
-            return False
-        if texto.count('[') != texto.count(']'):
-            return False
-        if texto.count('¿') != texto.count('?'):
-            return False
-        if texto.count('¡') != texto.count('!'):
-            return False
-            
-        # Verificar espacios después de signos de puntuación
-        for signo in ['.', ',', ';', ':']:
-            for i, c in enumerate(texto[:-1]):
-                if c == signo and texto[i + 1] != ' ':
+            # Verificar que la respuesta correcta esté en las opciones
+            if pregunta['respuesta_correcta'] not in pregunta['opciones']:
+                return False
+                
+            # Verificar coherencia de alternativas
+            for opcion in pregunta['opciones']:
+                if len(opcion.split()) < 2:  # Muy corta
                     return False
                     
-        # Verificar mayúsculas después de punto
-        for i, c in enumerate(texto[:-2]):
-            if c == '.' and texto[i + 1] == ' ' and not texto[i + 2].isupper():
+                # Verificar relación semántica con la pregunta
+                similitud = self.nlp(opcion).similarity(doc_pregunta)
+                if similitud < 0.2:  # Muy poco relacionada
+                    return False
+        
+        # Para preguntas V/F
+        elif pregunta['tipo'] == 'verdadero_falso':
+            # Verificar opciones correctas
+            if set(pregunta['opciones']) != {"Verdadero", "Falso"}:
                 return False
                 
-        # Verificar espacios múltiples
-        if '  ' in texto:
-            return False
-            
-        # Verificar mayúscula inicial
-        if not texto[0].isupper():
-            return False
-            
-        # Verificar terminación adecuada
-        if not texto[-1] in '.!?':
-            return False
-            
-        # Verificar longitud mínima de palabras
-        palabras = texto.split()
-        if any(len(palabra) < 2 for palabra in palabras):
-            return False
-            
+            # Verificar respuesta válida
+            if pregunta['respuesta_correcta'] not in ["Verdadero", "Falso"]:
+                return False
+        
         return True
 
-    def _validar_respuesta(self, respuesta: str, pregunta: str, contexto: str) -> bool:
-        """Valida que una respuesta sea coherente con la pregunta y el contexto"""
-        try:
-            # Verificar coherencia semántica
-            doc_respuesta = self.nlp(respuesta)
-            doc_pregunta = self.nlp(pregunta)
-            
-            # Verificar relación entre pregunta y respuesta
-            similitud = doc_respuesta.similarity(doc_pregunta)
-            if similitud < 0.3:  # Umbral mínimo de relación
+    def _validar_ortografia(self, pregunta: Dict) -> bool:
+        """Valida la ortografía y formato de una pregunta"""
+        textos_a_validar = [pregunta['pregunta']]
+        
+        if pregunta['tipo'] == 'alternativas':
+            textos_a_validar.extend(pregunta['opciones'])
+        
+        for texto in textos_a_validar:
+            # Verificar signos de puntuación básicos
+            if texto.count('(') != texto.count(')'):
                 return False
                 
-            # Verificar que la respuesta use conceptos del contexto
-            doc_contexto = self.nlp(contexto)
-            similitud_contexto = doc_respuesta.similarity(doc_contexto)
-            if similitud_contexto < 0.4:  # Debe estar relacionada con el contexto
-                return False
-                
-            # Verificar estructura gramatical básica
-            tiene_verbo = False
-            tiene_sustantivo = False
-            for token in doc_respuesta:
-                if token.pos_ == 'VERB':
-                    tiene_verbo = True
-                elif token.pos_ in ['NOUN', 'PROPN']:
-                    tiene_sustantivo = True
+            # Verificar espacios después de signos de puntuación
+            for signo in ['.', ',', ';', ':']:
+                if f'{signo} ' not in texto and signo in texto:
+                    return False
                     
-            if not (tiene_verbo and tiene_sustantivo):
+            # Verificar mayúsculas al inicio
+            if not texto[0].isupper():
                 return False
                 
-            # Verificar longitud adecuada
-            palabras = respuesta.split()
-            if len(palabras) < 4 or len(palabras) > 30:
+            # Verificar espacios múltiples
+            if '  ' in texto:
                 return False
                 
-            return True
+            # Verificar signos de interrogación (solo para la pregunta)
+            if texto == pregunta['pregunta']:
+                if pregunta['tipo'] == 'alternativas':
+                    if not (texto.startswith('¿') and texto.endswith('?')):
+                        return False
+                else:  # V/F
+                    if texto.startswith('¿') or texto.endswith('?'):
+                        return False
             
-        except Exception as e:
-            print(f"Error al validar respuesta: {str(e)}")
-            return False
-
-    def _validar_coherencia_alternativas(self, opciones: List[str], respuesta_correcta: str) -> bool:
-        """Valida que las alternativas sean coherentes entre sí"""
-        try:
-            if len(opciones) < 4:
-                return False
-                
-            # Verificar que todas las alternativas sean del mismo tipo
-            tipos_gramaticales = set()
-            for opcion in opciones:
-                doc = self.nlp(opcion)
-                tipo = [token.pos_ for token in doc]
-                tipos_gramaticales.add(tuple(tipo))
-                
-            if len(tipos_gramaticales) > 2:  # Permite cierta variación
-                return False
-                
-            # Verificar longitud similar
-            longitudes = [len(opcion.split()) for opcion in opciones]
-            promedio = sum(longitudes) / len(longitudes)
-            if any(abs(l - promedio) > 5 for l in longitudes):
-                return False
-                
-            # Verificar que la respuesta correcta no destaque
-            doc_correcta = self.nlp(respuesta_correcta)
-            similitudes = []
-            for opcion in opciones:
-                if opcion != respuesta_correcta:
-                    doc_opcion = self.nlp(opcion)
-                    similitud = doc_opcion.similarity(doc_correcta)
-                    similitudes.append(similitud)
+            # Verificar palabras básicas
+            doc = self.nlp(texto)
+            for token in doc:
+                # Verificar palabras muy cortas que no sean artículos o preposiciones
+                if (len(token.text) == 1 and 
+                    token.pos_ not in ['DET', 'ADP'] and 
+                    token.text.lower() not in ['y', 'o', 'a']):
+                    return False
                     
-            # Las alternativas incorrectas deben ser suficientemente similares
-            if min(similitudes) < 0.3:
-                return False
-                
-            return True
-            
-        except Exception as e:
-            print(f"Error al validar coherencia de alternativas: {str(e)}")
-            return False
+                # Verificar palabras sin sentido (tokens no reconocidos)
+                if (token.pos_ == 'X' and 
+                    not token.like_num and 
+                    not token.like_url and 
+                    not token.like_email):
+                    return False
+        
+        return True
