@@ -5,30 +5,15 @@
             "fuente": "https://www.unbosque.edu.co/blog-universidad-el-bosque/que-es-la-medicina",
             "preguntas": [
                 {
-                    "pregunta": "¿Qué representa un papel fundamental?",
+                    "pregunta": "¿Cuál es la importancia de múltiples mitos?",
                     "opciones": [
-                        "un papel fundamental",
-                        "esterilidad",
-                        "la sociedad",
-                        "medicina"
+                        "esta carrera",
+                        "conócelos y aclara todas tus dudas",
+                        "todas tus dudas",
+                        "Alrededor de la medicina"
                     ],
-                    "respuesta_correcta": "medicina",
+                    "respuesta_correcta": "conócelos y aclara todas tus dudas",
                     "tipo": "alternativas"
-                },
-                {
-                    "pregunta": "Durante el embarazo: con la Medicina se protege tanto a la madre como  al embrión y al feto, dándole a conocer a la futura madre los cuidados que debe tener, la dieta y los ejercicios que deberá manejar luego de convertirse en mamá.",
-                    "respuesta_correcta": "Verdadero",
-                    "tipo": "verdadero_falso"
-                },
-                {
-                    "pregunta": "Como puedes ver, la medicina es una ciencia que está presente a lo largo de la vida y estudia los orígenes de las enfermedades de forma que puedan atenderse efectivamente a través del diagnóstico, prevención y tratamiento de las enfermedades que presenta el cuerpo humano.",
-                    "respuesta_correcta": "Verdadero",
-                    "tipo": "verdadero_falso"
-                },
-                {
-                    "pregunta": "Durante la infancia y adolescencia: se hacen seguimientos periódicos que permitan tener una vida saludable, también se pueden descubrir enfermedades genéticas y tratarlas a tiempo.",
-                    "respuesta_correcta": "Verdadero",
-                    "tipo": "verdadero_falso"
                 }
             ]
         },
@@ -37,30 +22,15 @@
             "fuente": "https://www.hopkinsmedicine.org/health/treatment-tests-and-therapies/types-of-surgery",
             "preguntas": [
                 {
-                    "pregunta": "¿Qué característica define a La cirugía robótica?",
+                    "pregunta": "¿Cuál es el principal objetivo de capacitación intensiva?",
                     "opciones": [
-                        "una evolución de la cirugía mínimamente invasiva",
-                        "La cirugía robótica",
-                        "diferentes",
-                        "esterilidad"
+                        "la residencia",
+                        "los médicos",
+                        "técnicas quirúrgicas",
+                        "manejo de complicaciones"
                     ],
-                    "respuesta_correcta": "una evolución de la cirugía mínimamente invasiva",
+                    "respuesta_correcta": "manejo de complicaciones",
                     "tipo": "alternativas"
-                },
-                {
-                    "pregunta": "ortopédica puede ser mínimamente invasiva, utilizando técnicas como la laparoscopia, que implica pequeñas incisiones y el uso de una cámara para guiar el procedimiento, lo que reduce el tiempo de recuperación y el riesgo de complicaciones.",
-                    "respuesta_correcta": "Falso",
-                    "tipo": "verdadero_falso"
-                },
-                {
-                    "pregunta": "utiliza es una evolución de la cirugía mínimamente invasiva, donde los cirujanos utilizan brazos robóticos controlados por computadora para realizar procedimientos con alta precisión.",
-                    "respuesta_correcta": "Falso",
-                    "tipo": "verdadero_falso"
-                },
-                {
-                    "pregunta": "Durante referencia, los médicos reciben capacitación intensiva en técnicas quirúrgicas, cuidados pre y postoperatorios, y manejo de complicaciones.",
-                    "respuesta_correcta": "Falso",
-                    "tipo": "verdadero_falso"
                 }
             ]
         }
@@ -71,46 +41,37 @@
             "fuente": "https://educacion.udp.cl/carreras/pedagogia-en-ingles/",
             "preguntas": [
                 {
-                    "pregunta": "Esto tiene como propósito ofrecer presentaciones, algunas desarrolladas en la universidad y otras en los centros escolares, que permitirán al estudiante aprender a enseñar, logrando sinergia e integración entre teoría y práctica a través de la evaluación y planificación de unidades de aprendizaje en inglés.",
-                    "respuesta_correcta": "Falso",
-                    "tipo": "verdadero_falso"
-                },
-                {
-                    "pregunta": "Programa de formación demostrado tiene un enfoque comunicativo que integra progresivamente el desarrollo de las habilidades de comprensión lectora, comprensión auditiva, expresión oral y expresión escrita, y aborda el aprendizaje de la lingüística desde una perspectiva aplicada.",
-                    "respuesta_correcta": "Falso",
-                    "tipo": "verdadero_falso"
-                },
-                {
-                    "pregunta": "Su foco radica en el aprendizaje y enseñanza de la lengua inglesa en el contexto escolar nacional y de acuerdo con el nacional Mineduc.",
-                    "respuesta_correcta": "Falso",
-                    "tipo": "verdadero_falso"
-                }
-            ]
-        },
-        {
-            "texto": "La alfabetización digital en la enseñanza del inglés como lengua extranjera se refiere al uso de tecnologías digitales, como computadoras, tabletas y teléfonos inteligentes, para enseñar y aprender inglés. Esto puede incluir la creación de contenido digital, la colaboración en línea y la comunicación a través de redes sociales.",
-            "fuente": "https://www.teachingenglish.org.uk/article/digital-literacy",
-            "preguntas": [
-                {
-                    "pregunta": "¿Qué característica define a tecnologías digitales?",
+                    "pregunta": "¿Cuál es el principal objetivo de través del idioma inglés?",
                     "opciones": [
-                        "computadoras, tabletas y teléfonos inteligentes",
-                        ", tabletas",
-                        "La alfabetización digital",
-                        "tecnologías digitales"
+                        "promover el aprendizaje de niños/as y jóvenes",
+                        "como propósito",
+                        "profesionales integrales",
+                        "La carrera"
                     ],
-                    "respuesta_correcta": "computadoras, tabletas y teléfonos inteligentes",
+                    "respuesta_correcta": "promover el aprendizaje de niños/as y jóvenes",
                     "tipo": "alternativas"
                 },
                 {
-                    "pregunta": "Esto puede incluir tratamiento de contenido digital, la colaboración en línea y la comunicación a través de redes sociales.",
-                    "respuesta_correcta": "Falso",
-                    "tipo": "verdadero_falso"
+                    "pregunta": "¿Qué rol desempeña la lengua inglesa?",
+                    "opciones": [
+                        "el aprendizaje",
+                        "aprendizaje y enseñanza",
+                        "el contexto escolar",
+                        "Su foco"
+                    ],
+                    "respuesta_correcta": "aprendizaje y enseñanza",
+                    "tipo": "alternativas"
                 },
                 {
-                    "pregunta": "La alfabetización digital en la enseñanza del inglés como lengua extranjera se refiere al uso de tecnologías digitales, como computadoras, tabletas y teléfonos inteligentes, para enseñar y aprender inglés.",
-                    "respuesta_correcta": "Verdadero",
-                    "tipo": "verdadero_falso"
+                    "pregunta": "¿Cómo se define  entre otros ámbitos?",
+                    "opciones": [
+                        "estudios sobre procesos cognitivos",
+                        "la lengua",
+                        "de la investigación",
+                        "la experiencia internacional"
+                    ],
+                    "respuesta_correcta": "estudios sobre procesos cognitivos",
+                    "tipo": "alternativas"
                 }
             ]
         }
@@ -121,30 +82,26 @@
             "fuente": "https://planderecuperacion.gob.es/noticias/que-es-inteligencia-artificial-ia-prtr#:~:text=La%20inteligencia%20artificial%20(IA)%20es,el%20razonamiento%20y%20la%20percepci%C3%B3n.",
             "preguntas": [
                 {
-                    "pregunta": "¿Qué representa la detección?",
+                    "pregunta": "¿Cómo se define como Siri?",
                     "opciones": [
-                        "Los coches autónomos",
-                        "obstáculos",
-                        "la navegación",
-                        "IA"
+                        "asistentes virtuales",
+                        "las experiencias",
+                        "los clientes",
+                        "Los chatbots"
                     ],
-                    "respuesta_correcta": "obstáculos",
+                    "respuesta_correcta": "asistentes virtuales",
                     "tipo": "alternativas"
                 },
                 {
-                    "pregunta": "A medida que la tecnología avanza, la IA continúa evolucionando, abriendo nuevas posibilidades y desafíos.",
-                    "respuesta_correcta": "Verdadero",
-                    "tipo": "verdadero_falso"
-                },
-                {
-                    "pregunta": "El aprendizaje automático es un componente clave de la IA, donde los algoritmos permiten a las computadoras aprender de los datos y mejorar su rendimiento con el tiempo sin programación explícita.",
-                    "respuesta_correcta": "Verdadero",
-                    "tipo": "verdadero_falso"
-                },
-                {
-                    "pregunta": "Implica el desarrollo de sistemas informáticos y algoritmos capaces de realizar tareas que típicamente requieren inteligencia humana, como el reconocimiento de voz, la resolución de problemas, el aprendizaje, la toma de decisiones y el reconocimiento de patrones.",
-                    "respuesta_correcta": "Verdadero",
-                    "tipo": "verdadero_falso"
+                    "pregunta": "¿Qué rol desempeña La investigación?",
+                    "opciones": [
+                        "como objetivo",
+                        "las capacidades",
+                        "el desarrollo",
+                        "mejorar las capacidades de la IA"
+                    ],
+                    "respuesta_correcta": "mejorar las capacidades de la IA",
+                    "tipo": "alternativas"
                 }
             ]
         },
@@ -153,19 +110,15 @@
             "fuente": "https://www.ibm.com/cloud/learn/machine-learning",
             "preguntas": [
                 {
-                    "pregunta": "evolución se basa en el principio de aprendizaje a través de la interacción con un entorno.",
-                    "respuesta_correcta": "Falso",
-                    "tipo": "verdadero_falso"
-                },
-                {
-                    "pregunta": "El aprendizaje automático se puede dividir en tres tipos principales: aprendizaje supervisado, aprendizaje no supervisado y aprendizaje por refuerzo.",
-                    "respuesta_correcta": "Verdadero",
-                    "tipo": "verdadero_falso"
-                },
-                {
-                    "pregunta": "En el aprendizaje no supervisado, el modelo se entrena con pares y debe identificar patrones o estructuras ocultas sin ninguna guía previa.",
-                    "respuesta_correcta": "Falso",
-                    "tipo": "verdadero_falso"
+                    "pregunta": "¿Cuál es la importancia de el aprendizaje automático?",
+                    "opciones": [
+                        "permite que los sistemas informáticos identifiquen patrones y relaciones en los datos",
+                        "reglas explícitas",
+                        "cada tarea",
+                        "diferencia de los enfoques tradicionales"
+                    ],
+                    "respuesta_correcta": "permite que los sistemas informáticos identifiquen patrones y relaciones en los datos",
+                    "tipo": "alternativas"
                 }
             ]
         },
@@ -174,19 +127,15 @@
             "fuente": "https://www.python.org/doc/essays/blurb/",
             "preguntas": [
                 {
-                    "pregunta": "Esto permite a los desarrolladores realizar computadoras de proyectos sin necesidad de escribir mucho código desde cero.",
-                    "respuesta_correcta": "Falso",
-                    "tipo": "verdadero_falso"
-                },
-                {
-                    "pregunta": "sinergia lo convierte en una herramienta valiosa para científicos, ingenieros, analistas de datos, y muchos otros.",
-                    "respuesta_correcta": "Falso",
-                    "tipo": "verdadero_falso"
-                },
-                {
-                    "pregunta": "La programación en Python se ha convertido en una de las habilidades más buscadas en la industria de la tecnología debido a su versatilidad y facilidad de aprendizaje.",
-                    "respuesta_correcta": "Verdadero",
-                    "tipo": "verdadero_falso"
+                    "pregunta": "¿Qué rol desempeña estructuras robustas y escalables?",
+                    "opciones": [
+                        "como Django",
+                        "el desarrollo",
+                        "aplicaciones web",
+                        "desarrollo de aplicaciones web"
+                    ],
+                    "respuesta_correcta": "desarrollo de aplicaciones web",
+                    "tipo": "alternativas"
                 }
             ]
         }
