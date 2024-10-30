@@ -5,31 +5,14 @@
             "fuente": "https://www.unbosque.edu.co/blog-universidad-el-bosque/que-es-la-medicina",
             "preguntas": [
                 {
-                    "pregunta": "¿Cuál es la importancia de múltiples mitos?",
+                    "pregunta": "¿Qué representa diagnosticar?",
                     "opciones": [
-                        "esta carrera",
-                        "conócelos y aclara todas tus dudas",
-                        "todas tus dudas",
-                        "Alrededor de la medicina"
+                        "esta",
+                        "su correcto desarrollo y condiciones de salud",
+                        "la",
+                        "constante"
                     ],
-                    "respuesta_correcta": "conócelos y aclara todas tus dudas",
-                    "tipo": "alternativas"
-                }
-            ]
-        },
-        {
-            "texto": "La cirugía es una especialidad médica que implica la intervención física para diagnosticar, tratar o prevenir enfermedades y condiciones. Los cirujanos utilizan una variedad de técnicas quirúrgicas para acceder al interior del cuerpo humano, reparar tejidos dañados, extraer tumores o corregir anomalías. La cirugía se puede clasificar en diferentes tipos, dependiendo de la urgencia, el propósito y la técnica utilizada. La cirugía de emergencia se realiza inmediatamente para salvar la vida del paciente, como en el caso de un trauma grave o una apendicitis aguda. La cirugía electiva, por otro lado, se planifica con antelación y no es de urgencia, como una cirugía estética o una reparación de hernia. La cirugía puede ser mínimamente invasiva, utilizando técnicas como la laparoscopia, que implica pequeñas incisiones y el uso de una cámara para guiar el procedimiento, lo que reduce el tiempo de recuperación y el riesgo de complicaciones. La cirugía robótica es una evolución de la cirugía mínimamente invasiva, donde los cirujanos utilizan brazos robóticos controlados por computadora para realizar procedimientos con alta precisión. La formación de un cirujano es rigurosa y extensa. Después de completar la carrera de medicina, los futuros cirujanos deben realizar una residencia en cirugía, que puede durar entre cinco y siete años. Durante la residencia, los médicos reciben capacitación intensiva en técnicas quirúrgicas, cuidados pre y postoperatorios, y manejo de complicaciones. Algunos cirujanos optan por subespecializarse en áreas específicas como la neurocirugía, la cirugía cardiovascular, la cirugía ortopédica, la cirugía plástica, entre otras. La cirugía es una parte vital del sistema de salud y ha avanzado significativamente con el tiempo. Las innovaciones en técnicas quirúrgicas, anestesia y tecnología médica han mejorado la seguridad y la eficacia de los procedimientos quirúrgicos, permitiendo tratar una amplia gama de enfermedades y condiciones de manera más efectiva.",
-            "fuente": "https://www.hopkinsmedicine.org/health/treatment-tests-and-therapies/types-of-surgery",
-            "preguntas": [
-                {
-                    "pregunta": "¿Cuál es el principal objetivo de capacitación intensiva?",
-                    "opciones": [
-                        "la residencia",
-                        "los médicos",
-                        "técnicas quirúrgicas",
-                        "manejo de complicaciones"
-                    ],
-                    "respuesta_correcta": "manejo de complicaciones",
+                    "respuesta_correcta": "su correcto desarrollo y condiciones de salud",
                     "tipo": "alternativas"
                 }
             ]
@@ -41,36 +24,14 @@
             "fuente": "https://educacion.udp.cl/carreras/pedagogia-en-ingles/",
             "preguntas": [
                 {
-                    "pregunta": "¿Cuál es el principal objetivo de través del idioma inglés?",
+                    "pregunta": "¿Qué representa grado?",
                     "opciones": [
-                        "promover el aprendizaje de niños/as y jóvenes",
-                        "como propósito",
-                        "profesionales integrales",
-                        "La carrera"
+                        "grado",
+                        "competencias",
+                        "Licenciado en Educación",
+                        "Educación"
                     ],
-                    "respuesta_correcta": "promover el aprendizaje de niños/as y jóvenes",
-                    "tipo": "alternativas"
-                },
-                {
-                    "pregunta": "¿Qué rol desempeña la lengua inglesa?",
-                    "opciones": [
-                        "el aprendizaje",
-                        "aprendizaje y enseñanza",
-                        "el contexto escolar",
-                        "Su foco"
-                    ],
-                    "respuesta_correcta": "aprendizaje y enseñanza",
-                    "tipo": "alternativas"
-                },
-                {
-                    "pregunta": "¿Cómo se define  entre otros ámbitos?",
-                    "opciones": [
-                        "estudios sobre procesos cognitivos",
-                        "la lengua",
-                        "de la investigación",
-                        "la experiencia internacional"
-                    ],
-                    "respuesta_correcta": "estudios sobre procesos cognitivos",
+                    "respuesta_correcta": "Licenciado en Educación",
                     "tipo": "alternativas"
                 }
             ]
@@ -82,25 +43,14 @@
             "fuente": "https://planderecuperacion.gob.es/noticias/que-es-inteligencia-artificial-ia-prtr#:~:text=La%20inteligencia%20artificial%20(IA)%20es,el%20razonamiento%20y%20la%20percepci%C3%B3n.",
             "preguntas": [
                 {
-                    "pregunta": "¿Cómo se define como Siri?",
+                    "pregunta": "¿Qué representa crear?",
                     "opciones": [
-                        "asistentes virtuales",
-                        "las experiencias",
-                        "los clientes",
-                        "Los chatbots"
+                        "máquinas inteligentes",
+                        "tareas",
+                        "interacción",
+                        "ingeniería"
                     ],
-                    "respuesta_correcta": "asistentes virtuales",
-                    "tipo": "alternativas"
-                },
-                {
-                    "pregunta": "¿Qué rol desempeña La investigación?",
-                    "opciones": [
-                        "como objetivo",
-                        "las capacidades",
-                        "el desarrollo",
-                        "mejorar las capacidades de la IA"
-                    ],
-                    "respuesta_correcta": "mejorar las capacidades de la IA",
+                    "respuesta_correcta": "máquinas inteligentes",
                     "tipo": "alternativas"
                 }
             ]
@@ -110,31 +60,12 @@
             "fuente": "https://www.ibm.com/cloud/learn/machine-learning",
             "preguntas": [
                 {
-                    "pregunta": "¿Cuál es la importancia de el aprendizaje automático?",
+                    "pregunta": "¿De qué manera ajusta comportamiento?",
                     "opciones": [
-                        "permite que los sistemas informáticos identifiquen patrones y relaciones en los datos",
-                        "reglas explícitas",
-                        "cada tarea",
-                        "diferencia de los enfoques tradicionales"
+                        "función el elemento",
+                        "para maximizar la recompensa acumulada"
                     ],
-                    "respuesta_correcta": "permite que los sistemas informáticos identifiquen patrones y relaciones en los datos",
-                    "tipo": "alternativas"
-                }
-            ]
-        },
-        {
-            "texto": "La programación en Python se ha convertido en una de las habilidades más buscadas en la industria de la tecnología debido a su versatilidad y facilidad de aprendizaje. Python es un lenguaje de programación de alto nivel, interpretado y orientado a objetos, conocido por su sintaxis simple y clara, lo que facilita su lectura y escritura. Una de las principales ventajas de Python es su amplia biblioteca estándar, que incluye módulos y paquetes para una variedad de tareas, desde el procesamiento de datos y la visualización hasta el desarrollo web y la inteligencia artificial. Esto permite a los desarrolladores realizar una amplia gama de proyectos sin necesidad de escribir mucho código desde cero. Python es especialmente popular en el campo de la ciencia de datos y el aprendizaje automático. Herramientas como Pandas, NumPy, y Matplotlib facilitan el análisis de datos y la creación de visualizaciones, mientras que bibliotecas como TensorFlow y PyTorch permiten el desarrollo de modelos de aprendizaje automático y redes neuronales. Además, frameworks como Django y Flask se utilizan para el desarrollo de aplicaciones web, proporcionando estructuras robustas y escalables. La comunidad de Python es grande y activa, lo que significa que hay una abundancia de recursos, tutoriales y soporte disponible para los desarrolladores de todos los niveles. Los programadores pueden colaborar en proyectos de código abierto, participar en conferencias y acceder a una amplia gama de documentación y foros en línea. Aprender Python no solo es beneficioso para aquellos que desean una carrera en tecnología, sino también para profesionales de otras áreas que buscan automatizar tareas, analizar datos o desarrollar herramientas personalizadas. Su aplicabilidad en diversas disciplinas lo convierte en una herramienta valiosa para científicos, ingenieros, analistas de datos, y muchos otros. En resumen, la programación en Python ofrece una combinación única de simplicidad, potencia y versatilidad, lo que lo convierte en una opción ideal tanto para principiantes como para programadores experimentados que buscan expandir sus habilidades y capacidades.",
-            "fuente": "https://www.python.org/doc/essays/blurb/",
-            "preguntas": [
-                {
-                    "pregunta": "¿Qué rol desempeña estructuras robustas y escalables?",
-                    "opciones": [
-                        "como Django",
-                        "el desarrollo",
-                        "aplicaciones web",
-                        "desarrollo de aplicaciones web"
-                    ],
-                    "respuesta_correcta": "desarrollo de aplicaciones web",
+                    "respuesta_correcta": "para maximizar la recompensa acumulada",
                     "tipo": "alternativas"
                 }
             ]

@@ -33,6 +33,454 @@ class GeneradorQA:
             print(f"Error inicializando modelos: {str(e)}")
             raise
 
+    def _extraer_conceptos_clave(self, texto: str) -> List[Dict]:
+        """Extrae conceptos clave y sus relaciones de forma dinámica"""
+        doc = self.nlp(texto)
+        conceptos = []
+        
+        # Analizar cada oración para encontrar conceptos significativos
+        for sent in doc.sents:
+            # Identificar términos principales usando análisis de dependencias
+            for token in sent:
+                if self._es_termino_significativo(token):
+                    # Obtener el contexto semántico del término
+                    contexto = self._obtener_contexto_semantico(token, sent)
+                    if contexto:
+                        concepto = {
+                            'texto': token.text,
+                            'contexto': contexto,
+                            'relaciones': self._analizar_relaciones(token, sent)
+                        }
+                        conceptos.append(concepto)
+
+            # Analizar grupos nominales para conceptos compuestos
+            for chunk in sent.noun_chunks:
+                if self._es_concepto_compuesto_valido(chunk):
+                    contexto = self._obtener_contexto_semantico(chunk.root, sent)
+                    if contexto:
+                        concepto = {
+                            'texto': chunk.text,
+                            'contexto': contexto,
+                            'relaciones': self._analizar_relaciones(chunk.root, sent)
+                        }
+                        conceptos.append(concepto)
+        
+        return conceptos
+
+    def _es_termino_significativo(self, token) -> bool:
+        """Determina si un término es significativo para generar preguntas"""
+        # Verificar características lingüísticas
+        es_significativo = (
+            not token.is_stop and
+            not token.is_punct and
+            token.pos_ in ['NOUN', 'PROPN', 'VERB'] and
+            len(token.text) > 2
+        )
+        
+        if es_significativo:
+            # Verificar importancia semántica
+            doc = self.nlp(token.sent.text)
+            importancia = sum(token.similarity(t) for t in doc if t != token) / len(doc)
+            return importancia > 0.3
+            
+        return False
+
+    def _es_concepto_compuesto_valido(self, chunk) -> bool:
+        """Valida si un grupo nominal es un concepto válido para preguntas"""
+        # Verificar estructura y longitud
+        if len(chunk) < 2:
+            return False
+            
+        # Verificar que no sea una frase común o sin significado
+        doc = self.nlp(chunk.text)
+        tiene_contenido = any(not t.is_stop for t in doc)
+        tiene_estructura = any(t.pos_ in ['NOUN', 'PROPN'] for t in doc)
+        
+        return tiene_contenido and tiene_estructura
+
+    def _analizar_relaciones(self, token, sent) -> Dict:
+        """Analiza las relaciones semánticas y sintácticas de un término"""
+        relaciones = {
+            'acciones': [],
+            'propiedades': [],
+            'asociaciones': []
+        }
+        
+        for t in sent:
+            if t.head == token or token in [c for c in t.children]:
+                if t.pos_ == 'VERB' and not t.is_stop:
+                    relaciones['acciones'].append(t.text)
+                elif t.pos_ == 'ADJ':
+                    relaciones['propiedades'].append(t.text)
+                elif t.pos_ in ['NOUN', 'PROPN'] and t != token:
+                    relaciones['asociaciones'].append(t.text)
+                    
+        return relaciones
+
+    def _obtener_contexto_semantico(self, chunk, sent) -> Optional[str]:
+        """Extrae el contexto semántico relevante de una frase"""
+        contexto = []
+        
+        # Analizar dependencias sintácticas
+        for token in sent:
+            if token.head == chunk.root or chunk.root in [child for child in token.children]:
+                if not token.is_stop and token.pos_ in ['VERB', 'NOUN', 'ADJ']:
+                    contexto.append(token.text)
+
+        return ' '.join(contexto) if contexto else None
+
+    def _generar_pregunta_analitica(self, concepto: Dict) -> Optional[Dict]:
+        """Genera una pregunta analítica basada en el análisis semántico"""
+        try:
+            # Analizar el concepto para determinar el tipo de pregunta más apropiado
+            tipo_pregunta = self._determinar_tipo_pregunta_dinamico(concepto)
+            if not tipo_pregunta:
+                return None
+
+            # Generar la pregunta
+            pregunta = self._construir_pregunta_dinamica(concepto, tipo_pregunta)
+            if not pregunta:
+                return None
+
+            # Generar respuesta y alternativas
+            respuesta, alternativas = self._generar_opciones_semanticas(concepto, tipo_pregunta)
+            if not respuesta or len(alternativas) < 3:
+                return None
+
+            # Asegurar coherencia y variedad
+            alternativas_finales = self._ajustar_alternativas(alternativas, respuesta)
+            
+            return {
+                'pregunta': pregunta,
+                'opciones': alternativas_finales,
+                'respuesta_correcta': respuesta,
+                'tipo': 'alternativas'
+            }
+
+        except Exception as e:
+            print(f"Error en generación de pregunta: {str(e)}")
+            return None
+
+    def _determinar_tipo_pregunta_dinamico(self, concepto: Dict) -> Optional[str]:
+        """Determina el tipo de pregunta basado en el análisis del concepto"""
+        relaciones = concepto['relaciones']
+        
+        if relaciones['acciones']:
+            return 'FUNCION'
+        elif relaciones['propiedades']:
+            return 'CARACTERISTICA'
+        elif relaciones['asociaciones']:
+            return 'RELACION'
+        
+        # Análisis semántico para determinar el tipo
+        doc = self.nlp(concepto['texto'])
+        vector_concepto = doc.vector
+        
+        # Calcular similitud con diferentes tipos de preguntas
+        similitudes = {
+            'PROCESO': self.nlp("cómo funciona método procedimiento").similarity(doc),
+            'PROPÓSITO': self.nlp("para qué sirve objetivo finalidad").similarity(doc),
+            'COMPARACION': self.nlp("diferencia distinción contraste").similarity(doc)
+        }
+        
+        tipo = max(similitudes.items(), key=lambda x: x[1])
+        return tipo[0] if tipo[1] > 0.3 else None
+
+    def _construir_pregunta_dinamica(self, concepto: Dict, tipo: str) -> Optional[str]:
+        """Construye una pregunta de forma dinámica según el análisis"""
+        texto_concepto = concepto['texto'].lower()
+        
+        # Generar estructura de pregunta basada en análisis lingüístico
+        doc = self.nlp(texto_concepto)
+        if doc[0].pos_ in ['NOUN', 'PROPN']:
+            texto_concepto = f"el {texto_concepto}" if not texto_concepto.startswith('el ') else texto_concepto
+
+        # Construir pregunta según el tipo y contexto
+        patrones_base = {
+            'FUNCION': [
+                "¿Cuál es el principal propósito de",
+                "¿Para qué se utiliza",
+                "¿Qué función cumple"
+            ],
+            'CARACTERISTICA': [
+                "¿Qué característica define a",
+                "¿Qué distingue a",
+                "¿Cuál es el rasgo principal de"
+            ],
+            'RELACION': [
+                "¿Cómo se relaciona",
+                "¿Qué conexión tiene",
+                "¿Qué vincula a"
+            ],
+            'PROCESO': [
+                "¿Cómo funciona",
+                "¿Cuál es el mecanismo de",
+                "¿De qué manera opera"
+            ],
+            'PROPÓSITO': [
+                "¿Cuál es la finalidad de",
+                "¿Qué busca lograr",
+                "¿Cuál es el objetivo de"
+            ],
+            'COMPARACION': [
+                "¿Qué diferencia a",
+                "¿Cómo se distingue",
+                "¿Qué hace único a"
+            ]
+        }
+        
+        patron = random.choice(patrones_base[tipo])
+        return f"{patron} {texto_concepto}?"
+
+    def _generar_opciones_semanticas(self, concepto: Dict, tipo: str) -> Tuple[Optional[str], List[str]]:
+        """Genera opciones semánticamente coherentes"""
+        # Obtener la respuesta base de las relaciones del concepto
+        respuesta = self._obtener_respuesta_base(concepto, tipo)
+        if not respuesta:
+            return None, []
+
+        # Generar alternativas mediante análisis semántico
+        alternativas = set()
+        doc_respuesta = self.nlp(respuesta)
+        
+        # Analizar el contexto para generar alternativas relacionadas
+        doc_contexto = self.nlp(concepto['contexto'])
+        
+        for token in doc_contexto:
+            if self._es_termino_significativo(token):
+                # Generar alternativa basada en similitud semántica
+                alt = self._generar_alternativa_semantica(token, doc_respuesta, tipo)
+                if alt and alt != respuesta:
+                    alternativas.add(alt)
+
+        # Asegurar suficientes alternativas únicas y coherentes
+        alternativas = list(alternativas)[:3]
+        if len(alternativas) < 3:
+            # Generar alternativas adicionales si es necesario
+            extras = self._generar_alternativas_adicionales(respuesta, tipo)
+            alternativas.extend(extras)
+            alternativas = list(set(alternativas))[:3]
+
+        return respuesta, alternativas
+
+    def _obtener_respuesta_base(self, concepto: Dict, tipo: str) -> Optional[str]:
+        """Obtiene una respuesta base según el tipo de pregunta"""
+        relaciones = concepto['relaciones']
+        
+        if tipo == 'FUNCION' and relaciones['acciones']:
+            return f"{random.choice(relaciones['acciones'])} {concepto['texto']}"
+        elif tipo == 'CARACTERISTICA' and relaciones['propiedades']:
+            return f"{random.choice(relaciones['propiedades'])} {concepto['texto']}"
+        elif tipo == 'RELACION' and relaciones['asociaciones']:
+            return f"Se relaciona con {random.choice(relaciones['asociaciones'])}"
+        
+        # Generar respuesta basada en análisis semántico si no hay relaciones directas
+        doc = self.nlp(concepto['contexto'])
+        vectores_relevantes = [t for t in doc if self._es_termino_significativo(t)]
+        if vectores_relevantes:
+            return random.choice(vectores_relevantes).text
+        
+        return None
+
+    def _generar_alternativa_semantica(self, token, doc_respuesta, tipo: str) -> Optional[str]:
+        """Genera una alternativa semánticamente coherente"""
+        if not token.has_vector or not doc_respuesta.has_vector:
+            return None
+            
+        similitud = token.similarity(doc_respuesta)
+        
+        # Generar alternativa si la similitud está en un rango apropiado
+        if 0.3 <= similitud <= 0.7:
+            if tipo == 'FUNCION':
+                return f"{token.text} el elemento"
+            elif tipo == 'CARACTERISTICA':
+                return f"Es {token.text}"
+            elif tipo == 'RELACION':
+                return f"Se relaciona mediante {token.text}"
+                
+        return None
+
+    def _generar_alternativas_adicionales(self, respuesta: str, tipo: str) -> List[str]:
+        """Genera alternativas adicionales cuando es necesario"""
+        alternativas = []
+        doc_respuesta = self.nlp(respuesta)
+        
+        # Buscar términos semánticamente relacionados
+        for token in self.nlp.vocab:
+            if len(alternativas) >= 3:
+                break
+                
+            if token.has_vector and token.text.lower() != respuesta.lower():
+                similitud = token.similarity(doc_respuesta)
+                if 0.3 <= similitud <= 0.7:
+                    alternativa = self._formatear_alternativa(token.text, tipo)
+                    if alternativa:
+                        alternativas.append(alternativa)
+                        
+        return alternativas
+
+    def _formatear_alternativa(self, texto: str, tipo: str) -> Optional[str]:
+        """Formatea una alternativa según el tipo de pregunta"""
+        if not texto or len(texto.split()) < 2:
+            return None
+            
+        doc = self.nlp(texto)
+        if not any(self._es_termino_significativo(t) for t in doc):
+            return None
+            
+        return texto
+
+    def _determinar_tipo_analisis(self, concepto: Dict) -> Optional[str]:
+        """Determina el tipo de análisis más apropiado para el concepto"""
+        if 'accion' in concepto:
+            # Análisis de función o propósito
+            return 'funcion'
+        elif 'tema' in concepto:
+            # Análisis de características o propiedades
+            return 'caracteristica'
+        elif concepto['tipo'] in ['ORG', 'PRODUCT']:
+            # Análisis de rol o impacto
+            return 'impacto'
+        return None
+
+    def _construir_pregunta(self, concepto: Dict, tipo_analisis: str) -> Tuple[Optional[str], Optional[str]]:
+        """Construye una pregunta analítica coherente"""
+        doc = self.nlp(concepto['contexto'])
+        
+        # Asegurar que el concepto está en el caso gramatical correcto
+        concepto_texto = concepto['texto']
+        if concepto_texto.lower() != concepto_texto:
+            concepto_texto = f"el {concepto_texto}"
+
+        if tipo_analisis == 'funcion':
+            # Analizar el propósito o función
+            verbo = concepto.get('accion', '')
+            if verbo:
+                return (
+                    f"¿Cuál es la función principal de {concepto_texto} en relación con {verbo}?",
+                    concepto['contexto']
+                )
+        
+        elif tipo_analisis == 'caracteristica':
+            # Analizar características distintivas
+            tema = concepto.get('tema', '')
+            if tema:
+                return (
+                    f"¿Qué característica distintiva presenta {concepto_texto} en el contexto de {tema}?",
+                    concepto['contexto']
+                )
+        
+        elif tipo_analisis == 'impacto':
+            # Analizar el impacto o importancia
+            return (
+                f"¿Cuál es el impacto más significativo de {concepto_texto} según el texto?",
+                concepto['contexto']
+            )
+
+        return None, None
+
+    def _generar_alternativas_semanticas(self, respuesta: str, concepto: Dict, tipo_analisis: str) -> List[str]:
+        """Genera alternativas semánticamente coherentes"""
+        doc_respuesta = self.nlp(respuesta)
+        doc_contexto = self.nlp(concepto['contexto'])
+        alternativas = set()
+
+        # Identificar elementos semánticos clave en la respuesta
+        elementos_clave = [token for token in doc_respuesta if not token.is_stop and token.pos_ in ['NOUN', 'VERB', 'ADJ']]
+
+        # Generar alternativas basadas en similitud semántica
+        for sent in doc_contexto.sents:
+            for token in sent:
+                if token.pos_ in ['NOUN', 'VERB', 'ADJ'] and not token.is_stop:
+                    # Verificar relevancia semántica
+                    if any(elem.similarity(token) > 0.5 for elem in elementos_clave):
+                        alternativa = self._construir_alternativa_coherente(token, sent, tipo_analisis)
+                        if alternativa and alternativa != respuesta:
+                            alternativas.add(alternativa)
+
+        # Asegurar alternativas distintas y coherentes
+        alternativas_filtradas = []
+        for alt in alternativas:
+            if self._es_alternativa_valida(alt, respuesta, alternativas_filtradas):
+                alternativas_filtradas.append(alt)
+
+        return list(alternativas_filtradas)[:3]
+
+    def _construir_alternativa_coherente(self, token, sent, tipo_analisis: str) -> Optional[str]:
+        """Construye una alternativa coherente basada en el contexto"""
+        if tipo_analisis == 'funcion':
+            # Buscar verbos y objetos relacionados
+            for tok in sent:
+                if tok.dep_ == "dobj" and tok.head == token:
+                    return f"{token.text} {tok.text}"
+        
+        elif tipo_analisis == 'caracteristica':
+            # Buscar adjetivos y sustantivos relacionados
+            for tok in sent:
+                if tok.dep_ == "amod" and tok.head == token:
+                    return f"{tok.text} {token.text}"
+        
+        elif tipo_analisis == 'impacto':
+            # Buscar efectos o consecuencias
+            for tok in sent:
+                if tok.dep_ in ["prep", "agent"] and tok.head == token:
+                    return f"{token.text} {tok.text} {next(tok.children).text}"
+
+        return None
+
+    def _ajustar_alternativas(self, alternativas: List[str], respuesta: str) -> List[str]:
+        """Asegura que la respuesta correcta esté entre las alternativas y mantiene coherencia"""
+        if respuesta not in alternativas:
+            alternativas = alternativas[:3] + [respuesta]
+        random.shuffle(alternativas)
+        return alternativas
+
+    def generar_preguntas(self, texto: str) -> List[Dict]:
+        """Genera preguntas analíticas a partir del texto"""
+        conceptos = self._extraer_conceptos_clave(texto)
+        if not conceptos:
+            return []
+
+        preguntas = []
+        for concepto in conceptos:
+            pregunta = self._generar_pregunta_analitica(concepto)
+            if pregunta and self._es_pregunta_valida(pregunta, preguntas):
+                preguntas.append(pregunta)
+
+        return preguntas[:10]  # Limitar a 10 preguntas
+
+    def _es_pregunta_valida(self, nueva_pregunta: Dict, preguntas: List[Dict]) -> bool:
+        """Valida que la pregunta sea única y tenga sentido"""
+        # Verificar coherencia gramatical
+        if not self._validar_gramatica_pregunta(nueva_pregunta['pregunta']):
+            return False
+
+        # Evitar preguntas duplicadas o muy similares
+        for pregunta in preguntas:
+            if self.nlp(pregunta['pregunta']).similarity(self.nlp(nueva_pregunta['pregunta'])) > 0.7:
+                return False
+
+        return True
+
+    def _validar_gramatica_pregunta(self, pregunta: str) -> bool:
+        """Valida la coherencia gramatical de la pregunta"""
+        doc = self.nlp(pregunta)
+        
+        # Verificar estructura básica de pregunta
+        tiene_pronombre = False
+        tiene_verbo = False
+        tiene_complemento = False
+        
+        for token in doc:
+            if token.pos_ == "PRON" and token.text.lower() in ["qué", "cuál", "cómo", "dónde", "quién", "cuándo"]:
+                tiene_pronombre = True
+            elif token.pos_ == "VERB":
+                tiene_verbo = True
+            elif token.dep_ in ["obj", "obl"]:
+                tiene_complemento = True
+
+        return tiene_pronombre and tiene_verbo and tiene_complemento
+
     def _extraer_hechos(self, texto: str) -> List[Dict]:
         """Extrae hechos relevantes del texto usando análisis semántico"""
         doc = self.nlp(texto)
@@ -122,32 +570,26 @@ class GeneradorQA:
             
         return True
 
-    def _es_alternativa_valida(self, alternativa: str, pregunta: str, otras_alternativas: List[str]) -> bool:
-        """Valida que una alternativa sea coherente y no repetida"""
-        # Validar formato básico
-        if not self._validar_texto(alternativa):
+    def _es_alternativa_valida(self, alternativa: str, respuesta: str, otras_alternativas: List[str]) -> bool:
+        """Valida que una alternativa sea coherente y distintiva"""
+        doc_alt = self.nlp(alternativa)
+        doc_resp = self.nlp(respuesta)
+
+        # Evitar alternativas muy similares a la respuesta
+        if doc_alt.similarity(doc_resp) > 0.8:
             return False
-            
-        # Evitar alternativas idénticas o muy similares
+
+        # Evitar alternativas repetidas o muy similares entre sí
         for otra in otras_alternativas:
-            # Comparar textos normalizados
-            alt1 = alternativa.lower().strip().strip('.,;:')
-            alt2 = otra.lower().strip().strip('.,;:')
-            
-            if alt1 == alt2:
+            doc_otra = self.nlp(otra)
+            if doc_alt.similarity(doc_otra) > 0.7:
                 return False
-                
-            # Calcular similitud para evitar alternativas casi idénticas
-            similitud = self.nlp(alternativa).similarity(self.nlp(otra))
-            if similitud > 0.9:  # Muy similar
-                return False
+
+        # Verificar coherencia gramatical básica
+        tiene_sustantivo = any(token.pos_ == "NOUN" for token in doc_alt)
+        tiene_verbo = any(token.pos_ == "VERB" for token in doc_alt)
         
-        # Verificar relación semántica con la pregunta
-        similitud_pregunta = self.nlp(alternativa).similarity(self.nlp(pregunta))
-        if similitud_pregunta < 0.2:  # Muy poco relacionada
-            return False
-            
-        return True
+        return tiene_sustantivo or tiene_verbo
 
     def _generar_pregunta_desde_hecho(self, hecho: Dict) -> Optional[Dict]:
         """Genera una pregunta analítica a partir de un hecho"""
@@ -779,69 +1221,69 @@ class GeneradorCuestionarios:
         return True
 
     def _generar_pregunta(self, oracion: str) -> Optional[Dict]:
-        """Genera una pregunta y su respuesta"""
+        """Genera una pregunta y su respuesta de forma dinámica"""
         try:
-            # Obtener sujetos principales
             doc = self.nlp(oracion)
-            sujetos = []
             
-            # Extraer conceptos significativos
-            for chunk in doc.noun_chunks:
-                concepto = self._limpiar_texto(chunk.text)
-                if self._es_concepto_valido(concepto):
-                    sujetos.append(concepto)
+            # Analizar estructura semántica de la oración
+            elementos_significativos = []
+            for token in doc:
+                if self._es_elemento_significativo(token):
+                    contexto = self._analizar_contexto_elemento(token, doc)
+                    if contexto:
+                        elementos_significativos.append({
+                            'elemento': token.text,
+                            'tipo': token.pos_,
+                            'accion': contexto.get('accion'),
+                            'atributos': contexto.get('atributos', []),
+                            'relaciones': contexto.get('relaciones', [])
+                        })
 
-            if not sujetos:
+            if not elementos_significativos:
                 return None
 
-            # Seleccionar un sujeto y generar pregunta
-            sujeto = random.choice(sujetos)
+            # Seleccionar elemento para la pregunta
+            elemento_elegido = random.choice(elementos_significativos)
             
-            # Patrones de preguntas más naturales
-            patrones = [
-                f"¿Cuál es el principal objetivo de {sujeto}?",
-                f"¿Qué rol desempeña {sujeto}?",
-                f"¿Cuál es la importancia de {sujeto}?",
-                f"¿Cómo se define {sujeto}?",
-                f"¿Qué hace {sujeto}?"
-            ]
-            
-            pregunta_base = random.choice(patrones)
+            # Construir pregunta basada en el análisis semántico
+            pregunta, tipo_respuesta = self._construir_pregunta_por_semantica(elemento_elegido)
+            if not pregunta:
+                return None
 
-            # Obtener respuesta
+            # Obtener respuesta usando el modelo QA
             respuesta = self.qa_model(
-                question=pregunta_base,
+                question=pregunta,
                 context=oracion
             )
 
             if respuesta['score'] < 0.3:
                 return None
 
-            # Limpiar la respuesta
+            # Validar y limpiar respuesta
             respuesta_limpia = self._limpiar_texto(respuesta['answer'])
-            if not self._es_concepto_valido(respuesta_limpia):
+            if not (self._es_respuesta_valida(respuesta_limpia) and 
+                    self._validar_estructura_respuesta(respuesta_limpia) and
+                    self._validar_respuesta(respuesta_limpia, tipo_respuesta)):
                 return None
 
-            # Generar alternativas coherentes
-            alternativas = []
-            for chunk in doc.noun_chunks:
-                texto = self._limpiar_texto(chunk.text)
-                if (self._es_concepto_valido(texto) and 
-                    texto != sujeto and 
-                    texto != respuesta_limpia and 
-                    texto not in alternativas):
-                    alternativas.append(texto)
+            # Generar alternativas semánticamente relacionadas
+            alternativas = self._generar_alternativas_semanticas(
+                respuesta_limpia,
+                elemento_elegido,
+                tipo_respuesta,
+                doc
+            )
 
             if len(alternativas) < 3:
                 return None
 
-            # Seleccionar las mejores alternativas
-            mejores_alternativas = alternativas[:3]
-            todas_opciones = mejores_alternativas + [respuesta_limpia]
+            # Asegurar coherencia y diversidad
+            alternativas = self._refinar_alternativas(alternativas, respuesta_limpia)
+            todas_opciones = alternativas[:3] + [respuesta_limpia]
             random.shuffle(todas_opciones)
 
             return {
-                'pregunta': pregunta_base,
+                'pregunta': pregunta,
                 'opciones': todas_opciones,
                 'respuesta_correcta': respuesta_limpia,
                 'tipo': 'alternativas'
@@ -850,6 +1292,195 @@ class GeneradorCuestionarios:
         except Exception as e:
             print(f"Error en generación de pregunta: {str(e)}")
             return None
+
+    def _es_elemento_significativo(self, token) -> bool:
+        """Determina si un elemento es significativo para generar una pregunta"""
+        return (
+            not token.is_stop and
+            token.pos_ in ['NOUN', 'PROPN', 'VERB'] and
+            len(token.text) > 2 and
+            token.dep_ not in ['aux', 'det', 'punct']
+        )
+
+    def _analizar_contexto_elemento(self, token, doc) -> Dict:
+        """Analiza el contexto semántico de un elemento"""
+        contexto = {
+            'accion': None,
+            'atributos': [],
+            'relaciones': []
+        }
+
+        for t in doc:
+            if t.head == token:
+                if t.pos_ == 'VERB':
+                    contexto['accion'] = t.text
+                elif t.pos_ == 'ADJ':
+                    contexto['atributos'].append(t.text)
+            elif token.head == t and t.pos_ == 'VERB':
+                contexto['accion'] = t.text
+            elif t.dep_ in ['nmod', 'amod'] and t.head == token:
+                contexto['atributos'].append(t.text)
+            elif t.dep_ in ['conj', 'prep'] and t.head == token:
+                contexto['relaciones'].append(t.text)
+
+        return contexto
+
+    def _construir_pregunta_por_semantica(self, elemento: Dict) -> Tuple[Optional[str], Optional[str]]:
+        """Construye una pregunta basada en el análisis semántico"""
+        texto_elemento = elemento['elemento']
+        tipo_elemento = elemento['tipo']
+        
+        # Analizar características semánticas
+        doc = self.nlp(texto_elemento)
+        vector_elemento = doc.vector
+        
+        # Determinar el enfoque de la pregunta basado en el análisis
+        if elemento['accion']:
+            similitud_accion = self.nlp(elemento['accion']).similarity(doc)
+            if similitud_accion > 0.3:
+                return f"¿De qué manera {elemento['accion']} {texto_elemento}?", "ACCION"
+        
+        if elemento['atributos']:
+            return f"¿Qué característica define a {texto_elemento}?", "ATRIBUTO"
+        
+        if elemento['relaciones']:
+            return f"¿Cómo se relaciona {texto_elemento} con su entorno?", "RELACION"
+        
+        # Si no hay contexto específico, generar pregunta por análisis vectorial
+        similitud_abstracta = self.nlp("concepto definición significado").similarity(doc)
+        similitud_funcional = self.nlp("función propósito objetivo").similarity(doc)
+        
+        if similitud_abstracta > similitud_funcional:
+            return f"¿Qué representa {texto_elemento}?", "CONCEPTO"
+        else:
+            return f"¿Para qué sirve {texto_elemento}?", "FUNCION"
+
+    def _generar_alternativas_semanticas(self, respuesta: str, elemento: Dict, tipo_respuesta: str, doc) -> List[str]:
+        """Genera alternativas semánticamente coherentes"""
+        alternativas = set()
+        doc_respuesta = self.nlp(respuesta)
+
+        # Generar alternativas basadas en similitud semántica
+        for token in doc:
+            if self._es_elemento_significativo(token):
+                similitud = token.similarity(doc_respuesta[0])
+                if 0.3 <= similitud <= 0.7:
+                    alt = self._construir_alternativa(token, tipo_respuesta)
+                    if alt and alt != respuesta:
+                        alternativas.add(alt)
+
+        # Si no hay suficientes alternativas, buscar en el vocabulario general
+        if len(alternativas) < 3:
+            for token in self.nlp.vocab:
+                if len(alternativas) >= 5:
+                    break
+                if token.has_vector and token.text.lower() != respuesta.lower():
+                    similitud = token.similarity(doc_respuesta[0])
+                    if 0.3 <= similitud <= 0.7:
+                        alt = self._construir_alternativa(token, tipo_respuesta)
+                        if alt and alt != respuesta:
+                            alternativas.add(alt)
+
+        return list(alternativas)
+
+    def _construir_alternativa(self, token, tipo_respuesta: str) -> Optional[str]:
+        """Construye una alternativa coherente según el tipo de respuesta"""
+        if tipo_respuesta == "ACCION":
+            return f"{token.text} el elemento"
+        elif tipo_respuesta == "ATRIBUTO":
+            return f"Es {token.text}"
+        elif tipo_respuesta == "RELACION":
+            return f"Se relaciona con {token.text}"
+        elif tipo_respuesta == "CONCEPTO":
+            return token.text
+        elif tipo_respuesta == "FUNCION":
+            return f"Sirve para {token.text}"
+        return None
+
+    def _refinar_alternativas(self, alternativas: List[str], respuesta: str) -> List[str]:
+        """Refina las alternativas para asegurar coherencia y diversidad"""
+        alternativas_refinadas = []
+        doc_respuesta = self.nlp(respuesta)
+        
+        for alt in alternativas:
+            doc_alt = self.nlp(alt)
+            # Verificar que la alternativa es suficientemente diferente
+            if all(doc_alt.similarity(self.nlp(otra)) < 0.7 for otra in alternativas_refinadas):
+                # Verificar que mantiene relación temática
+                if doc_alt.similarity(doc_respuesta) > 0.3:
+                    alternativas_refinadas.append(alt)
+                    
+        return alternativas_refinadas
+
+    def _validar_respuesta(self, respuesta: str, tipo_respuesta: str) -> bool:
+        """Valida que una respuesta sea coherente según su tipo"""
+        if not respuesta or len(respuesta.split()) < 2:
+            return False
+            
+        doc = self.nlp(respuesta)
+        
+        # Verificar estructura básica según el tipo
+        if tipo_respuesta == "ACCION":
+            tiene_verbo = any(token.pos_ == 'VERB' for token in doc)
+            return tiene_verbo
+            
+        elif tipo_respuesta == "ATRIBUTO":
+            tiene_adj = any(token.pos_ == 'ADJ' for token in doc)
+            tiene_sustantivo = any(token.pos_ in ['NOUN', 'PROPN'] for token in doc)
+            return tiene_adj or tiene_sustantivo
+            
+        elif tipo_respuesta == "RELACION":
+            tiene_prep = any(token.pos_ == 'ADP' for token in doc)
+            tiene_sustantivo = any(token.pos_ in ['NOUN', 'PROPN'] for token in doc)
+            return tiene_prep and tiene_sustantivo
+            
+        elif tipo_respuesta == "CONCEPTO":
+            tiene_sustantivo = any(token.pos_ in ['NOUN', 'PROPN'] for token in doc)
+            return tiene_sustantivo
+            
+        elif tipo_respuesta == "FUNCION":
+            tiene_verbo = any(token.pos_ == 'VERB' for token in doc)
+            tiene_complemento = any(token.dep_ in ['dobj', 'pobj'] for token in doc)
+            return tiene_verbo and tiene_complemento
+            
+        return True
+
+    def _validar_estructura_respuesta(self, respuesta: str) -> bool:
+        """Valida la estructura gramatical básica de una respuesta"""
+        doc = self.nlp(respuesta)
+        
+        # Verificar longitud mínima y máxima
+        if len(doc) < 2 or len(doc) > 15:
+            return False
+            
+        # Verificar que tenga al menos un elemento significativo
+        tiene_contenido = False
+        for token in doc:
+            if not token.is_stop and not token.is_punct:
+                tiene_contenido = True
+                break
+                
+        return tiene_contenido
+
+    def _es_respuesta_valida(self, respuesta: str) -> bool:
+        """Verifica si una respuesta es válida en términos generales"""
+        # Limpiar espacios y caracteres especiales
+        respuesta = respuesta.strip()
+        if not respuesta:
+            return False
+            
+        # Evitar respuestas muy cortas o muy largas
+        palabras = respuesta.split()
+        if len(palabras) < 2 or len(palabras) > 10:
+            return False
+            
+        # Verificar que no sea una respuesta trivial
+        doc = self.nlp(respuesta)
+        palabras_significativas = [token for token in doc if not token.is_stop]
+        if len(palabras_significativas) < 2:
+            return False
+            
+        return True
 
     def _generar_verdadero_falso_mejorado(self, texto: str) -> Optional[Dict]:
         """Genera una pregunta de verdadero/falso coherente"""
