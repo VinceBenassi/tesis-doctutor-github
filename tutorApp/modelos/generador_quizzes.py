@@ -1,368 +1,587 @@
 # Generador de Quizzes
 # por Franco Benassi
+import torch
+from transformers import (
+    AutoTokenizer, 
+    AutoModelForQuestionAnswering,
+    AutoModelForSequenceClassification,
+    T5ForConditionalGeneration,
+    pipeline
+)
+import spacy
 import json
 import random
-import torch
-import nltk
-from nltk.tokenize import sent_tokenize
-from nltk.corpus import stopwords
-from transformers import AutoTokenizer, BertForQuestionAnswering, BertForMaskedLM
-import torch.nn as nn
-import torch.optim as optim
-from torch.utils.data import DataLoader, TensorDataset
+from typing import List, Dict, Optional
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
+import numpy as np
 
-nltk.download('punkt', quiet=True)
-nltk.download('stopwords', quiet=True)
-
-modelo_nombre = "mrm8488/bert-base-spanish-wwm-cased-finetuned-spa-squad2-es"
-tokenizador = AutoTokenizer.from_pretrained(modelo_nombre)
-modelo_base = BertForQuestionAnswering.from_pretrained(modelo_nombre)
-modelo_mlm = BertForMaskedLM.from_pretrained(modelo_nombre)
-
-class GeneradorCuestionarios(nn.Module):
-    def __init__(self, modelo_base):
-        super(GeneradorCuestionarios, self).__init__()
-        self.qa_model = modelo_base
-        self.capa_generacion = nn.Linear(self.qa_model.config.hidden_size, 1000)
-        self.capa_explicacion = nn.Linear(self.qa_model.config.hidden_size, 1000)
-
-    def forward(self, input_ids, attention_mask):
-        salidas = self.qa_model(input_ids=input_ids, attention_mask=attention_mask, output_hidden_states=True)
-        start_logits, end_logits = salidas.start_logits, salidas.end_logits
-        secuencia_oculta = salidas.hidden_states[-1][:, 0, :]
-        generacion = self.capa_generacion(secuencia_oculta)
-        explicacion = self.capa_explicacion(secuencia_oculta)
-        return start_logits, end_logits, generacion, explicacion
-
-
-
-def cargar_datos_json(ruta_archivo):
-    try:
-        with open(ruta_archivo, 'r', encoding='utf-8') as archivo:
-            datos = json.load(archivo)
-        return datos
-    
-    except Exception as e:
-        print(f"Error al cargar el archivo JSON: {e}")
-        return None
-
-
-
-def preparar_datos(datos):
-    return [item['texto'] for item in datos['quiz']]
-
-
-
-def crear_y_entrenar_modelo(textos):
-    modelo = GeneradorCuestionarios(modelo_base)
-    
-    entradas_codificadas = tokenizador(textos, padding=True, truncation=True, return_tensors="pt", max_length=256)
-    ids_entrada = entradas_codificadas['input_ids']
-    mascara_atencion = entradas_codificadas['attention_mask']
-    
-    conjunto_datos = TensorDataset(ids_entrada, mascara_atencion)
-    cargador_datos = DataLoader(conjunto_datos, batch_size=2, shuffle=True)
-    
-    optimizador = optim.AdamW(modelo.parameters(), lr=1e-5)
-    funcion_perdida = nn.CrossEntropyLoss()
-    
-    modelo.train()
-    num_epocas = 1
-
-    for epoca in range(num_epocas):
-        perdida_total = 0
-
-        for i, batch in enumerate(cargador_datos):
-            ids_batch, mascara_batch = batch
-            optimizador.zero_grad()
-            start_logits, end_logits, generacion, explicacion = modelo(ids_batch, mascara_batch)  # Modificado aquí
-            perdida = funcion_perdida(generacion, ids_batch[:, 0])  # Solo comparamos con el primer token
-            perdida.backward()
-            optimizador.step()
-            perdida_total += perdida.item()
-
-    return modelo
-
-
-
-def extraer_palabras_clave(frase):
-    stop_words = set(stopwords.words('spanish'))
-    palabras = [palabra for palabra in frase.split() if palabra.lower() not in stop_words]
-    return sorted(set(palabras), key=lambda x: -len(x))[:5]
-
-
-
-def generar_importancia(frase, modelo_mlm, tokenizador):
-    plantillas = [
-        "Esta información es crucial porque [MASK].",
-        "El concepto es relevante ya que [MASK].",
-        "Entender esto es fundamental para [MASK]."
-    ]
-    plantilla = random.choice(plantillas)
-    entradas = tokenizador(plantilla, return_tensors="pt")
-    with torch.no_grad():
-        salidas = modelo_mlm(**entradas)
-    
-    logits = salidas.logits
-    mascara_token_index = torch.where(entradas["input_ids"][0] == tokenizador.mask_token_id)[0]
-    predicciones = logits[0, mascara_token_index].topk(1)
-    
-    return tokenizador.decode(predicciones.indices[0]).strip()
-
-
-
-def generar_contexto_adicional(frase, modelo_mlm, tokenizador):
-    plantillas = [
-        "Se relaciona con [MASK] en un contexto más amplio.",
-        "Tiene implicaciones en [MASK] que son importantes de considerar.",
-        "Este concepto es fundamental en el campo de [MASK]."
-    ]
-    plantilla = random.choice(plantillas)
-    entradas = tokenizador(plantilla, return_tensors="pt")
-    with torch.no_grad():
-        salidas = modelo_mlm(**entradas)
-    
-    logits = salidas.logits
-    mascara_token_index = torch.where(entradas["input_ids"][0] == tokenizador.mask_token_id)[0]
-    predicciones = logits[0, mascara_token_index].topk(1)
-    
-    return tokenizador.decode(predicciones.indices[0]).strip()
-
-
-
-def generar_explicacion(frase, modelo, tokenizador):
-    entradas = tokenizador(frase, return_tensors="pt", max_length=512, truncation=True)
-    with torch.no_grad():
-        salidas = modelo(**entradas, output_hidden_states=True)
-    
-    secuencia_oculta = salidas.hidden_states[-1][:, 0, :]
-    logits_explicacion = modelo.capa_explicacion(secuencia_oculta)
-    
-    palabras_clave = extraer_palabras_clave(frase)
-    explicacion = f"Esta afirmación se refiere a {', '.join(palabras_clave[:3])}. "
-    explicacion += f"Es importante porque {generar_importancia(frase, modelo_mlm, tokenizador)}. "
-    explicacion += f"Además, {generar_contexto_adicional(frase, modelo_mlm, tokenizador)}."
-    
-    return explicacion
-
-
-
-def extraer_frases_clave(texto):
-    oraciones = sent_tokenize(texto)
-    stop_words = set(stopwords.words('spanish'))
-    vectorizador = TfidfVectorizer(stop_words=stop_words)
-    tfidf_matriz = vectorizador.fit_transform(oraciones)
-    
-    frases_clave = []
-    for i, oracion in enumerate(oraciones):
-        if len(oracion.split()) > 10:
-            puntuacion = tfidf_matriz[i].sum()
-            frases_clave.append((oracion, puntuacion))
-    
-    frases_clave.sort(key=lambda x: x[1], reverse=True)
-    return [frase for frase, _ in frases_clave[:10]]
-
-
-
-def generar_pregunta_alternativas(frase, modelo, tokenizador):
-    palabras = frase.split()
-    if len(palabras) < 10:
-        return None
-    
-    palabras_importantes = [p for p in palabras if p.lower() not in set(stopwords.words('spanish'))]
-    if len(palabras_importantes) < 3:
-        return None
-    
-    tipo_pregunta = random.choice(["completar", "funcion"])
-    
-    if tipo_pregunta == "completar":
-        palabra_clave = random.choice(palabras_importantes)
-        indice_palabra = palabras.index(palabra_clave)
+class GeneradorCuestionarios:
+    def __init__(self):
+        print("Inicializando modelos...")
         
-        contexto = ' '.join(palabras[:indice_palabra] + ['[MASK]'] + palabras[indice_palabra+1:])
+        # Modelo principal para generación de preguntas
+        self.qa_model = pipeline(
+            "question-answering",
+            model="mrm8488/bert-base-spanish-wwm-cased-finetuned-spa-squad2-es"
+        )
         
-        entradas = tokenizador(contexto, return_tensors="pt", max_length=512, truncation=True)
-        with torch.no_grad():
-            start_logits, end_logits, generacion = modelo(**entradas)
+        # Modelo T5 para generación de texto
+        self.t5_tokenizer = AutoTokenizer.from_pretrained("google/flan-t5-large")
+        self.t5_model = T5ForConditionalGeneration.from_pretrained("google/flan-t5-large")
         
-        logits = generacion[0]
-        mascara_token_index = torch.where(entradas["input_ids"][0] == tokenizador.mask_token_id)[0]
-        predicciones = logits[mascara_token_index].topk(4)
+        # Modelo BERT para clasificación y verificación
+        self.bert_tokenizer = AutoTokenizer.from_pretrained("dccuchile/bert-base-spanish-wwm-cased")
+        self.bert_model = AutoModelForSequenceClassification.from_pretrained(
+            "dccuchile/bert-base-spanish-wwm-cased",
+            num_labels=2
+        )
         
-        opciones = [tokenizador.decode([token_id.item()]).strip() for token_id in predicciones.indices[0]]
-        if palabra_clave not in opciones:
-            opciones[-1] = palabra_clave
-        random.shuffle(opciones)
+        # Modelo spaCy para análisis lingüístico
+        self.nlp = spacy.load("es_core_news_lg")
         
-        pregunta = f"¿Qué término completa mejor la siguiente afirmación? {contexto}"
-    else:
-        sujeto = random.choice(palabras_importantes)
-        pregunta = f"¿Cuál es la función principal de {sujeto}?"
+        # Configuración
+        self.max_preguntas = 10
+        self.min_similitud = 0.3
         
-        entradas = tokenizador(frase, return_tensors="pt", max_length=512, truncation=True)
-        with torch.no_grad():
-            start_logits, end_logits, generacion = modelo(**entradas)
+    def _extraer_informacion_relevante(self, texto: str) -> List[Dict]:
+        """Extrae información relevante del texto usando análisis lingüístico"""
+        doc = self.nlp(texto)
+        informacion = []
         
-        respuesta_correcta = frase[torch.argmax(start_logits):torch.argmax(end_logits)].strip()
+        # Extraer oraciones significativas
+        for sent in doc.sents:
+            if len(sent.text.split()) >= 10:
+                # Analizar la oración
+                analisis = {
+                    'texto': sent.text,
+                    'entidades': [(ent.text, ent.label_) for ent in sent.ents],
+                    'conceptos': [chunk.text for chunk in sent.noun_chunks],
+                    'importancia': sum(token.is_stop is False for token in sent)
+                }
+                informacion.append(analisis)
         
-        opciones = [respuesta_correcta]
-        while len(opciones) < 4:
-            opcion = generar_opcion_aleatoria(frase, modelo, tokenizador)
-            if opcion not in opciones:
-                opciones.append(opcion)
-        
-        random.shuffle(opciones)
+        return sorted(informacion, key=lambda x: x['importancia'], reverse=True)
 
-    explicacion = generar_explicacion(frase, modelo, tokenizador)
-    
-    return {
-        "pregunta": pregunta,
-        "opciones": opciones,
-        "respuesta_correcta": palabra_clave if tipo_pregunta == "completar" else respuesta_correcta,
-        "tipo": "alternativas",
-        "explicacion": explicacion
-    }
-
-
-
-def generar_opcion_aleatoria(frase, modelo, tokenizador):
-    palabras = frase.split()
-    indice_aleatorio = random.randint(0, len(palabras) - 1)
-    palabras[indice_aleatorio] = '[MASK]'
-    contexto_modificado = ' '.join(palabras)
-    
-    entradas = tokenizador(contexto_modificado, return_tensors="pt", max_length=512, truncation=True)
-    with torch.no_grad():
-        start_logits, end_logits, generacion = modelo(**entradas)
-    
-    logits = generacion[0]
-    mascara_token_index = torch.where(entradas["input_ids"][0] == tokenizador.mask_token_id)[0]
-    predicciones = logits[mascara_token_index].topk(1)
-    
-    return tokenizador.decode([predicciones.indices[0][0].item()]).strip()
-
-
-
-def generar_pregunta_verdadero_falso(frase, modelo, tokenizador):
-    palabras = frase.split()
-    if len(palabras) < 10:
-        return None
-    
-    palabras_importantes = [p for p in palabras if p.lower() not in set(stopwords.words('spanish'))]
-    if len(palabras_importantes) < 3:
-        return None
-    
-    es_verdadero = random.choice([True, False])
-    
-    if es_verdadero:
-        pregunta = frase
-    else:
-        palabra_original = random.choice(palabras_importantes)
-        indice_palabra = palabras.index(palabra_original)
-        
-        entradas = tokenizador(frase, return_tensers="pt", max_length=512, truncation=True)
-        with torch.no_grad():
-            start_logits, end_logits, generacion = modelo(**entradas)
-        
-        logits = generacion[0]
-        predicciones = logits[indice_palabra].topk(5)
-        
-        palabra_generada = tokenizador.decode([predicciones.indices[random.randint(1, 4)].item()]).strip()
-        palabras[indice_palabra] = palabra_generada
-        pregunta = ' '.join(palabras)
-
-    explicacion = generar_explicacion(frase, modelo, tokenizador)
-    
-    return {
-        "pregunta": pregunta,
-        "respuesta_correcta": "Verdadero" if es_verdadero else "Falso",
-        "tipo": "verdadero_falso",
-        "explicacion": explicacion
-    }
-
-
-
-def verificar_calidad_pregunta(pregunta, texto_original):
-    vectorizador = TfidfVectorizer()
-    vectores = vectorizador.fit_transform([pregunta['pregunta'], texto_original])
-    similitud = cosine_similarity(vectores[0], vectores[1])[0][0]
-    return similitud > 0.3
-
-
-
-def generar_pregunta(texto, modelo, tokenizador):
-    oraciones = sent_tokenize(texto)
-    if not oraciones:
-        return None
-    
-    oracion = random.choice(oraciones)
-    palabras = oracion.split()
-    if len(palabras) < 5:
-        return None
-    
-    tipo_pregunta = random.choice(["verdadero_falso", "alternativas"])
-    
-    if tipo_pregunta == "verdadero_falso":
-        es_verdadero = random.choice([True, False])
-        if es_verdadero:
-            pregunta = oracion
-        else:
-            indice_palabra = random.randint(0, len(palabras) - 1)
-            palabras[indice_palabra] = random.choice(palabras)  # Reemplazamos una palabra al azar
-            pregunta = ' '.join(palabras)
-        
-        return {
-            "pregunta": pregunta,
-            "respuesta_correcta": "Verdadero" if es_verdadero else "Falso",
-            "tipo": "verdadero_falso"
-        }
-    else:
-        palabra_clave = random.choice(palabras)
-        indice_palabra = palabras.index(palabra_clave)
-        palabras[indice_palabra] = "____"
-        pregunta = ' '.join(palabras)
-        
-        opciones = [palabra_clave]
-        while len(opciones) < 4:
-            opcion = random.choice(palabras)
-            if opcion not in opciones:
-                opciones.append(opcion)
-        random.shuffle(opciones)
-        
-        return {
-            "pregunta": f"¿Qué palabra completa correctamente la siguiente oración? {pregunta}",
-            "opciones": opciones,
-            "respuesta_correcta": palabra_clave,
-            "tipo": "alternativas"
-        }
-
-def generar_cuestionarios(datos, modelo, tokenizador):
-    cuestionarios = {}
-    for i, item in enumerate(datos['quiz']):
-        materia = item['materia']
-        
-        if materia not in cuestionarios:
-            cuestionarios[materia] = []
-        
-        preguntas = []
-        intentos = 0
-
-        while len(preguntas) < 10 and intentos < 30:
-            try:
-                pregunta = generar_pregunta(item['texto'], modelo, tokenizador)
+    def _generar_pregunta_analisis(self, info: Dict) -> Optional[Dict]:
+        """Genera una pregunta de análisis usando T5"""
+        try:
+            # Generar pregunta
+            prompt = f"generate analytical question in Spanish: {info['texto']}"
+            inputs = self.t5_tokenizer(prompt, return_tensors="pt", max_length=512, truncation=True)
+            
+            outputs = self.t5_model.generate(
+                **inputs,
+                max_length=128,
+                num_beams=4,
+                no_repeat_ngram_size=2
+            )
+            
+            pregunta = self.t5_tokenizer.decode(outputs[0], skip_special_tokens=True)
+            
+            # Validar respuesta usando QA
+            qa_result = self.qa_model(
+                question=pregunta,
+                context=info['texto']
+            )
+            
+            if qa_result['score'] > 0.7:
+                respuesta_correcta = qa_result['answer']
+                alternativas = self._generar_alternativas_coherentes(
+                    respuesta_correcta,
+                    info['texto'],
+                    info['entidades']
+                )
                 
-                if pregunta:
-                    preguntas.append(pregunta)
-            except Exception as e:
-                print(f"Error al generar pregunta: {e}")
-            intentos += 1
-        
-        cuestionarios[materia].append({
-            "texto": item['texto'],
-            "fuente": item['fuente'],
-            "preguntas": preguntas
-        })
+                if alternativas and len(alternativas) >= 3:
+                    opciones = alternativas + [respuesta_correcta]
+                    random.shuffle(opciones)
+                    
+                    return {
+                        'pregunta': pregunta,
+                        'opciones': opciones,
+                        'respuesta_correcta': respuesta_correcta,
+                        'tipo': 'alternativas'
+                    }
+            
+            return None
+            
+        except Exception as e:
+            print(f"Error generando pregunta: {str(e)}")
+            return None
 
-    return cuestionarios
+    def _generar_alternativas_coherentes(self, respuesta: str, contexto: str, entidades: List) -> List[str]:
+        """Genera alternativas coherentes basadas en el contexto y entidades"""
+        try:
+            alternativas = set()
+            doc_respuesta = self.nlp(respuesta)
+            
+            # Identificar tipo de respuesta
+            if doc_respuesta.ents:
+                tipo_entidad = doc_respuesta.ents[0].label_
+                # Buscar entidades similares del mismo tipo
+                for ent, label in entidades:
+                    if label == tipo_entidad and ent != respuesta:
+                        alternativas.add(ent)
+            
+            # Si no hay suficientes alternativas, usar análisis semántico
+            if len(alternativas) < 3:
+                doc_contexto = self.nlp(contexto)
+                doc_respuesta_vector = doc_respuesta.vector
+                
+                for token in doc_contexto:
+                    if (token.pos_ in ['NOUN', 'PROPN'] and 
+                        token.text != respuesta and 
+                        len(token.text) > 3):
+                        # Calcular similitud usando los vectores de palabras
+                        similitud = cosine_similarity(
+                            [token.vector],
+                            [doc_respuesta_vector]
+                        )[0][0]
+                        
+                        if 0.3 <= similitud <= 0.7:
+                            alternativas.add(token.text)
+            
+            # Si aún no hay suficientes alternativas, intentar con sintagmas nominales
+            if len(alternativas) < 3:
+                for chunk in self.nlp(contexto).noun_chunks:
+                    if (chunk.text != respuesta and 
+                        len(chunk.text) > 3 and 
+                        chunk.root.pos_ in ['NOUN', 'PROPN']):
+                        
+                        similitud = cosine_similarity(
+                            [chunk.vector],
+                            [doc_respuesta_vector]
+                        )[0][0]
+                        
+                        if 0.3 <= similitud <= 0.7:
+                            alternativas.add(chunk.text)
+            
+            # Validar coherencia de las alternativas encontradas
+            alternativas_validadas = []
+            for alt in alternativas:
+                if self._validar_alternativa(alt, respuesta, contexto):
+                    alternativas_validadas.append(alt)
+            
+            # Si no se tienen suficientes alternativas, generar algunas usando T5
+            while len(alternativas_validadas) < 3:
+                nueva_alt = self._generar_alternativa_t5(respuesta, contexto)
+                if nueva_alt and nueva_alt not in alternativas_validadas:
+                    if self._validar_alternativa(nueva_alt, respuesta, contexto):
+                        alternativas_validadas.append(nueva_alt)
+            
+            return list(alternativas_validadas)[:3]
+            
+        except Exception as e:
+            print(f"Error generando alternativas: {str(e)}")
+            return []
+        
+    def _generar_alternativa_t5(self, respuesta: str, contexto: str) -> Optional[str]:
+        """Genera una alternativa usando T5"""
+        try:
+            # Crear prompt para generar alternativa similar pero diferente
+            prompt = f"generate alternative similar to but different from: {respuesta}"
+            inputs = self.t5_tokenizer(prompt, return_tensors="pt", max_length=512, truncation=True)
+            
+            outputs = self.t5_model.generate(
+                **inputs,
+                max_length=64,
+                num_beams=4,
+                no_repeat_ngram_size=2,
+                do_sample=True,
+                temperature=0.7
+            )
+            
+            alternativa = self.t5_tokenizer.decode(outputs[0], skip_special_tokens=True)
+            
+            # Validar que la alternativa sea diferente y coherente
+            if (alternativa and 
+                alternativa != respuesta and 
+                len(alternativa.split()) <= len(respuesta.split()) + 2):
+                return alternativa
+                
+            return None
+            
+        except Exception as e:
+            print(f"Error generando alternativa T5: {str(e)}")
+            return None
+
+    def _validar_alternativa(self, alternativa: str, respuesta: str, contexto: str) -> bool:
+        """Valida la coherencia de una alternativa"""
+        if not alternativa or alternativa == respuesta:
+            return False
+            
+        # Validar longitud similar
+        if abs(len(alternativa.split()) - len(respuesta.split())) > 3:
+            return False
+            
+        # Validar coherencia semántica
+        doc_alt = self.nlp(alternativa)
+        doc_resp = self.nlp(respuesta)
+        similitud = doc_alt.similarity(doc_resp)
+        
+        if similitud > 0.9 or similitud < 0.2:
+            return False
+            
+        return True
+
+    def _generar_verdadero_falso(self, info: Dict) -> Optional[Dict]:
+        """Genera una pregunta de verdadero/falso mediante modificación inteligente"""
+        try:
+            doc = self.nlp(info['texto'])
+            
+            # Decidir si mantener verdadera o modificar
+            es_verdadero = random.choice([True, False])
+            
+            if es_verdadero:
+                afirmacion = info['texto']
+            else:
+                # Modificar la afirmación de manera coherente
+                afirmacion = self._modificar_afirmacion_coherente(doc, info['entidades'])
+            
+            if afirmacion:
+                return {
+                    'pregunta': afirmacion,
+                    'respuesta_correcta': "Verdadero" if es_verdadero else "Falso",
+                    'tipo': 'verdadero_falso',
+                    'explicacion': self._generar_explicacion(info['texto'], es_verdadero, afirmacion)
+                }
+            
+            return None
+            
+        except Exception as e:
+            print(f"Error generando pregunta V/F: {str(e)}")
+            return None
+
+    def _modificar_afirmacion_coherente(self, doc, entidades: List) -> Optional[str]:
+        """Modifica una afirmación de manera coherente para hacerla falsa"""
+        texto_modificado = doc.text
+        
+        # Estrategias de modificación
+        estrategias = [
+            self._modificar_entidad,
+            self._modificar_cantidad,
+            self._modificar_concepto
+        ]
+        
+        # Intentar estrategias hasta lograr una modificación válida
+        random.shuffle(estrategias)
+        for estrategia in estrategias:
+            modificacion = estrategia(doc, entidades)
+            if modificacion:
+                texto_modificado = modificacion
+                break
+                
+        return texto_modificado if texto_modificado != doc.text else None
+
+    def _modificar_entidad(self, doc, entidades: List) -> Optional[str]:
+        """Modifica una entidad nombrada manteniendo coherencia"""
+        if not doc.ents:
+            return None
+            
+        ent = random.choice(doc.ents)
+        texto = doc.text
+        
+        # Encontrar una entidad similar pero diferente
+        for otra_ent, label in entidades:
+            if (otra_ent != ent.text and 
+                label == ent.label_ and 
+                self.nlp(otra_ent).similarity(self.nlp(ent.text)) > 0.5):
+                return texto.replace(ent.text, otra_ent)
+                
+        return None
+
+    def _modificar_cantidad(self, doc, _) -> Optional[str]:
+        """Modifica valores numéricos de manera coherente"""
+        texto = doc.text
+        for token in doc:
+            if token.like_num:
+                try:
+                    num = float(token.text)
+                    # Modificar el número de manera realista
+                    nuevo_num = str(int(num * random.uniform(1.5, 2.5)))
+                    return texto.replace(token.text, nuevo_num)
+                except:
+                    continue
+        return None
+
+    def _modificar_concepto(self, doc, _) -> Optional[str]:
+        """Modifica conceptos clave manteniendo coherencia gramatical"""
+        texto = doc.text
+        for token in doc:
+            if token.pos_ in ['NOUN', 'VERB', 'ADJ'] and len(token.text) > 3:
+                # Generar alternativa usando el modelo T5
+                prompt = f"generate opposite of: {token.text}"
+                inputs = self.t5_tokenizer(prompt, return_tensors="pt")
+                outputs = self.t5_model.generate(**inputs, max_length=32)
+                alternativa = self.t5_tokenizer.decode(outputs[0], skip_special_tokens=True)
+                
+                if alternativa and alternativa != token.text:
+                    return texto.replace(token.text, alternativa)
+        return None
+
+    def _generar_explicacion(self, original: str, es_verdadero: bool, modificada: str) -> str:
+        """Genera una explicación detallada para la respuesta"""
+        if es_verdadero:
+            return f"Esta afirmación es correcta según el texto original: '{original}'"
+        else:
+            # Analizar las diferencias
+            doc_orig = self.nlp(original)
+            doc_mod = self.nlp(modificada)
+            
+            diferencias = []
+            for token_orig, token_mod in zip(doc_orig, doc_mod):
+                if token_orig.text != token_mod.text:
+                    diferencias.append(f"'{token_orig.text}' fue cambiado por '{token_mod.text}'")
+            
+            explicacion = f"La afirmación es falsa. En el texto original dice: '{original}'. "
+            if diferencias:
+                explicacion += f"Las diferencias son: {', '.join(diferencias)}"
+            
+            return explicacion
+
+    def generar_cuestionario(self, texto: str) -> List[Dict]:
+        """Genera un cuestionario completo con 10 preguntas balanceadas"""
+        preguntas = []
+        
+        try:
+            # Extraer información relevante
+            info_relevante = self._extraer_informacion_relevante(texto)
+            
+            # Generar preguntas balanceadas (6 alternativas, 4 V/F)
+            while len(preguntas) < self.max_preguntas and info_relevante:
+                info = info_relevante.pop(0)
+                
+                if len(preguntas) < 6:
+                    pregunta = self._generar_pregunta_analisis(info)
+                else:
+                    pregunta = self._generar_verdadero_falso(info)
+                    
+                if pregunta and self._validar_pregunta(pregunta, texto):
+                    preguntas.append(pregunta)
+            
+            return preguntas
+            
+        except Exception as e:
+            print(f"Error generando cuestionario: {str(e)}")
+            return []
+
+    def _validar_pregunta(self, pregunta: Dict, texto_original: str) -> bool:
+        """Valida la calidad y coherencia de una pregunta generada"""
+        try:
+            # Validaciones básicas
+            if not pregunta.get('pregunta'):
+                return False
+                
+            # Validar coherencia semántica
+            doc = self.nlp(pregunta['pregunta'])
+            if not any(token.pos_ == 'VERB' for token in doc):
+                return False
+                
+            # Validar estructura según tipo
+            if pregunta['tipo'] == 'alternativas':
+                if not (
+                    'opciones' in pregunta and 
+                    'respuesta_correcta' in pregunta and
+                    len(pregunta['opciones']) == 4 and
+                    pregunta['respuesta_correcta'] in pregunta['opciones']
+                ):
+                    return False
+                    
+            elif pregunta['tipo'] == 'verdadero_falso':
+                if not (
+                    'respuesta_correcta' in pregunta and
+                    pregunta['respuesta_correcta'] in ['Verdadero', 'Falso'] and
+                    'explicacion' in pregunta
+                ):
+                    return False
+            
+            # Validar relevancia con el texto original
+            vectorizer = TfidfVectorizer()
+            tfidf = vectorizer.fit_transform([pregunta['pregunta'], texto_original])
+            similitud = cosine_similarity(tfidf[0:1], tfidf[1:2])[0][0]
+            
+            return similitud >= self.min_similitud
+            
+        except Exception as e:
+            print(f"Error en validación: {str(e)}")
+            return False
+
+    def procesar_archivo(self, ruta_archivo: str) -> Dict:
+        """Procesa archivo JSON y genera cuestionarios"""
+        try:
+            with open(ruta_archivo, 'r', encoding='utf-8') as f:
+                datos = json.load(f)
+            
+            resultados = {}
+            
+            # Procesar cada materia y sus textos
+            for materia in datos.keys():
+                if not datos[materia]:  # Ignorar materias sin contenido
+                    continue
+                
+                resultados[materia] = []
+                print(f"\nProcesando {materia}...")
+                
+                for item in datos[materia]:
+                    if not item.get('texto'):  # Ignorar items sin texto
+                        continue
+                        
+                    preguntas = self.generar_cuestionario(item['texto'])
+                    
+                    # Validar calidad del cuestionario completo
+                    if len(preguntas) == self.max_preguntas:
+                        resultados[materia].append({
+                            'texto': item['texto'],
+                            'fuente': item.get('fuente', ''),
+                            'preguntas': self._post_procesar_preguntas(preguntas)
+                        })
+            
+            # Guardar resultados
+            self._guardar_resultados(resultados)
+            
+            return resultados
+            
+        except Exception as e:
+            print(f"Error procesando archivo: {str(e)}")
+            return {}
+
+    def _post_procesar_preguntas(self, preguntas: List[Dict]) -> List[Dict]:
+        """Realiza un post-procesamiento final de las preguntas para garantizar calidad"""
+        preguntas_procesadas = []
+        
+        for pregunta in preguntas:
+            # Limpiar y normalizar texto
+            pregunta_limpia = self._limpiar_texto(pregunta['pregunta'])
+            
+            if pregunta['tipo'] == 'alternativas':
+                opciones_limpias = [self._limpiar_texto(opcion) for opcion in pregunta['opciones']]
+                respuesta_limpia = self._limpiar_texto(pregunta['respuesta_correcta'])
+                
+                # Verificar coherencia final
+                if self._verificar_coherencia_final({
+                    'pregunta': pregunta_limpia,
+                    'opciones': opciones_limpias,
+                    'respuesta_correcta': respuesta_limpia
+                }):
+                    preguntas_procesadas.append({
+                        'pregunta': pregunta_limpia,
+                        'opciones': opciones_limpias,
+                        'respuesta_correcta': respuesta_limpia,
+                        'tipo': 'alternativas'
+                    })
+                    
+            elif pregunta['tipo'] == 'verdadero_falso':
+                explicacion_limpia = self._limpiar_texto(pregunta['explicacion'])
+                
+                if self._verificar_coherencia_final({
+                    'pregunta': pregunta_limpia,
+                    'explicacion': explicacion_limpia
+                }):
+                    preguntas_procesadas.append({
+                        'pregunta': pregunta_limpia,
+                        'respuesta_correcta': pregunta['respuesta_correcta'],
+                        'tipo': 'verdadero_falso',
+                        'explicacion': explicacion_limpia
+                    })
+        
+        return preguntas_procesadas
+
+    def _limpiar_texto(self, texto: str) -> str:
+        """Limpia y normaliza el texto"""
+        # Eliminar espacios múltiples
+        texto = ' '.join(texto.split())
+        
+        # Asegurar puntuación correcta
+        if texto and not texto[-1] in '.?!':
+            texto += '.'
+            
+        # Capitalizar primera letra
+        texto = texto[0].upper() + texto[1:] if texto else texto
+        
+        return texto
+
+    def _verificar_coherencia_final(self, pregunta: Dict) -> bool:
+        """Realiza una verificación final de coherencia"""
+        try:
+            doc = self.nlp(pregunta['pregunta'])
+            
+            # Verificar estructura gramatical básica
+            tiene_verbo = False
+            tiene_sujeto = False
+            
+            for token in doc:
+                if token.pos_ == 'VERB':
+                    tiene_verbo = True
+                if token.dep_ in ['nsubj', 'nsubjpass']:
+                    tiene_sujeto = True
+            
+            if not (tiene_verbo and tiene_sujeto):
+                return False
+            
+            # Para preguntas de alternativas
+            if 'opciones' in pregunta:
+                # Verificar que las opciones sean del mismo tipo semántico
+                embeddings_opciones = [self.nlp(opcion).vector for opcion in pregunta['opciones']]
+                similitudes = cosine_similarity(embeddings_opciones)
+                
+                # Comprobar que las opciones tengan cierta similitud entre sí
+                if not (0.3 <= similitudes.mean() <= 0.8):
+                    return False
+                
+                # Verificar que las opciones sean respuestas válidas a la pregunta
+                pregunta_sin_signos = pregunta['pregunta'].replace('¿', '').replace('?', '')
+                for opcion in pregunta['opciones']:
+                    oracion_prueba = pregunta_sin_signos.replace('_____', opcion)
+                    doc_prueba = self.nlp(oracion_prueba)
+                    
+                    # Verificar coherencia gramatical de la oración resultante
+                    if not self._verificar_gramatica(doc_prueba):
+                        return False
+            
+            # Para preguntas de verdadero/falso
+            if 'explicacion' in pregunta:
+                # Verificar que la explicación sea coherente con la pregunta
+                doc_explicacion = self.nlp(pregunta['explicacion'])
+                similitud = doc.similarity(doc_explicacion)
+                
+                if similitud < 0.4:
+                    return False
+            
+            return True
+            
+        except Exception as e:
+            print(f"Error en verificación final: {str(e)}")
+            return False
+
+    def _verificar_gramatica(self, doc) -> bool:
+        """Verifica la coherencia gramatical de una oración"""
+        # Verificar estructura básica
+        tiene_verbo_principal = False
+        tiene_sujeto = False
+        
+        for token in doc:
+            if token.dep_ == 'ROOT' and token.pos_ == 'VERB':
+                tiene_verbo_principal = True
+            if token.dep_ in ['nsubj', 'nsubjpass']:
+                tiene_sujeto = True
+            
+            # Verificar concordancia básica
+            if token.dep_ == 'det' and token.head.pos_ == 'NOUN':
+                if token.morph.get('Gender') != token.head.morph.get('Gender') or \
+                   token.morph.get('Number') != token.head.morph.get('Number'):
+                    return False
+        
+        return tiene_verbo_principal and tiene_sujeto
+
+    def _guardar_resultados(self, resultados: Dict):
+        """Guarda los resultados en un archivo JSON"""
+        try:
+            ruta_salida = 'tutorApp/static/json/cuestionarios_generados.json'
+            with open(ruta_salida, 'w', encoding='utf-8') as f:
+                json.dump(resultados, f, ensure_ascii=False, indent=4)
+                
+            print(f"\nResultados guardados en '{ruta_salida}'")
+            
+        except Exception as e:
+            print(f"Error guardando resultados: {str(e)}")
