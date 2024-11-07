@@ -15,34 +15,81 @@ from typing import List, Dict, Optional
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
+import gc
+import time
+from tqdm import tqdm
 
 class GeneradorCuestionarios:
     def __init__(self):
         print("Inicializando modelos...")
+
+        # Configuración de device
+        self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         
-        # Modelo principal para generación de preguntas
-        self.qa_model = pipeline(
+        # Inicialización directa de modelos
+        print("Cargando modelo QA...")
+        self._qa_model = pipeline(
             "question-answering",
-            model="mrm8488/bert-base-spanish-wwm-cased-finetuned-spa-squad2-es"
+            model="mrm8488/bert-base-spanish-wwm-cased-finetuned-spa-squad2-es",
+            device=self.device
         )
         
-        # Modelo T5 para generación de texto
-        self.t5_tokenizer = AutoTokenizer.from_pretrained("google/flan-t5-large")
-        self.t5_model = T5ForConditionalGeneration.from_pretrained("google/flan-t5-large")
+        print("Cargando tokenizer T5...")
+        self._t5_tokenizer = AutoTokenizer.from_pretrained("google/flan-t5-large")
         
-        # Modelo BERT para clasificación y verificación
-        self.bert_tokenizer = AutoTokenizer.from_pretrained("dccuchile/bert-base-spanish-wwm-cased")
-        self.bert_model = AutoModelForSequenceClassification.from_pretrained(
+        print("Cargando modelo T5...")
+        self._t5_model = T5ForConditionalGeneration.from_pretrained(
+            "google/flan-t5-large"
+        ).to(self.device)
+        
+        print("Cargando tokenizer BERT...")
+        self._bert_tokenizer = AutoTokenizer.from_pretrained(
+            "dccuchile/bert-base-spanish-wwm-cased"
+        )
+        
+        print("Cargando modelo BERT...")
+        self._bert_model = AutoModelForSequenceClassification.from_pretrained(
             "dccuchile/bert-base-spanish-wwm-cased",
             num_labels=2
-        )
+        ).to(self.device)
         
-        # Modelo spaCy para análisis lingüístico
-        self.nlp = spacy.load("es_core_news_lg")
+        print("Cargando modelo spaCy...")
+        self._nlp = spacy.load("es_core_news_lg")
         
         # Configuración
         self.max_preguntas = 10
         self.min_similitud = 0.3
+        self.timeout = 300  # 5 minutos máximo por pregunta
+
+    @property
+    def qa_model(self):
+        return self._qa_model
+
+    @property
+    def t5_tokenizer(self):
+        return self._t5_tokenizer
+    
+    @property
+    def t5_model(self):
+        return self._t5_model
+
+    @property
+    def bert_tokenizer(self):
+        return self._bert_tokenizer
+
+    @property
+    def bert_model(self):
+        return self._bert_model
+    
+    @property
+    def nlp(self):
+        return self._nlp
+
+    def _limpiar_memoria(self):
+        """Limpia la memoria GPU/CPU"""
+        if torch.cuda.is_available():
+            torch.cuda.empty_cache()
+        gc.collect()
         
     def _extraer_informacion_relevante(self, texto: str) -> List[Dict]:
         """Extrae información relevante del texto usando análisis lingüístico"""
@@ -64,33 +111,46 @@ class GeneradorCuestionarios:
         return sorted(informacion, key=lambda x: x['importancia'], reverse=True)
 
     def _generar_pregunta_analisis(self, info: Dict) -> Optional[Dict]:
-        """Genera una pregunta de análisis usando T5"""
+        """Genera una pregunta de análisis más coherente"""
         try:
-            # Generar pregunta
-            prompt = f"generate analytical question in Spanish: {info['texto']}"
+            # 1. Extraer conceptos clave del texto
+            doc = self.nlp(info['texto'])
+            conceptos_clave = self._extraer_conceptos_clave(doc)
+            if not conceptos_clave:
+                return None
+
+            # 2. Generar pregunta usando T5 con contexto específico
+            concepto = random.choice(conceptos_clave)
+            prompts = [
+                f"generate question about '{concepto}' definition in Spanish: {info['texto']}",
+                f"generate question about '{concepto}' purpose in Spanish: {info['texto']}",
+                f"generate question about '{concepto}' characteristics in Spanish: {info['texto']}",
+                f"generate question about '{concepto}' importance in Spanish: {info['texto']}"
+            ]
+            prompt = random.choice(prompts)
             inputs = self.t5_tokenizer(prompt, return_tensors="pt", max_length=512, truncation=True)
             
             outputs = self.t5_model.generate(
                 **inputs,
                 max_length=128,
                 num_beams=4,
-                no_repeat_ngram_size=2
+                no_repeat_ngram_size=2,
+                temperature=0.8
             )
             
             pregunta = self.t5_tokenizer.decode(outputs[0], skip_special_tokens=True)
             
-            # Validar respuesta usando QA
-            qa_result = self.qa_model(
-                question=pregunta,
-                context=info['texto']
-            )
+            # 3. Usar QA para encontrar la respuesta correcta
+            qa_result = self.qa_model(question=pregunta, context=info['texto'])
             
             if qa_result['score'] > 0.7:
                 respuesta_correcta = qa_result['answer']
-                alternativas = self._generar_alternativas_coherentes(
+                
+                # 4. Generar alternativas conceptualmente relacionadas
+                alternativas = self._generar_alternativas_semanticas(
                     respuesta_correcta,
-                    info['texto'],
-                    info['entidades']
+                    concepto,
+                    info['texto']
                 )
                 
                 if alternativas and len(alternativas) >= 3:
@@ -110,71 +170,215 @@ class GeneradorCuestionarios:
             print(f"Error generando pregunta: {str(e)}")
             return None
 
+    def _extraer_conceptos_clave(self, doc) -> List[str]:
+        """Extrae conceptos clave usando análisis semántico"""
+        conceptos = []
+        
+        # Identificar sintagmas nominales importantes
+        for chunk in doc.noun_chunks:
+            if (chunk.root.pos_ in ['NOUN', 'PROPN'] and 
+                not chunk.root.is_stop and 
+                len(chunk.text.split()) <= 3):
+                
+                # Calcular importancia usando TF-IDF
+                importancia = sum(not token.is_stop for token in chunk)
+                if importancia > 1:
+                    conceptos.append(chunk.text)
+        
+        # Encontrar entidades nombradas relevantes
+        for ent in doc.ents:
+            if ent.label_ in ['ORG', 'PRODUCT', 'EVENT', 'CONCEPT']:
+                conceptos.append(ent.text)
+        
+        return list(set(conceptos))
+
+    def _generar_alternativas_semanticas(self, respuesta: str, concepto: str, contexto: str) -> List[str]:
+        """Genera alternativas semánticamente relacionadas"""
+        try:
+            alternativas = set()
+            doc_respuesta = self.nlp(respuesta)
+            doc_concepto = self.nlp(concepto)
+            
+            # 1. Extraer información relacionada del contexto
+            doc_contexto = self.nlp(contexto)
+            oraciones_relevantes = []
+            
+            for sent in doc_contexto.sents:
+                if concepto.lower() in sent.text.lower():
+                    oraciones_relevantes.append(sent.text)
+            
+            # 2. Generar alternativas basadas en el contexto
+            for oracion in oraciones_relevantes:
+                # Usar T5 para generar variaciones
+                prompt = f"generate alternative answer about {concepto} in Spanish: {oracion}"
+                inputs = self.t5_tokenizer(prompt, return_tensors="pt")
+                outputs = self.t5_model.generate(
+                    **inputs,
+                    max_length=64,
+                    num_beams=4,
+                    no_repeat_ngram_size=2,
+                    do_sample=True,
+                    temperature=0.8
+                )
+                
+                alternativa = self.t5_tokenizer.decode(outputs[0], skip_special_tokens=True)
+                
+                if self._validar_alternativa_semantica(alternativa, respuesta, concepto):
+                    alternativas.add(alternativa)
+            
+            # 3. Si no hay suficientes, generar usando relaciones conceptuales
+            while len(alternativas) < 3:
+                prompt = f"generate related but incorrect answer about {concepto} in Spanish"
+                inputs = self.t5_tokenizer(prompt, return_tensors="pt")
+                outputs = self.t5_model.generate(
+                    **inputs,
+                    max_length=64,
+                    num_beams=4,
+                    do_sample=True,
+                    temperature=0.9
+                )
+                
+                alternativa = self.t5_tokenizer.decode(outputs[0], skip_special_tokens=True)
+                if self._validar_alternativa_semantica(alternativa, respuesta, concepto):
+                    alternativas.add(alternativa)
+            
+            return list(alternativas)[:3]
+            
+        except Exception as e:
+            print(f"Error generando alternativas semánticas: {str(e)}")
+            return []
+
+    def _validar_alternativa_semantica(self, alternativa: str, respuesta: str, concepto: str) -> bool:
+        """Valida la coherencia semántica de una alternativa"""
+        try:
+            if not alternativa or alternativa == respuesta:
+                return False
+            
+            doc_alt = self.nlp(alternativa)
+            doc_resp = self.nlp(respuesta)
+            doc_concepto = self.nlp(concepto)
+            
+            # Verificar longitud y estructura
+            if abs(len(doc_alt) - len(doc_resp)) > 5:
+                return False
+            
+            # Verificar que contenga el concepto o términos relacionados
+            similitud_concepto = doc_alt.similarity(doc_concepto)
+            if similitud_concepto < 0.3:
+                return False
+            
+            # Verificar que sea una alternativa válida pero no idéntica
+            similitud_respuesta = doc_alt.similarity(doc_resp)
+            if similitud_respuesta > 0.8 or similitud_respuesta < 0.2:
+                return False
+            
+            # Verificar coherencia gramatical
+            tiene_verbo = any(token.pos_ == 'VERB' for token in doc_alt)
+            tiene_sustantivo = any(token.pos_ == 'NOUN' for token in doc_alt)
+            
+            return tiene_verbo and tiene_sustantivo
+            
+        except Exception as e:
+            print(f"Error en validación semántica: {str(e)}")
+            return False
+
     def _generar_alternativas_coherentes(self, respuesta: str, contexto: str, entidades: List) -> List[str]:
         """Genera alternativas coherentes basadas en el contexto y entidades"""
         try:
             alternativas = set()
             doc_respuesta = self.nlp(respuesta)
             
-            # Identificar tipo de respuesta
+            # Si la respuesta no tiene vector válido, usar enfoque alternativo
+            if not doc_respuesta.vector.any():
+                return self._generar_alternativas_simples(respuesta, contexto)
+            
+            vector_respuesta = doc_respuesta.vector.reshape(1, -1)  # Asegurar 2D
+            
+            # 1. Primero intentar con entidades nombradas
             if doc_respuesta.ents:
                 tipo_entidad = doc_respuesta.ents[0].label_
-                # Buscar entidades similares del mismo tipo
                 for ent, label in entidades:
                     if label == tipo_entidad and ent != respuesta:
                         alternativas.add(ent)
             
-            # Si no hay suficientes alternativas, usar análisis semántico
+            # 2. Intentar con sintagmas nominales
             if len(alternativas) < 3:
                 doc_contexto = self.nlp(contexto)
-                doc_respuesta_vector = doc_respuesta.vector
-                
-                for token in doc_contexto:
-                    if (token.pos_ in ['NOUN', 'PROPN'] and 
-                        token.text != respuesta and 
-                        len(token.text) > 3):
-                        # Calcular similitud usando los vectores de palabras
-                        similitud = cosine_similarity(
-                            [token.vector],
-                            [doc_respuesta_vector]
-                        )[0][0]
-                        
-                        if 0.3 <= similitud <= 0.7:
-                            alternativas.add(token.text)
-            
-            # Si aún no hay suficientes alternativas, intentar con sintagmas nominales
-            if len(alternativas) < 3:
-                for chunk in self.nlp(contexto).noun_chunks:
+                for chunk in doc_contexto.noun_chunks:
                     if (chunk.text != respuesta and 
                         len(chunk.text) > 3 and 
                         chunk.root.pos_ in ['NOUN', 'PROPN']):
-                        
-                        similitud = cosine_similarity(
-                            [chunk.vector],
-                            [doc_respuesta_vector]
-                        )[0][0]
+                        # Calcular similitud de manera segura
+                        vector_chunk = chunk.vector.reshape(1, -1)
+                        similitud = cosine_similarity(vector_chunk, vector_respuesta)[0][0]
                         
                         if 0.3 <= similitud <= 0.7:
                             alternativas.add(chunk.text)
+                            if len(alternativas) >= 3:
+                                break
             
-            # Validar coherencia de las alternativas encontradas
-            alternativas_validadas = []
-            for alt in alternativas:
-                if self._validar_alternativa(alt, respuesta, contexto):
-                    alternativas_validadas.append(alt)
+            # 3. Usar T5 para generar alternativas faltantes
+            intentos = 0
+            while len(alternativas) < 3 and intentos < 5:
+                alt_generada = self._generar_alternativa_t5(respuesta, contexto)
+                if alt_generada and alt_generada not in alternativas:
+                    if self._validar_alternativa(alt_generada, respuesta, contexto):
+                        alternativas.add(alt_generada)
+                intentos += 1
             
-            # Si no se tienen suficientes alternativas, generar algunas usando T5
-            while len(alternativas_validadas) < 3:
-                nueva_alt = self._generar_alternativa_t5(respuesta, contexto)
-                if nueva_alt and nueva_alt not in alternativas_validadas:
-                    if self._validar_alternativa(nueva_alt, respuesta, contexto):
-                        alternativas_validadas.append(nueva_alt)
+            # Si aún necesitamos más alternativas, usar el método simple
+            if len(alternativas) < 3:
+                alternativas_simples = self._generar_alternativas_simples(respuesta, contexto)
+                alternativas.update(alternativas_simples)
             
-            return list(alternativas_validadas)[:3]
+            alternativas_lista = list(alternativas)[:3]
+            # Asegurar que tenemos exactamente 3 alternativas
+            while len(alternativas_lista) < 3:
+                alternativas_lista.append(f"Opción adicional {len(alternativas_lista) + 1}")
+            
+            return alternativas_lista
             
         except Exception as e:
             print(f"Error generando alternativas: {str(e)}")
-            return []
+            return [f"Opción {i}" for i in range(1, 4)]
+
+   
+    def _generar_alternativas_simples(self, respuesta: str, contexto: str) -> List[str]:
+        """Método de respaldo para generar alternativas cuando los métodos principales fallan"""
+        try:
+            alternativas = set()
+            doc_contexto = self.nlp(contexto)
+            
+            # Extraer sustantivos y nombres propios como alternativas
+            for token in doc_contexto:
+                if len(alternativas) >= 3:
+                    break
+                if (token.pos_ in ['NOUN', 'PROPN'] and 
+                    token.text != respuesta and 
+                    len(token.text) > 3):
+                    alternativas.add(token.text)
+            
+            # Si aún necesitamos más alternativas, usar chunks
+            if len(alternativas) < 3:
+                for chunk in doc_contexto.noun_chunks:
+                    if len(alternativas) >= 3:
+                        break
+                    if (chunk.text != respuesta and 
+                        len(chunk.text) > 3 and 
+                        chunk.root.pos_ in ['NOUN', 'PROPN']):
+                        alternativas.add(chunk.text)
+            
+            # Asegurar que tenemos suficientes alternativas
+            while len(alternativas) < 3:
+                alt_t5 = self._generar_alternativa_t5(respuesta, contexto)
+                if alt_t5 and alt_t5 not in alternativas:
+                    alternativas.add(alt_t5)
+            
+            return list(alternativas)[:3]
+            
+        except Exception as e:
+            print(f"Error en alternativas simples: {str(e)}")
+            return [f"Opción {i}" for i in range(1, 4)]  # Último recurso
         
     def _generar_alternativa_t5(self, respuesta: str, contexto: str) -> Optional[str]:
         """Genera una alternativa usando T5"""
@@ -207,23 +411,62 @@ class GeneradorCuestionarios:
             return None
 
     def _validar_alternativa(self, alternativa: str, respuesta: str, contexto: str) -> bool:
-        """Valida la coherencia de una alternativa"""
-        if not alternativa or alternativa == respuesta:
-            return False
+        """Valida la coherencia de una alternativa usando múltiples métricas"""
+        try:
+            if not alternativa or not respuesta:
+                return False
             
-        # Validar longitud similar
-        if abs(len(alternativa.split()) - len(respuesta.split())) > 3:
-            return False
+            # Convertir a minúsculas para comparación
+            alt_lower = alternativa.lower().strip()
+            resp_lower = respuesta.lower().strip()
             
-        # Validar coherencia semántica
-        doc_alt = self.nlp(alternativa)
-        doc_resp = self.nlp(respuesta)
-        similitud = doc_alt.similarity(doc_resp)
-        
-        if similitud > 0.9 or similitud < 0.2:
-            return False
+            # Evitar alternativas idénticas o muy similares
+            if alt_lower == resp_lower:
+                return False
+                
+            # Validar longitud similar (permitir cierta variación)
+            palabras_alt = alt_lower.split()
+            palabras_resp = resp_lower.split()
+            if abs(len(palabras_alt) - len(palabras_resp)) > 3:
+                return False
+                
+            # Análisis con spaCy
+            doc_alt = self.nlp(alternativa)
+            doc_resp = self.nlp(respuesta)
             
-        return True
+            # Verificar que ambos documentos tienen contenido válido
+            if not doc_alt.vector.any() or not doc_resp.vector.any():
+                return False
+                
+            # Calcular similitud usando vectores (corregido)
+            vector_alt = doc_alt.vector.reshape(1, -1)  # Asegurar 2D
+            vector_resp = doc_resp.vector.reshape(1, -1)  # Asegurar 2D
+            
+            similitud = cosine_similarity(vector_alt, vector_resp)[0][0]
+            
+            # Validar similitud semántica (no muy similar ni muy diferente)
+            if similitud > 0.9 or similitud < 0.2:
+                return False
+                
+            # Verificar que sean del mismo tipo gramatical
+            pos_alt = {token.pos_ for token in doc_alt}
+            pos_resp = {token.pos_ for token in doc_resp}
+            if not pos_alt.intersection(pos_resp):
+                return False
+                
+            # Verificar coherencia con el contexto
+            doc_contexto = self.nlp(contexto)
+            vector_contexto = doc_contexto.vector.reshape(1, -1)  # Asegurar 2D
+            similitud_contexto = cosine_similarity(vector_alt, vector_contexto)[0][0]
+            
+            if similitud_contexto < 0.1:  # Debe tener alguna relación con el contexto
+                return False
+            
+            return True
+            
+        except Exception as e:
+            print(f"Error en validación de alternativa: {str(e)}")
+            return False
 
     def _generar_verdadero_falso(self, info: Dict) -> Optional[Dict]:
         """Genera una pregunta de verdadero/falso mediante modificación inteligente"""
@@ -340,31 +583,52 @@ class GeneradorCuestionarios:
             
             return explicacion
 
-    def generar_cuestionario(self, texto: str) -> List[Dict]:
-        """Genera un cuestionario completo con 10 preguntas balanceadas"""
+    def _generar_cuestionario_con_timeout(self, texto: str, timeout: int = 1200) -> List[Dict]:
+        """Genera un cuestionario con mejor control de tiempo"""
         preguntas = []
+        start_time = time.time()
+        intentos_maximos = 20  # Permitir más intentos para lograr las 10 preguntas
         
         try:
-            # Extraer información relevante
             info_relevante = self._extraer_informacion_relevante(texto)
+            if not info_relevante:
+                return []
             
-            # Generar preguntas balanceadas (6 alternativas, 4 V/F)
-            while len(preguntas) < self.max_preguntas and info_relevante:
-                info = info_relevante.pop(0)
-                
-                if len(preguntas) < 6:
-                    pregunta = self._generar_pregunta_analisis(info)
-                else:
-                    pregunta = self._generar_verdadero_falso(info)
+            # Intentar generar preguntas hasta tener 10 o agotar tiempo/intentos
+            with tqdm(total=self.max_preguntas) as pbar:
+                intentos = 0
+                while len(preguntas) < self.max_preguntas and intentos < intentos_maximos:
+                    if time.time() - start_time > timeout:
+                        print("\nTimeout global alcanzado")
+                        break
                     
-                if pregunta and self._validar_pregunta(pregunta, texto):
-                    preguntas.append(pregunta)
+                    info = info_relevante[intentos % len(info_relevante)]
+                    intentos += 1
+                    
+                    try:
+                        # Alternar entre tipos de preguntas
+                        if len(preguntas) < 6:
+                            nueva_pregunta = self._generar_pregunta_analisis(info)
+                        else:
+                            nueva_pregunta = self._generar_verdadero_falso(info)
+                        
+                        if nueva_pregunta and self._validar_pregunta(nueva_pregunta, texto):
+                            preguntas.append(nueva_pregunta)
+                            pbar.update(1)
+                            
+                    except Exception as e:
+                        print(f"\nError en intento {intentos}: {str(e)}")
+                        continue
+                    
+                    # Limpiar memoria cada 3 intentos
+                    if intentos % 3 == 0:
+                        self._limpiar_memoria()
             
             return preguntas
             
         except Exception as e:
-            print(f"Error generando cuestionario: {str(e)}")
-            return []
+            print(f"\nError en generación de cuestionario: {str(e)}")
+            return preguntas
 
     def _validar_pregunta(self, pregunta: Dict, texto_original: str) -> bool:
         """Valida la calidad y coherencia de una pregunta generada"""
@@ -408,69 +672,105 @@ class GeneradorCuestionarios:
             return False
 
     def procesar_archivo(self, ruta_archivo: str) -> Dict:
-        """Procesa archivo JSON y genera cuestionarios"""
+        """Procesa archivo JSON con manejo mejorado de errores y timeout"""
+        resultados = {}
+        
         try:
+            # Cargar y validar datos
             with open(ruta_archivo, 'r', encoding='utf-8') as f:
                 datos = json.load(f)
+                if not isinstance(datos, dict):
+                    print("Error: Formato de datos inválido")
+                    return {}
+
+            total_materias = len(datos.keys())
+            print(f"Procesando {total_materias} materias...")
             
-            resultados = {}
-            
-            # Procesar cada materia y sus textos
-            for materia in datos.keys():
-                if not datos[materia]:  # Ignorar materias sin contenido
-                    continue
-                
+            # Procesar cada materia
+            for materia in tqdm(datos.keys(), desc="Procesando materias"):
+                # Inicializar lista para la materia
                 resultados[materia] = []
                 print(f"\nProcesando {materia}...")
                 
-                for item in datos[materia]:
-                    if not item.get('texto'):  # Ignorar items sin texto
+                # Obtener contenido de la materia
+                contenido = datos[materia]
+                if not contenido:
+                    continue
+                    
+                # Procesar cada entrada de contenido
+                for item in tqdm(contenido, desc=f"Procesando textos de {materia}"):
+                    if not isinstance(item, dict) or 'texto' not in item:
                         continue
                         
-                    preguntas = self.generar_cuestionario(item['texto'])
+                    # Establecer tiempo límite por texto
+                    start_time = time.time()
+                    preguntas = []
                     
-                    # Validar calidad del cuestionario completo
-                    if len(preguntas) == self.max_preguntas:
-                        resultados[materia].append({
-                            'texto': item['texto'],
-                            'fuente': item.get('fuente', ''),
-                            'preguntas': self._post_procesar_preguntas(preguntas)
-                        })
+                    try:
+                        # Generar cuestionario con timeout extendido
+                        preguntas = self._generar_cuestionario_con_timeout(
+                            item['texto'],
+                            timeout=600  # 10 minutos por texto
+                        )
+                        
+                        if preguntas:
+                            registro = {
+                                'texto': item['texto'],
+                                'fuente': item.get('fuente', ''),
+                                'preguntas': preguntas
+                            }
+                            resultados[materia].append(registro)
+                            
+                            # Guardar resultados parciales
+                            self._guardar_resultados(
+                                resultados,
+                                f"resultados_parciales_{materia}.json"
+                            )
+                    
+                    except Exception as e:
+                        print(f"\nError procesando texto en {materia}: {str(e)}")
+                        continue
+                    
+                    finally:
+                        self._limpiar_memoria()
+                        
+                # Verificar si se generaron preguntas para la materia
+                if not resultados[materia]:
+                    print(f"No se generaron preguntas para {materia}")
             
-            # Guardar resultados
-            self._guardar_resultados(resultados)
+            # Guardar resultados finales solo si hay contenido
+            if any(resultados.values()):
+                self._guardar_resultados(resultados)
+            else:
+                print("No se generaron preguntas para ninguna materia")
             
             return resultados
             
         except Exception as e:
-            print(f"Error procesando archivo: {str(e)}")
-            return {}
+            print(f"\nError procesando archivo: {str(e)}")
+            return resultados
 
-    def _post_procesar_preguntas(self, preguntas: List[Dict]) -> List[Dict]:
-        """Realiza un post-procesamiento final de las preguntas para garantizar calidad"""
-        preguntas_procesadas = []
-        
-        for pregunta in preguntas:
-            # Limpiar y normalizar texto
+    def _post_procesar_pregunta(self, pregunta: Dict) -> Optional[Dict]:
+        """Procesa una única pregunta para garantizar calidad"""
+        try:
             pregunta_limpia = self._limpiar_texto(pregunta['pregunta'])
             
             if pregunta['tipo'] == 'alternativas':
                 opciones_limpias = [self._limpiar_texto(opcion) for opcion in pregunta['opciones']]
                 respuesta_limpia = self._limpiar_texto(pregunta['respuesta_correcta'])
                 
-                # Verificar coherencia final
                 if self._verificar_coherencia_final({
                     'pregunta': pregunta_limpia,
                     'opciones': opciones_limpias,
                     'respuesta_correcta': respuesta_limpia
                 }):
-                    preguntas_procesadas.append({
+                    return {
                         'pregunta': pregunta_limpia,
                         'opciones': opciones_limpias,
                         'respuesta_correcta': respuesta_limpia,
                         'tipo': 'alternativas'
-                    })
-                    
+                    }
+            
             elif pregunta['tipo'] == 'verdadero_falso':
                 explicacion_limpia = self._limpiar_texto(pregunta['explicacion'])
                 
@@ -478,14 +778,18 @@ class GeneradorCuestionarios:
                     'pregunta': pregunta_limpia,
                     'explicacion': explicacion_limpia
                 }):
-                    preguntas_procesadas.append({
+                    return {
                         'pregunta': pregunta_limpia,
                         'respuesta_correcta': pregunta['respuesta_correcta'],
                         'tipo': 'verdadero_falso',
                         'explicacion': explicacion_limpia
-                    })
-        
-        return preguntas_procesadas
+                    }
+            
+            return None
+            
+        except Exception as e:
+            print(f"Error en post-procesamiento: {str(e)}")
+            return None
 
     def _limpiar_texto(self, texto: str) -> str:
         """Limpia y normaliza el texto"""
@@ -574,10 +878,10 @@ class GeneradorCuestionarios:
         
         return tiene_verbo_principal and tiene_sujeto
 
-    def _guardar_resultados(self, resultados: Dict):
-        """Guarda los resultados en un archivo JSON"""
+    def _guardar_resultados(self, resultados: Dict, nombre_archivo: str = 'cuestionarios_generados.json'):
+        """Guarda resultados con manejo de errores"""
         try:
-            ruta_salida = 'tutorApp/static/json/cuestionarios_generados.json'
+            ruta_salida = f'tutorApp/static/json/{nombre_archivo}'
             with open(ruta_salida, 'w', encoding='utf-8') as f:
                 json.dump(resultados, f, ensure_ascii=False, indent=4)
                 
@@ -585,3 +889,14 @@ class GeneradorCuestionarios:
             
         except Exception as e:
             print(f"Error guardando resultados: {str(e)}")
+            # Intentar guardar en ubicación alternativa
+            try:
+                with open(nombre_archivo, 'w', encoding='utf-8') as f:
+                    json.dump(resultados, f, ensure_ascii=False, indent=4)
+                print(f"Resultados guardados en ubicación alternativa: '{nombre_archivo}'")
+            except:
+                print("No se pudieron guardar los resultados")
+
+    def __del__(self):
+        """Limpieza al destruir la instancia"""
+        self._limpiar_memoria()
