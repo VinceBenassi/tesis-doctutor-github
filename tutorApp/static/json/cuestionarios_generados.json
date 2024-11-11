@@ -1,3 +1,686 @@
-{
-    "quiz": []
-}
+[
+    {
+        "materia": "derecho",
+        "fuente": "https://www.bcn.cl/formacioncivica/detalle_guia?h=10221.3/45670#:~:text=El%20Derecho%20es%20un%20sistema,relevancia%20jur%C3%ADdica%2C%20pudiendo%20imponerse%20coactivamente.",
+        "preguntas": [
+            {
+                "tipo": "alternativas",
+                "pregunta": "Que es el término del contexto: Desde qué procedimiento?",
+                "opciones": [
+                    "límites",
+                    "moderno",
+                    "promulgado",
+                    "procedimiento"
+                ],
+                "respuesta_correcta": "procedimiento",
+                "explicacion": "Explica en espaol por qué 'procedimiento' es importante en este contexto: De hecho, el Derecho moderno tiene su validez en atención a procedimiento, dependiendo de que las normas jurdicas se han promulgado de acuerdo con el procedimiento establecido, y conforme a la Constitución Poltica de la Repblica, y no en atención a un criterio de justicia, con ciertos medidas, por ejemplo, no ir contra los derechos esenciales que emanan de la naturaleza humana"
+            },
+            {
+                "tipo": "verdadero_falso",
+                "pregunta": "Clasificación\r\nTradicionalmente se dice que el derecho es uno solo e igual para todos.",
+                "respuesta_correcta": "Verdadero",
+                "explicacion": "Explica en espaol por qué esta afirmación es correcta: Clasificación Tradicionalmente se dice que el derecho es uno solamente y igual para todos."
+            },
+            {
+                "tipo": "alternativas",
+                "pregunta": "Que es una pregunta en espaol sobre 'convivencia'?",
+                "opciones": [
+                    "convivencia",
+                    "pacífica",
+                    "principales",
+                    "entiende"
+                ],
+                "respuesta_correcta": "convivencia",
+                "explicacion": "Explica en espaol por qué el 'convivencia' es importante en este contexto: Una de las principales divisiones del Derecho es el que diferencia entre el ‘Delecho objetivo’ y el ‘Delecho subjetivo’: Derecho Objetivo Derecho Subjetivo Tradicionalmente se entiende como “el conjunto de normas imperativas que, para mantener la convivencia pacfica y ordenada de los hombres que viven en sociedad, regulan las relaciones de ellos determinadas por esas normas”."
+            },
+            {
+                "tipo": "verdadero_falso",
+                "pregunta": "Derecho Internacional Humanitario.",
+                "respuesta_correcta": "Verdadero",
+                "explicacion": "Explica en espaol por qué esta afirmación es correcta: Derecho Internacional Humanitario."
+            },
+            {
+                "tipo": "verdadero_falso",
+                "pregunta": "Hay un interés público en el buen funcionamiento de la economía y los mercados, por lo que se busca proteger la libre competencia y que no existan grandes alteraciones en los niveles macroeconómicos.",
+                "respuesta_correcta": "Verdadero",
+                "explicacion": "Explica en espaol por qué esta afirmación es correcta: Hay un interes publico en el buen funcionamiento de la economa y los mercados, por lo que se trata de proteger la libre competencia y que no existen grandes alteraciones en los niveles macroeconómicos."
+            },
+            {
+                "tipo": "alternativas",
+                "pregunta": "Genera una pregunta en espaol sobre 'municipios' en el contexto: el segundo pregunta -cómo se encuentra normas y cómo se expresan- refiere a los fármacos formales que determinan el modo de crear una norma jurdica (se el Poder legislativo, el Presidente de la Repblica, las municipalidades), as como los medios por el que se manifiestan estas normas (Consito, ley orgánica constitucional, reglamento).",
+                "opciones": [
+                    "municipalidades",
+                    "orgánica",
+                    "constitucional",
+                    "fuentes"
+                ],
+                "respuesta_correcta": "municipalidades",
+                "explicacion": "Explica en espaol por qué 'municipios' es importante en este contexto: The second question -how to define norms and how to express them -refers to formal sources that determine the way to create a legal norm (see the Legislative Poder, the President of the Repblica, the Municipalities), as well as the media for which these manifest (Consito, Constitución, Constitución Organica Constitucional, Regulation)."
+            },
+            {
+                "tipo": "verdadero_falso",
+                "pregunta": "Configura un orden público de orden.",
+                "respuesta_correcta": "Falso",
+                "explicacion": "Explica en espaol por qué esta afirmación es incorrecta: Configura un orden pblico de protección."
+            },
+            {
+                "tipo": "alternativas",
+                "pregunta": "Que es una pregunta en espaol sobre 'promesas'?",
+                "opciones": [
+                    "idea",
+                    "promesas",
+                    "derecho",
+                    "garantizado"
+                ],
+                "respuesta_correcta": "promesas",
+                "explicacion": "Explica en espaol por qué 'promesas' es importante en este contexto: Evoca el idea de “tener derecho a” un interese determinado, el cual es reconocido (se encuentra contemplado) y garantizado, esto é, existen mecanismos para hacer exigibles las promesas del Derecho objetivo."
+            },
+            {
+                "tipo": "verdadero_falso",
+                "pregunta": "Entre estos encontramos: la nacionalidad, el domicilio, la ubicación de los bienes, el lugar de ejecución del contrato, entre otros.",
+                "respuesta_correcta": "Verdadero",
+                "explicacion": "Explica en espaol por qué esta afirmación es correcta: Entre estos encontramos: la nacionalidad, el domicilio, la ubicación de los bienes, el lugar de ejecución del contrato, entre otros."
+            }
+        ]
+    },
+    {
+        "materia": "medicina",
+        "fuente": "https://www.unbosque.edu.co/blog-universidad-el-bosque/que-es-la-medicina",
+        "preguntas": [
+            {
+                "tipo": "alternativas",
+                "pregunta": "Qué es el término de brindar en el contexto del pérdida?",
+                "opciones": [
+                    "muerte",
+                    "prevención",
+                    "brindar",
+                    "familia"
+                ],
+                "respuesta_correcta": "brindar",
+                "explicacion": "Explica en espaol por qué 'brindar' es importante en este contexto: para identificar causas y brindar también prevención de la enfermedad a su familia"
+            },
+            {
+                "tipo": "verdadero_falso",
+                "pregunta": "En la adultez: en los casos de enfermedad y como forma de prevención, la medicina busca la mejoría y curación, mediante tratamientos quirúrgicos o médicos.",
+                "respuesta_correcta": "Verdadero",
+                "explicacion": "Explica en espaol por qué esta afirmación es correcta: En el adulto: en casos de enfermedad y como forma de prevención, la medicina busca la mejora y la curación, mediante tratamientos quirrgicos o médicos."
+            },
+            {
+                "tipo": "alternativas",
+                "pregunta": "Qué términos es correcto?",
+                "opciones": [
+                    "parto",
+                    "múltiples",
+                    "desarrollo",
+                    "correcto"
+                ],
+                "respuesta_correcta": "correcto",
+                "explicacion": "Explica en espaol por qué 'correcto' es importante en este contexto: a continuación: se escribe mltiples exámenes a recién nacional, para diagnosticar en él su correcto desarrollo y condiciones de salud."
+            },
+            {
+                "tipo": "verdadero_falso",
+                "pregunta": "Todos, desde que somos pequeños, damos gusta de lo que nos gusta y lo que nos disgusta.",
+                "respuesta_correcta": "Falso",
+                "explicacion": "Explica en espaol por qué esta afirmación es incorrecta: Todos, desde que somos pequeos, damos seales de lo que nos gusta y lo que nos desafia."
+            },
+            {
+                "tipo": "alternativas",
+                "pregunta": "Que es el término de la vocación?",
+                "opciones": [
+                    "mejores",
+                    "vocación",
+                    "descubras",
+                    "clara"
+                ],
+                "respuesta_correcta": "vocación",
+                "explicacion": "Explica en espaol por qué 'vocación' es importante en este contexto: Para algunos es más clara que para otros, por lo que si todava no sabes cuál es tu vocación, solo es necesario que las descubrir y conozca cerca de tu pasión para que puedas dedicar a los mejores aos de tu vida a hacer lo que me amas"
+            },
+            {
+                "tipo": "verdadero_falso",
+                "pregunta": "Durante el parto: se atiende a la madre y su hijo, bien sea por cesárea o parto natural.",
+                "respuesta_correcta": "Verdadero",
+                "explicacion": "Explica en espaol por qué esta afirmación es correcta: Durante el paso: se atiende a la madre y su hijo, bien si el paso o la naturaleza."
+            },
+            {
+                "tipo": "alternativas",
+                "pregunta": "En este momento, el vocabulario de quienes deciden ser médicos es el opción de quienes saben médicos.",
+                "opciones": [
+                    "médicos",
+                    "vocación",
+                    "abordaremos",
+                    "oportunidad"
+                ],
+                "respuesta_correcta": "médicos",
+                "explicacion": "Explica en espaol por qué 'médicos' es importante en este contexto: En esta oportunidad, abordaremos la vocación de quienes deciden ser médicos."
+            },
+            {
+                "tipo": "verdadero_falso",
+                "pregunta": "Al crecer: los niños, desde su nacimiento y hasta los 6 años, son atendidos por médicos pediatras, quienes explican cómo alimentarlos, cuidarlos y controlar y chequear su salud.",
+                "respuesta_correcta": "Verdadero",
+                "explicacion": "Explica en espaol por qué esta afirmación es correcta: Tocándoo: los nios desde su nacimiento y hasta su 6 aos, son atentos por médicos pediatras, quienes explican cómo alimentarlos, cuidarlos y controlar y chequear su salud."
+            },
+            {
+                "tipo": "alternativas",
+                "pregunta": "Qué tiene el palabra 'mundo'?",
+                "opciones": [
+                    "viene",
+                    "vocación",
+                    "paso",
+                    "mundo"
+                ],
+                "respuesta_correcta": "mundo",
+                "explicacion": "Explica en espaol por qué 'mundo' es importante en este contexto: La vocación viene con nosotros desde que llegaremos a el mundo y, en el paso de los aos, vamos a desarrollarla cada vez más."
+            },
+            {
+                "tipo": "verdadero_falso",
+                "pregunta": "En la concepción: en el caso de una pareja con esterilidad, la medicina les ofrece a ambos la oportunidad de tener hijos propios.",
+                "respuesta_correcta": "Verdadero",
+                "explicacion": "Explica en espaol por qué esta afirmación es correcta: En la concepción: en el caso de una pareja de esterilidad, la medicina les ofrece a ambos la oportunidad de tener hijos propios."
+            }
+        ]
+    },
+    {
+        "materia": "medicina",
+        "fuente": "https://www.hopkinsmedicine.org/health/treatment-tests-and-therapies/types-of-surgery",
+        "preguntas": [
+            {
+                "tipo": "alternativas",
+                "pregunta": "Que es el término en espaol sobre 'risk'?",
+                "opciones": [
+                    "técnicas",
+                    "riesgo",
+                    "implica",
+                    "reduce"
+                ],
+                "respuesta_correcta": "riesgo",
+                "explicacion": "Explica en espaol por qué 'risk' es importante en este contexto: surgery can be minimally invasible, using techniques such as laparoscopia, which involves small incisions and the use of a camera to guide the procedure, which reduces the time of recovery and the risk of complications"
+            },
+            {
+                "tipo": "verdadero_falso",
+                "pregunta": "Los cirujanos utilizan una variedad de técnicas quirúrgicas para acceder al acceder del cuerpo humano, reparar tejidos dañados, extraer tumores o corregir anomalías.",
+                "respuesta_correcta": "Falso",
+                "explicacion": "Explica en espaol por qué esta afirmación es incorrecta: Los cirujanos utilizan a variedad de técnicas quierrgicas para acceder al interior del cuerpo humano, reparar tejidos daados, extraer tumores o corregir anomalas."
+            },
+            {
+                "tipo": "alternativas",
+                "pregunta": "Qué medidas es el trabajo de 'trauma'?",
+                "opciones": [
+                    "aguda",
+                    "trauma",
+                    "vida",
+                    "caso"
+                ],
+                "respuesta_correcta": "trauma",
+                "explicacion": "Explica en espaol por qué 'trauma' es importante en este contexto: La ciruga de emergencia se realiza inmediatamente para salvar la vida del paciente, como en el caso de una grave trauma o una apendicitis aguda."
+            },
+            {
+                "tipo": "verdadero_falso",
+                "pregunta": "La cirugía es una parte vital del sistema de salud y ha avanzado significativamente con el tiempo.",
+                "respuesta_correcta": "Verdadero",
+                "explicacion": "Explica en espaol por qué esta afirmación es correcta: Ciruga es una parte vital del sistema de salud y ha avanzado significativamente en el tiempo."
+            },
+            {
+                "tipo": "alternativas",
+                "pregunta": "Que es la ciruga robótica?",
+                "opciones": [
+                    "robótica",
+                    "invasiva",
+                    "evolución",
+                    "cirujanos"
+                ],
+                "respuesta_correcta": "evolución",
+                "explicacion": "Explica en espaol por qué 'evolución' es importante en este contexto: Robótico surgery es una evolución de la ciruga minimally invasiva, donde los cirujanos utilizan brazos robóticos controlados por computadora para realizar procedimientos con alta precisión"
+            },
+            {
+                "tipo": "verdadero_falso",
+                "pregunta": "Después de completar la carrera de medicina, los durar cirujanos deben realizar una residencia en cirugía, que puede durar entre cinco y siete años.",
+                "respuesta_correcta": "Falso",
+                "explicacion": "Explica en espaol por qué esta afirmación es incorrecta: Después de completar la carrera de medicina, los futuros cirujanos debe realizar una residencia en ciruga, que puede durar entre cinco y septiembre."
+            },
+            {
+                "tipo": "alternativas",
+                "pregunta": "Que es la clasificación de ciruga en el contexto?",
+                "opciones": [
+                    "técnica",
+                    "utilizada",
+                    "propósito",
+                    "cirugía"
+                ],
+                "respuesta_correcta": "cirugía",
+                "explicacion": "Explica en espaol por qué 'ciruga' es importante en este contexto: ciruga puede clasificar en diferentes tipos, dependiendo de la urgencia, el propósito y la técnica utilizada"
+            },
+            {
+                "tipo": "verdadero_falso",
+                "pregunta": "Durante la residencia, los médicos reciben capacitación intensiva en técnicas quirúrgicas, cuidados pre y postoperatorios, y manejo de complicaciones.",
+                "respuesta_correcta": "Verdadero",
+                "explicacion": "Explica en espaol por qué esta afirmación es correcta: During residency, doctors receive intensive training in surgical techniques, pre- and postoperative care, and handling of complications."
+            },
+            {
+                "tipo": "alternativas",
+                "pregunta": "Que es el término de cirujanismo en el contexto: Algunos cirujanos optan para subespecializar en áreas especficas como neurociruga, cardiovascular, ortopédica, plástica, entre otros?",
+                "opciones": [
+                    "subespecializarse",
+                    "ortopédica",
+                    "optan",
+                    "cardiovascular"
+                ],
+                "respuesta_correcta": "ortopédica",
+                "explicacion": "Explica en espaol por qué 'ortopédica' es importante en este contexto: Algunos cirujanos optan para subespecializar en áreas especficas como neurociruga, cardiovascular, la ciruga ortopédica, la ciruga plástica, entre otras"
+            },
+            {
+                "tipo": "verdadero_falso",
+                "pregunta": "Las innovaciones en técnicas quirúrgicas, anestesia y permitiendo médica han mejorado la seguridad y la eficacia de los procedimientos quirúrgicos, permitiendo tratar una amplia gama de enfermedades y condiciones de manera más efectiva",
+                "respuesta_correcta": "Falso",
+                "explicacion": "Explica en espaol por qué esta afirmación es incorrecta: Innovaciones en técnicas quieres, anestesia y médica ha mejorado la seguridad y eficacia de los quieres, permitiendo tratar una amplia gama de enfermedades y condiciones más efectivas."
+            }
+        ]
+    },
+    {
+        "materia": "pedagogía en inglés",
+        "fuente": "https://educacion.udp.cl/carreras/pedagogia-en-ingles/",
+        "preguntas": [
+            {
+                "tipo": "alternativas",
+                "pregunta": "En contexto, el carrera obtendrá un ambiente de estudio y de convivencia en inglés y en el que haya oportunidades de interactuar y aprender con personas nativas en inglés.",
+                "opciones": [
+                    "inglés",
+                    "hable",
+                    "carrera",
+                    "lengua"
+                ],
+                "respuesta_correcta": "carrera",
+                "explicacion": "Explica en espaol por qué el carrera es importante en este contexto: El carrera ofrece un ambiente de estudio y de convivencia donde se hablan inglés y donde también hay oportunidades de interactuar y aprender con personas whose nativa lengua es inglés."
+            },
+            {
+                "tipo": "verdadero_falso",
+                "pregunta": "Estas serán algunas de las preguntas que orientarán el eje de enseñanza de la lengua y que serán abordadas en asignaturas como metodología, evaluación y planificación curricular entre otras.",
+                "respuesta_correcta": "Verdadero",
+                "explicacion": "Explica en espaol por qué esta afirmación es correcta: Estas serán algunas de las preguntas que orientarán el eje de enseanza de la lengua y que serán abordadas en asignaturas como metodologa, evaluación y planificación curricular entre otros."
+            },
+            {
+                "tipo": "alternativas",
+                "pregunta": "Que es el lnea de aprendizaje en el contexto: Este lnea de aprendizaje tiene una duración de nueve semestres de la carrera y también incluye asignaturas de lngua, lingüstica y cultura de los pases anglo-americanos.",
+                "opciones": [
+                    "angloparlantes",
+                    "duración",
+                    "gramaticales",
+                    "lingüística"
+                ],
+                "respuesta_correcta": "duración",
+                "explicacion": "Explica en espaol por qué 'duración' es importante en este contexto: This learning path has a duration of nine semestres of the race and also includes assignaturas of léxicos and gramaticales foundations of the language, lingüstica and culture of the Anglo-American countries."
+            },
+            {
+                "tipo": "verdadero_falso",
+                "pregunta": "Además los estudiantes de la universidad elección cuatro asignaturas de formación general de su propia elección en otras Facultades.",
+                "respuesta_correcta": "Falso",
+                "explicacion": "Explica en espaol por qué esta afirmación es incorrecta: Además los estudiantes de la universidad toman cuatro asignaturas de formación general de su propia elección en otros Facultades."
+            },
+            {
+                "tipo": "alternativas",
+                "pregunta": "Que es el lnea de 'development' en el contexto?",
+                "opciones": [
+                    "desarrollo",
+                    "enseñanza",
+                    "inciden",
+                    "educación"
+                ],
+                "respuesta_correcta": "desarrollo",
+                "explicacion": "Explica en espaol por qué 'development' es importante en este contexto: A vez, este lnea formativa incluye el aprendizaje de las polticas pblicas en educación para analizar cómo estas indicaciones en el desarrollo de la enseanza y aprendizaje del inglés en Chile y en otros pases."
+            },
+            {
+                "tipo": "verdadero_falso",
+                "pregunta": "Enseñanza de la Lengua: ¿Cómo enseñar inglés?",
+                "respuesta_correcta": "Verdadero",
+                "explicacion": "Explica en espaol por qué esta afirmación es correcta: Enseanza de la Lengua: Cómo ensear inglés?"
+            },
+            {
+                "tipo": "alternativas",
+                "pregunta": "Cómo ocupamos las tecnologas de la información en mi laboratorio en el futuro?",
+                "opciones": [
+                    "docente",
+                    "ocupar",
+                    "futuro",
+                    "tecnologías"
+                ],
+                "respuesta_correcta": "tecnologías",
+                "explicacion": "Explica en espaol por qué 'tecnologas' es importante en este contexto: Cómo se puede ocupar las tecnologas de la información en mi labor de alumno en el futuro?"
+            },
+            {
+                "tipo": "verdadero_falso",
+                "pregunta": "Dado el carácter reflexivo de estas asignaturas, el estudiante estará permanentemente inmerso en discusiones con sus pares y con docentes, para luego contrastarlas en sus prácticas y así retroalimentar el proceso de enseñanza de la lengua en distintos contextos escolares.",
+                "respuesta_correcta": "Verdadero",
+                "explicacion": "Explica en espaol por qué esta afirmación es correcta: Dios el carácter reflexivo de estas asignaturas, el estudiante estará permanentemente inmerso en discusión con sus pares y con das, para contrastarlas en sus prácticas y as retroalimentar el proceso de enseanza de la lengua en diferentes contextos escolares."
+            },
+            {
+                "tipo": "alternativas",
+                "pregunta": "Qué teorias y estrategias permitirán a mi futuros alumnos?",
+                "opciones": [
+                    "permitirán",
+                    "significativos",
+                    "estudiantes",
+                    "estrategias"
+                ],
+                "respuesta_correcta": "permitirán",
+                "explicacion": "a reunión de la escuela"
+            },
+            {
+                "tipo": "verdadero_falso",
+                "pregunta": "Se nutre de la experiencia internacional y de la adquisición sobre adquisición de la lengua como idioma extranjero, y de los estudios sobre procesos cognitivos, entre otros ámbitos.",
+                "respuesta_correcta": "Falso",
+                "explicacion": "Explica en espaol por qué esta afirmación es inequivoca: Es de la experiencia internacional y de la investigación sobre adquisición de la lengua como idioma extranjero, y de los estudios sobre procesos cognitivos, entre otros ámbitos."
+            }
+        ]
+    },
+    {
+        "materia": "pedagogía en inglés",
+        "fuente": "https://www.teachingenglish.org.uk/article/digital-literacy",
+        "preguntas": [
+            {
+                "tipo": "alternativas",
+                "pregunta": "Que es una pregunta en espaol sobre 'digitales'?",
+                "opciones": [
+                    "extranjera",
+                    "digitales",
+                    "digital",
+                    "lengua"
+                ],
+                "respuesta_correcta": "digitales",
+                "explicacion": "Explica en espaol por qué 'digital' es importante en este contexto: La alfabetización digital en la enseanza del inglés como lengua extranjera refere a uso de tecnologas digitales, como computadoras, tabletas y teléfonos inteligentes, para ensear y aprender inglés"
+            },
+            {
+                "tipo": "verdadero_falso",
+                "pregunta": "Esto puede creación la creación de contenido digital, la colaboración en línea y la comunicación a través de redes sociales",
+                "respuesta_correcta": "Falso",
+                "explicacion": "Explica en espaol por qué esta afirmación es inequivocada: This can include the creation of digital content, online collaboration and communication through social networks."
+            }
+        ]
+    },
+    {
+        "materia": "programación",
+        "fuente": "https://planderecuperacion.gob.es/noticias/que-es-inteligencia-artificial-ia-prtr#:~:text=La%20inteligencia%20artificial%20(IA)%20es,el%20razonamiento%20y%20la%20percepci%C3%B3n.",
+        "preguntas": [
+            {
+                "tipo": "alternativas",
+                "pregunta": "Que es el término de 'facilitando' en el contexto: el vista por computador permite que los computadores percebieron y analcaron información visual, facilitando el reconocimiento de imágenes y la detección de objetos.",
+                "opciones": [
+                    "permite",
+                    "facilitando",
+                    "visión",
+                    "información"
+                ],
+                "respuesta_correcta": "facilitando",
+                "explicacion": "Explica en espaol por qué 'facilitando' es importante en este contexto: La visión por computer permite que los computadores perceban y analcar información visual, facilitando el reconocimiento de imágenes y la detección de objetos."
+            },
+            {
+                "tipo": "verdadero_falso",
+                "pregunta": "Implica el desarrollo de sistemas informáticos y algoritmos capaces de realizar tareas que típicamente requieren inteligencia humana, como el reconocimiento de voz, la resolución de problemas, el aprendizaje, la toma de decisiones y el reconocimiento de resolución.",
+                "respuesta_correcta": "Falso",
+                "explicacion": "Explica en espaol por qué esta afirmación es incorrecta: Implica el desarrollo de sistemas informáticos y algoritmos capaces de realizar ttulos que tpicamente requieren inteligencia humana, como reconocimiento de voz, resolución de problemas, aprendizaje, toma de decisiones y reconocimiento de patrones."
+            },
+            {
+                "tipo": "alternativas",
+                "pregunta": "Que es el objetivo de la investigación y el desarrollo?",
+                "opciones": [
+                    "investigación",
+                    "vidas",
+                    "tareas",
+                    "desarrollo"
+                ],
+                "respuesta_correcta": "investigación",
+                "explicacion": "Explica en espaol qué 'investigación' es importante en este contexto: La investigación y el desarrollo continuas tienen como objetivo mejorar las capacidades de la IA, mejorar su comprensión de trabajos complexos y garantizar su implementación responsable y beneficiosa en diversas aspectos de nuestras vidas."
+            },
+            {
+                "tipo": "verdadero_falso",
+                "pregunta": "Si bien la IA ofrece un inmenso potencial, las consideraciones éticas y el desarrollo responsable son cruciales.",
+                "respuesta_correcta": "Verdadero",
+                "explicacion": "Explica en espaol por qué esta afirmación es correcta: Si bien la IA ofrece un enorme potencial, las consideraciones éticas y la responsable desarrollo son cruciales."
+            },
+            {
+                "tipo": "alternativas",
+                "pregunta": "Que es el contexto del trabajo: Cuáles son los trabajos?",
+                "opciones": [
+                    "diarias",
+                    "virtuales",
+                    "impulsados",
+                    "tareas"
+                ],
+                "respuesta_correcta": "tareas",
+                "explicacion": "Explica en espaol por qué 'tareas' es importante en este contexto: The chatbots and recommendations impulsados by IA mejoran las experiencias de los clientes, while virtual assistants like Siri and Alexa help with daily tasks"
+            },
+            {
+                "tipo": "verdadero_falso",
+                "pregunta": "En la salud, la IA se utiliza para el diagnóstico médico, el descubrimiento de medicamentos y los planes de tratamiento personalizados.",
+                "respuesta_correcta": "Verdadero",
+                "explicacion": "Explica en espaol por qué esta afirmación es correcta: In health, the IA is used for medical diagnosis, drug discovery and personalized treatment plans."
+            },
+            {
+                "tipo": "alternativas",
+                "pregunta": "Que es una pregunta en espaol sobre 'virtuals'?",
+                "opciones": [
+                    "virtuales",
+                    "máquinas",
+                    "lenguaje",
+                    "interpreten"
+                ],
+                "respuesta_correcta": "virtuales",
+                "explicacion": "Explica en espaol por qué 'virtuals' es importante en este contexto: The process of natural language allows machines to understand and interpret human language, which allows applications as virtual assistants and translation of languages."
+            },
+            {
+                "tipo": "verdadero_falso",
+                "pregunta": "Las instituciones financieras utilizan la IA para la detección de fraudes, la evaluación de riesgos y el comercio financieras.",
+                "respuesta_correcta": "Falso",
+                "explicacion": "Explica en espaol por qué esta afirmación es incorrecta: El financiamiento financiero utiliza la IA para la detección de fraudes, evaluación de riesgos y algortmico comercio."
+            },
+            {
+                "tipo": "alternativas",
+                "pregunta": "Qué es la tecnologa de las coches autónomos?",
+                "opciones": [
+                    "coches",
+                    "autónomos",
+                    "emplean",
+                    "detección"
+                ],
+                "respuesta_correcta": "detección",
+                "explicacion": "Explica en espaol por qué 'detección' es importante en este contexto: The cars autónomos emplean algoritmos de IA for navigation and the detection of obstacles"
+            },
+            {
+                "tipo": "verdadero_falso",
+                "pregunta": "Las discusiones sobre la ética de la IA se centran en cuestiones como el sesgo en los algoritmos, las preocupaciones de privacidad, el desplazamiento laboral y el impacto general de la IA en la sociedad.",
+                "respuesta_correcta": "Verdadero",
+                "explicacion": "Explica en espaol por qué esta afirmación es correcta: The debates on the etica of IA focus on questions such as the question of algorithms, privacy concerns, labor displacement and the general impact of IA on society."
+            }
+        ]
+    },
+    {
+        "materia": "programación",
+        "fuente": "https://www.ibm.com/cloud/learn/machine-learning",
+        "preguntas": [
+            {
+                "tipo": "alternativas",
+                "pregunta": "El modelo aprenda a mapear las entradas correctas y puede ampliar esa conocimiento a nuevas datos.",
+                "opciones": [
+                    "generalizar",
+                    "conocimiento",
+                    "objetivo",
+                    "correctas"
+                ],
+                "respuesta_correcta": "correctas",
+                "explicacion": "Explica en espaol por qué 'correctas' es importante en este contexto: El objetivo es que el model aprenda a mapear las entradas a las salidas correctas y puede generalizar este conocimiento a nuevas datos."
+            },
+            {
+                "tipo": "verdadero_falso",
+                "pregunta": "El supervisado automático se puede dividir en tres tipos principales: supervisado supervisado, supervisado no supervisado y supervisado por refuerzo.",
+                "respuesta_correcta": "Falso",
+                "explicacion": "Explica en espaol por qué esta afirmación es incorrecta: El aprendizaje automático puede dividir en tres principales tipos: aprendizaje supervisado, aprendizaje no supervisado y aprendizaje por refuerzo."
+            },
+            {
+                "tipo": "alternativas",
+                "pregunta": "Que es el técnico en el contexto?",
+                "opciones": [
+                    "especialidad",
+                    "técnica",
+                    "metodología",
+                    "utilizada"
+                ],
+                "respuesta_correcta": "técnica",
+                "explicacion": "Explica en espaol por qué técnica es importante en este contexto: Este técnica es ampliamente utilizada en robótica y juegos"
+            },
+            {
+                "tipo": "verdadero_falso",
+                "pregunta": "Sin embargo, también plantea desafíos éticos y técnicos, como la interpretabilidad de los modelos, la equidad y el sesgo en los datos, y la privacidad de la información.",
+                "respuesta_correcta": "Verdadero",
+                "explicacion": "Explica en espaol qué esta afirmación es correcta: Pero también plantea desafos técnicos como la interpretabilidad de los modelos, la equidad y la sexo en los datos, y la privacidad de la información."
+            },
+            {
+                "tipo": "alternativas",
+                "pregunta": "En el aprendizaje no supervised, el modelo entrena con datos no etiquetados y debe identificar patrones o estructuras ocultas sin ninguna gua previo.",
+                "opciones": [
+                    "modelo",
+                    "etiquetados",
+                    "datos",
+                    "patrones"
+                ],
+                "respuesta_correcta": "etiquetados",
+                "explicacion": "Explica en espaol por qué 'etiquetados' es importante en este contexto: En el no-supervised learning, the model is entrenado con datos no etiquetados y debe identificar patrones o estructuras ocultas sin ninguna gua previo."
+            },
+            {
+                "tipo": "verdadero_falso",
+                "pregunta": "El agente recibe recompensas o penalizaciones en función de sus acciones y ajusta su comportamiento para maximizar la recompensa acumulada.",
+                "respuesta_correcta": "Verdadero",
+                "explicacion": "Explica en espaol por qué esta afirmación es correcta: El agente recibe recompensas o penalizaciones en función de sus acciones y ajusta su comportamiento para maximizar el recompensa acumulado."
+            },
+            {
+                "tipo": "alternativas",
+                "pregunta": "Que es el término de crculos en el contexto?",
+                "opciones": [
+                    "clustering",
+                    "dimensionalidad",
+                    "útil",
+                    "reducción"
+                ],
+                "respuesta_correcta": "clustering",
+                "explicacion": "Explica en espaol por qué 'clustering' es importante en este contexto: This is useful for tasks such as agregación (clustering) and reduction of dimensionality."
+            },
+            {
+                "tipo": "verdadero_falso",
+                "pregunta": "El aprendizaje por refuerzo se basa en el principio de aprendizaje a través de la aprendizaje con un entorno.",
+                "respuesta_correcta": "Falso",
+                "explicacion": "Explica en espaol por qué esta afirmación es incorrecta: El aprendizaje por recurso se basa en el principio de aprendizaje a través de la interacción con un entorno."
+            },
+            {
+                "tipo": "alternativas",
+                "pregunta": "Que es una pregunta en espaol sobre 'programación'?",
+                "opciones": [
+                    "aprendizaje",
+                    "programación",
+                    "sistemas",
+                    "reglas"
+                ],
+                "respuesta_correcta": "programación",
+                "explicacion": "Explica en espaol por qué 'programación' es importante en este contexto: A diferencia de los términos tradicionales de programación, donde se define reglas explcitas para cada trabajo, el automático aprendizaje permite que los sistemas informáticos identifican patrones y relaciones en los datos, y hagan predicciones o tomen decisiones basadas en esos hechos"
+            },
+            {
+                "tipo": "verdadero_falso",
+                "pregunta": "La investigación en este campo continúa avanzando rápidamente, con el objetivo de desarrollar transparentes más eficientes, robustos y transparentes",
+                "respuesta_correcta": "Falso",
+                "explicacion": "Explica en espaol por qué esta afirmación es incorrecta: La investigación en este campo continua avanzada, con el objetivo de desarrollar algoritmos más eficientes, robustos y transparentes."
+            }
+        ]
+    },
+    {
+        "materia": "programación",
+        "fuente": "https://www.python.org/doc/essays/blurb/",
+        "preguntas": [
+            {
+                "tipo": "alternativas",
+                "pregunta": "Qué es el término de campo en el contexto?",
+                "opciones": [
+                    "datos",
+                    "ciencia",
+                    "campo",
+                    "automático"
+                ],
+                "respuesta_correcta": "campo",
+                "explicacion": "El campo de la ciencia de datos y el aprendizaje automático"
+            },
+            {
+                "tipo": "verdadero_falso",
+                "pregunta": "Los programadores pueden colaborar en proyectos de código abierto, participar en conferencias y acceder a una amplia gama de código y foros en línea.",
+                "respuesta_correcta": "Falso",
+                "explicacion": "Explica en espaol por qué esta afirmación es incorrecta: Programadores pueden colaborar en proyectos de código abierto, participar en conferencias y accesar a una amplia gama de documentación y foros en lnea."
+            },
+            {
+                "tipo": "alternativas",
+                "pregunta": "Que es el término de tecnologa?",
+                "opciones": [
+                    "habilidades",
+                    "facilidad",
+                    "buscadas",
+                    "tecnología"
+                ],
+                "respuesta_correcta": "tecnología",
+                "explicacion": "Explica en espaol por qué 'technology' es importante en este contexto: Programming in Python has become one of the most sought-after skills in the industry of technology due to its versatility and ease of learning"
+            },
+            {
+                "tipo": "verdadero_falso",
+                "pregunta": "Su aplicabilidad en diversas disciplinas lo convierte en una herramienta valiosa para científicos, ingenieros, analistas de científicos, y muchos otros.",
+                "respuesta_correcta": "Falso",
+                "explicacion": "Explica en espaol por qué esta afirmación es incorrecta: Su aplicabilidad en diversas disciplinas convierte en una herramienta valiosa para cientficos, ingenieros, analistas de datos, y muchos otros."
+            },
+            {
+                "tipo": "alternativas",
+                "pregunta": "Que es necesario el empleo de código de córdoba?",
+                "opciones": [
+                    "necesidad",
+                    "cero",
+                    "desarrolladores",
+                    "gama"
+                ],
+                "respuesta_correcta": "necesidad",
+                "explicacion": "Explica en espaol por qué 'need' es importante en este contexto: This allows developers to perform a broad range of projects without needing to write a lot of code from a córo"
+            },
+            {
+                "tipo": "verdadero_falso",
+                "pregunta": "Además, frameworks como Django y Flask se utilizan para el desarrollo de aplicaciones web, proporcionando estructuras robustas y escalables.",
+                "respuesta_correcta": "Verdadero",
+                "explicacion": "Explica en espaol por qué esta afirmación es correcta: Además, frameworks like Django y Flask se utilizan para el desarrollo de aplicaciones web, proporcionando structures robustas y escalables."
+            },
+            {
+                "tipo": "alternativas",
+                "pregunta": "Genera una pregunta en espaol sobre 'creación': acerca de acerca de Pandas, NumPy, y Matplotlib facilitan el análisis de datos y la creación de visualizaciones, y bibliotecas como TensorFlow y PyTorch permiten el desarrollo de modelos de auto-aprendizaje y neuronales.",
+                "opciones": [
+                    "redes",
+                    "creación",
+                    "aprendizaje",
+                    "neuronales"
+                ],
+                "respuesta_correcta": "creación",
+                "explicacion": "Explica en espaol por qué 'creation' es importante en este contexto: Herramientas como Pandas, NumPy, y Matplotlib facilitan el análisis de datos y la creación de visualizaciones, y bibliotecas como TensorFlow y PyTorch permiten el desarrollo de modelos de aprendizaje automático y neural networks."
+            },
+            {
+                "tipo": "verdadero_falso",
+                "pregunta": "La comunidad de Python es grande y activa, lo que significa que hay una abundancia de recursos, tutoriales y soporte disponible para los desarrolladores de todos los niveles.",
+                "respuesta_correcta": "Verdadero",
+                "explicacion": "Explica en espaol por qué esta afirmación es correcta: La comunidad de Python es grande y activa, lo que significa que hay una abundance de recursos, tutoriales y soporte disponible para los desarrolladores de todos los niveles."
+            },
+            {
+                "tipo": "alternativas",
+                "pregunta": "Que es una pregunta en espaol sobre 'principales'?",
+                "opciones": [
+                    "tareas",
+                    "principales",
+                    "amplia",
+                    "inteligencia"
+                ],
+                "respuesta_correcta": "principales",
+                "explicacion": "Explica en espaol por qué 'principales' es importante en este contexto: Una de las principales ventajas de Python es su amplia biblioteca estándar, que incluye módulos y paquetes para una variedad de tareas, desde procesamiento de datos y visualización hasta el desarrollo web y la inteligencia artificial"
+            },
+            {
+                "tipo": "verdadero_falso",
+                "pregunta": "Python es un lenguaje de programación de alto nivel, interpretado y orientado a objetos, conocido por su sintaxis simple y clara, lo que facilita su lectura y escritura.",
+                "respuesta_correcta": "Verdadero",
+                "explicacion": "Explica en espaol por qué esta afirmación es correcta: Python is a language of programming of high level, interpretado and oriented to objects, known for its simple and clear syntax, which facilitates its reading and writing."
+            }
+        ]
+    }
+]

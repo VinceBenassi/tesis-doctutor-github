@@ -117,15 +117,26 @@
     }
 
     function mostrarVistaPrevia(url) {
-        const iframe = document.getElementById('previewIframe');
-        iframe.src = url;
-    
-        // Mostrar el modal de Bootstrap
-        $('#previewModal').modal('show');
-    }    
+        // Hacer una solicitud para obtener la captura de pantalla
+        fetch(`/api/capture-screenshot/?url=${encodeURIComponent(url)}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.screenshot_url) {
+                    // Cargar la imagen en el modal y mostrar el modal
+                    const previewImage = document.getElementById('previewImage');
+                    
+                    previewImage.src = data.screenshot_url;
+                    $('#previewModal').modal('show');
+                } else {
+                    console.error('Error al obtener la URL de la captura de pantalla');
+                }
+            })
+            .catch(error => console.error('Error en la solicitud de captura:', error));
+    }
 
     function inicializarVistaPrevia() {
         const enlaces = document.querySelectorAll('.source-link');
+        
         enlaces.forEach(enlace => {
             enlace.onclick = function(e) {
                 e.preventDefault();
