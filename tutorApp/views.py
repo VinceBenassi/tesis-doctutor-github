@@ -24,7 +24,7 @@ historial_chatbot = []
 
 # Carga los cuestionarios una sola vez al iniciar la aplicación
 generador = GeneradorCuestionarios()
-cuestionarios = generador.generar_cuestionario('tutorApp/static/json/quiz.json')
+cuestionarios = generador.generar_cuestionario_desde_json('tutorApp/static/json/quiz.json')
 # Fin carga de los cuestionarios
 
 # Obtén la ruta de la carpeta de PDFs
