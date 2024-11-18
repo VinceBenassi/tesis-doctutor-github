@@ -1,262 +1,437 @@
 # Generador de Cuestionarios
 # Por Franco Benassi
 import json
+import os
 import random
 import spacy
-import torch
-from transformers import (
-    AutoModelForSeq2SeqLM,
-    AutoTokenizer,
-    pipeline,
-    T5ForConditionalGeneration,
-    T5Tokenizer
-)
-from sentence_transformers import SentenceTransformer
-import numpy as np
-from nltk.tokenize import sent_tokenize
 import re
+from typing import List, Dict, Any
+from collections import defaultdict
+from transformers import pipeline
 
 class GeneradorCuestionarios:
     def __init__(self):
-        # Cargar modelos
-        self.nlp = spacy.load("es_core_news_lg")
-        self.sentence_model = SentenceTransformer('hiiamsid/sentence_similarity_spanish_es')
-        
-        # Modelo T5 en español para generación de preguntas
-        self.t5_tokenizer = T5Tokenizer.from_pretrained("google/mt5-small")
-        self.t5_model = T5ForConditionalGeneration.from_pretrained("google/mt5-small")
-        
-        # Pipeline de clasificación de texto
-        self.classifier = pipeline(
-            "text-classification",
-            model="dccuchile/bert-base-spanish-wwm-cased",
-            tokenizer="dccuchile/bert-base-spanish-wwm-cased"
-        )
+        # Modelo de respuesta a preguntas (QA)
+        self.qa_model = pipeline("question-answering", model="dccuchile/bert-base-spanish-wwm-cased")
+        # Modelo de procesamiento del lenguaje natural
+        self.nlp = spacy.load("es_core_news_sm")
 
-    def procesar_texto(self, texto):
-        """Procesa el texto utilizando SpaCy para análisis lingüístico"""
+    def analizar_texto(self, texto: str) -> Dict[str, Any]:
+        """Analiza el texto para identificar conceptos clave y estructuras importantes."""
         doc = self.nlp(texto)
-        return doc
+        oraciones = [sent.text for sent in doc.sents if len(sent.text) > 10]
+        entidades = [ent.text for ent in doc.ents if ent.label_ in ["PER", "ORG", "CONCEPT", "EVENT"]]
+        conceptos = [chunk.text for chunk in doc.noun_chunks if len(chunk.text.split()) > 1]
 
-    def extraer_conceptos_clave(self, doc):
-        """Extrae conceptos clave del texto procesado"""
-        conceptos = []
-        for ent in doc.ents:
-            if ent.label_ in ['ORG', 'PERSON', 'LOC', 'MISC']:
-                conceptos.append(ent.text)
-        
-        # Extraer sustantivos y frases nominales importantes
-        for chunk in doc.noun_chunks:
-            if len(chunk.text.split()) > 1:  # Frases de más de una palabra
-                conceptos.append(chunk.text)
-                
-        return list(set(conceptos))
+        return {
+            "oraciones": oraciones,
+            "entidades": list(set(entidades)),
+            "conceptos": list(set(conceptos))
+        }
 
-    def generar_pregunta_alternativas(self, texto, concepto):
-        """Genera una pregunta de alternativas usando T5"""
-        input_text = f"genera una pregunta sobre: {concepto} contexto: {texto}"
+    def _extraer_conceptos(self, texto: str) -> List[str]:
+        """Extrae conceptos clave del texto"""
+        # Buscar frases con mayúsculas iniciales y términos técnicos
+        conceptos = re.findall(r'\b[A-Z][a-zA-Z\s]+\b|\b[a-zA-Z]+(?:\s+[a-zA-Z]+)*\b', texto)
         
-        # Generar pregunta
-        inputs = self.t5_tokenizer.encode(input_text, return_tensors="pt", max_length=512, truncation=True)
-        outputs = self.t5_model.generate(inputs, max_length=150, min_length=50, num_return_sequences=1)
-        pregunta = self.t5_tokenizer.decode(outputs[0], skip_special_tokens=True)
+        # Filtrar y limpiar conceptos
+        conceptos = [c.strip() for c in conceptos if len(c.split()) <= 4 and len(c) > 3]
         
-        # Generar alternativas coherentes
-        alternativas = self.generar_alternativas(texto, concepto, pregunta)
-        respuesta_correcta = alternativas[0]  # La primera alternativa es la correcta
-        random.shuffle(alternativas)  # Mezclar alternativas
-        
+        # Eliminar duplicados y ordenar por longitud
+        return sorted(list(set(conceptos)), key=len, reverse=True)[:10]
+
+    def _extraer_definiciones(self, oraciones: List[str]) -> List[Dict[str, str]]:
+        """Extrae definiciones del texto"""
+        definiciones = []
+        patrones_definicion = [
+            r'([^.]+)\s+es\s+([^.]+)',
+            r'([^.]+)\s+se define como\s+([^.]+)',
+            r'([^.]+)\s+significa\s+([^.]+)',
+            r'([^.]+)\s+se refiere a\s+([^.]+)'
+        ]
+
+        for oracion in oraciones:
+            for patron in patrones_definicion:
+                matches = re.findall(patron, oracion, re.IGNORECASE)
+                for match in matches:
+                    if len(match) == 2:
+                        definiciones.append({
+                            'concepto': match[0].strip(),
+                            'definicion': match[1].strip()
+                        })
+
+        return definiciones
+
+    def _extraer_relaciones(self, oraciones: List[str]) -> List[Dict[str, Any]]:
+        """Extrae relaciones entre conceptos"""
+        relaciones = []
+        patrones_relacion = [
+            r'([^.]+)\s+depende de\s+([^.]+)',
+            r'([^.]+)\s+influye en\s+([^.]+)',
+            r'([^.]+)\s+afecta a\s+([^.]+)',
+            r'([^.]+)\s+se relaciona con\s+([^.]+)'
+        ]
+
+        for oracion in oraciones:
+            for patron in patrones_relacion:
+                matches = re.findall(patron, oracion, re.IGNORECASE)
+                for match in matches:
+                    if len(match) == 2:
+                        relaciones.append({
+                            'concepto1': match[0].strip(),
+                            'concepto2': match[1].strip(),
+                            'tipo_relacion': 'asociación'
+                        })
+
+        return relaciones
+
+    def _extraer_procesos(self, oraciones: List[str]) -> List[Dict[str, List[str]]]:
+        """Extrae procesos o secuencias del texto"""
+        procesos = []
+        inicio_proceso = [
+            'primero', 'inicialmente', 'para comenzar',
+            'el proceso comienza', 'el primer paso'
+        ]
+
+        proceso_actual = None
+        pasos = []
+
+        for oracion in oraciones:
+            # Detectar inicio de proceso
+            if any(inicio in oracion.lower() for inicio in inicio_proceso):
+                if proceso_actual and pasos:
+                    procesos.append({
+                        'nombre': proceso_actual,
+                        'pasos': pasos
+                    })
+                proceso_actual = oracion
+                pasos = []
+            # Continuar proceso actual
+            elif proceso_actual and any(conector in oracion.lower() for conector in ['luego', 'después', 'entonces', 'finalmente']):
+                pasos.append(oracion)
+
+        # Agregar último proceso si existe
+        if proceso_actual and pasos:
+            procesos.append({
+                'nombre': proceso_actual,
+                'pasos': pasos
+            })
+
+        return procesos
+
+    def _generar_pregunta_definicion(self, analisis: Dict[str, Any]) -> Dict[str, Any]:
+        """Genera una pregunta sobre definición de conceptos"""
+        if not analisis['definiciones']:
+            return None
+
+        definicion = random.choice(analisis['definiciones'])
+        concepto = definicion['concepto']
+        def_correcta = definicion['definicion']
+
+        # Generar distractores modificando la definición correcta
+        distractores = []
+        palabras = def_correcta.split()
+        for _ in range(3):
+            distractor = palabras.copy()
+            # Modificar algunas palabras al azar
+            for i in range(min(3, len(distractor))):
+                pos = random.randint(0, len(distractor)-1)
+                distractor[pos] = random.choice(['diferente', 'similar', 'específico', 'general', 'único', 'especial'])
+            distractores.append(' '.join(distractor))
+
+        opciones = [def_correcta] + distractores
+        random.shuffle(opciones)
+
         return {
             "tipo": "alternativas",
-            "pregunta": pregunta,
-            "opciones": alternativas,
-            "respuesta_correcta": respuesta_correcta,
-            "explicacion": self.generar_explicacion(texto, pregunta, respuesta_correcta)
+            "pregunta": f"¿Cuál es la definición correcta de {concepto}?",
+            "opciones": opciones,
+            "respuesta_correcta": def_correcta,
+            "explicacion": f"La definición correcta de {concepto} es '{def_correcta}'. Esta definición captura la esencia del concepto y sus características principales."
         }
 
-    def generar_alternativas(self, texto, concepto, pregunta):
-        """Genera alternativas coherentes para la pregunta"""
-        doc = self.nlp(texto)
-        alternativas = []
-        
-        # Encontrar la respuesta correcta
-        for sent in doc.sents:
-            if concepto in sent.text:
-                alternativas.append(self.extraer_respuesta_correcta(sent.text, concepto))
-                break
-        
-        # Generar distractores coherentes
-        distractores = self.generar_distractores(texto, concepto, alternativas[0])
-        alternativas.extend(distractores[:3])  # Tomar 3 distractores
-        
-        return alternativas
+    def _generar_pregunta_concepto(self, analisis: Dict[str, Any]) -> Dict[str, Any]:
+        """Genera una pregunta sobre características de conceptos"""
+        if not analisis['conceptos']:
+            return None
 
-    def extraer_respuesta_correcta(self, oracion, concepto):
-        """Extrae la respuesta correcta de la oración"""
-        doc = self.nlp(oracion)
-        for chunk in doc.noun_chunks:
-            if concepto not in chunk.text and len(chunk.text.split()) > 1:
-                return chunk.text.strip()
-        return ""
+        concepto = random.choice(analisis['conceptos'])
+        # Buscar oraciones que mencionan el concepto
+        oraciones_relacionadas = [
+            o for o in analisis['oraciones'] 
+            if concepto.lower() in o.lower()
+        ]
 
-    def generar_distractores(self, texto, concepto, respuesta_correcta):
-        """Genera distractores coherentes"""
-        doc = self.nlp(texto)
-        distractores = []
-        
-        for sent in doc.sents:
-            for chunk in self.nlp(sent.text).noun_chunks:
-                if (concepto not in chunk.text and 
-                    chunk.text != respuesta_correcta and 
-                    len(chunk.text.split()) > 1):
-                    distractores.append(chunk.text.strip())
-        
-        # Filtrar y seleccionar los distractores más relevantes
-        distractores = list(set(distractores))
-        distractores = self.filtrar_distractores_similares(distractores, respuesta_correcta)
-        return distractores
+        if not oraciones_relacionadas:
+            return None
 
-    def filtrar_distractores_similares(self, distractores, respuesta_correcta):
-        """Filtra distractores basándose en similitud semántica"""
-        if not distractores:
-            return []
-            
-        # Calcular embeddings
-        embeddings = self.sentence_model.encode(distractores + [respuesta_correcta])
-        respuesta_embedding = embeddings[-1]
-        
-        # Calcular similitudes
-        similitudes = np.dot(embeddings[:-1], respuesta_embedding)
-        
-        # Seleccionar distractores con similitud moderada
-        distractores_filtrados = []
-        for i, similitud in enumerate(similitudes):
-            if 0.3 < similitud < 0.7:  # Rango de similitud adecuado
-                distractores_filtrados.append(distractores[i])
-        
-        return distractores_filtrados[:3]  # Retornar máximo 3 distractores
+        oracion_principal = random.choice(oraciones_relacionadas)
+        caracteristica_correcta = oracion_principal.replace(concepto, "").strip()
 
-    def generar_pregunta_verdadero_falso(self, texto):
-        """Genera una pregunta de verdadero/falso"""
-        oraciones = sent_tokenize(texto)
-        oracion_original = random.choice(oraciones)
-        
-        # Generar versión modificada para preguntas falsas
-        if random.random() < 0.5:
-            enunciado = self.modificar_oracion(oracion_original)
-            es_verdadero = False
-        else:
-            enunciado = oracion_original
-            es_verdadero = True
-            
         return {
             "tipo": "verdadero_falso",
-            "pregunta": enunciado,
-            "respuesta_correcta": "Verdadero" if es_verdadero else "Falso",
-            "explicacion": self.generar_explicacion_vf(oracion_original, enunciado, es_verdadero)
+            "pregunta": f"{concepto} {caracteristica_correcta}",
+            "respuesta_correcta": "Verdadero",
+            "explicacion": f"Esta afirmación es verdadera porque {oracion_principal.lower()}"
         }
 
-    def modificar_oracion(self, oracion):
-        """Modifica una oración para crear una versión falsa"""
-        doc = self.nlp(oracion)
-        palabras = [token.text for token in doc]
-        
-        # Identificar palabras clave que se pueden modificar
-        modificables = []
-        for i, token in enumerate(doc):
-            if token.pos_ in ['NOUN', 'VERB', 'ADJ']:
-                modificables.append(i)
-        
-        if modificables:
-            # Modificar una palabra clave
-            indice = random.choice(modificables)
-            palabras[indice] = self.obtener_antonimo_o_alternativa(doc[indice])
-        
-        return ' '.join(palabras)
+    def _generar_pregunta_relacion(self, analisis: Dict[str, Any]) -> Dict[str, Any]:
+        """Genera una pregunta sobre relaciones entre conceptos"""
+        if not analisis['relaciones']:
+            return None
 
-    def obtener_antonimo_o_alternativa(self, token):
-        """Obtiene un antónimo o alternativa para una palabra"""
-        # Implementar lógica para obtener antónimos o alternativas
-        # Este es un ejemplo simplificado
-        antonimos = {
-            'grande': 'pequeño',
-            'bueno': 'malo',
-            'alto': 'bajo',
-            'rápido': 'lento',
-            # Agregar más pares según sea necesario
+        relacion = random.choice(analisis['relaciones'])
+        concepto1 = relacion['concepto1']
+        concepto2 = relacion['concepto2']
+
+        # Generar opciones de respuesta
+        opciones = [
+            f"{concepto1} está directamente relacionado con {concepto2}",
+            f"{concepto1} es independiente de {concepto2}",
+            f"{concepto1} no tiene relación con {concepto2}",
+            f"{concepto2} es opuesto a {concepto1}"
+        ]
+
+        return {
+            "tipo": "alternativas",
+            "pregunta": f"¿Cuál es la relación correcta entre {concepto1} y {concepto2}?",
+            "opciones": opciones,
+            "respuesta_correcta": opciones[0],
+            "explicacion": f"Existe una relación directa entre {concepto1} y {concepto2} porque {relacion.get('tipo_relacion', 'están conectados en el contexto dado')}"
         }
-        return antonimos.get(token.text.lower(), token.text)
 
-    def generar_explicacion(self, texto, pregunta, respuesta):
-        """Genera una explicación coherente para la respuesta"""
-        input_text = f"Explica por qué la respuesta '{respuesta}' es correcta para la pregunta: {pregunta}"
-        
-        inputs = self.t5_tokenizer.encode(input_text, return_tensors="pt", max_length=512, truncation=True)
-        outputs = self.t5_model.generate(
-            inputs,
-            max_length=200,
-            min_length=50,
-            num_return_sequences=1,
-            temperature=0.7
-        )
-        
-        explicacion = self.t5_tokenizer.decode(outputs[0], skip_special_tokens=True)
-        return explicacion
+    def _generar_pregunta_proceso(self, analisis: Dict[str, Any]) -> Dict[str, Any]:
+        """Genera una pregunta sobre procesos o secuencias"""
+        if not analisis['procesos']:
+            return None
 
-    def generar_explicacion_vf(self, original, modificada, es_verdadero):
-        """Genera una explicación para preguntas de verdadero/falso"""
-        if es_verdadero:
-            return f"El enunciado es correcto porque coincide con la información: {original}"
-        else:
-            return f"El enunciado es falso. La información correcta es: {original}"
+        proceso = random.choice(analisis['procesos'])
+        pasos = proceso['pasos']
 
-    def generar_cuestionario(self, texto, materia, fuente, num_preguntas=10):
-        """Genera un cuestionario completo"""
-        doc = self.procesar_texto(texto)
-        conceptos = self.extraer_conceptos_clave(doc)
+        if len(pasos) < 2:
+            return None
+
+        # Crear una afirmación sobre el orden de los pasos
+        paso1 = random.choice(pasos)
+        paso2 = random.choice([p for p in pasos if p != paso1])
+        orden_correcto = pasos.index(paso1) < pasos.index(paso2)
+
+        afirmacion = f"En el proceso de {proceso['nombre']}, {paso1} ocurre antes que {paso2}"
+
+        return {
+            "tipo": "verdadero_falso",
+            "pregunta": afirmacion,
+            "respuesta_correcta": "Verdadero" if orden_correcto else "Falso",
+            "explicacion": f"Esta afirmación es {'correcta' if orden_correcto else 'incorrecta'} porque en el proceso descrito, {'' if orden_correcto else 'no'} se sigue esta secuencia específica."
+        }
+
+    def _generar_pregunta_aplicacion(self, analisis: Dict[str, Any]) -> Dict[str, Any]:
+        """Genera una pregunta sobre aplicación práctica de conceptos"""
+        if not analisis['conceptos']:
+            return None
+
+        concepto = random.choice(analisis['conceptos'])
         
+        # Generar opciones de aplicación
+        opciones = [
+            f"Aplicar {concepto} en situaciones prácticas",
+            f"Memorizar la definición de {concepto}",
+            f"Ignorar {concepto} en la práctica",
+            f"Evitar el uso de {concepto}"
+        ]
+
+        return {
+            "tipo": "alternativas",
+            "pregunta": f"¿Cuál es la mejor manera de utilizar el conocimiento sobre {concepto}?",
+            "opciones": opciones,
+            "respuesta_correcta": opciones[0],
+            "explicacion": f"La mejor manera de utilizar el conocimiento sobre {concepto} es aplicándolo en situaciones prácticas, ya que esto permite comprender su utilidad real y desarrollar competencias efectivas."
+        }
+    
+    def generar_preguntas(self, texto: str, num_preguntas: int = 10) -> List[Dict[str, Any]]:
+        """Genera múltiples preguntas dinámicamente."""
+        analisis = self.analizar_texto(texto)
         preguntas = []
-        num_alternativas = num_preguntas // 2
-        num_vf = num_preguntas - num_alternativas
-        
-        # Generar preguntas de alternativas
-        for _ in range(num_alternativas):
-            if conceptos:
-                concepto = random.choice(conceptos)
-                pregunta = self.generar_pregunta_alternativas(texto, concepto)
+
+        while len(preguntas) < num_preguntas:
+            tipo_pregunta = random.choice(["alternativas", "verdadero_falso"])
+            
+            if tipo_pregunta == "alternativas":
+                pregunta = self.generar_pregunta_alternativas(analisis, texto)
+            else:
+                pregunta = self.generar_pregunta_verdadero_falso(analisis, texto)
+
+            if pregunta:
                 preguntas.append(pregunta)
-        
-        # Generar preguntas de verdadero/falso
-        for _ in range(num_vf):
-            pregunta = self.generar_pregunta_verdadero_falso(texto)
-            preguntas.append(pregunta)
-        
+
+        return preguntas
+
+    def generar_pregunta_alternativas(self, analisis: Dict[str, Any], texto: str) -> Dict[str, Any]:
+        """Genera una pregunta de opción múltiple con distractores relevantes."""
+        if not analisis["conceptos"]:
+            return None
+
+        concepto = random.choice(analisis["conceptos"])
+        respuesta_correcta = self.qa_model(
+            question=f"¿Qué implica el concepto {concepto}?", context=texto
+        )["answer"]
+
+        distractores = self.generar_distractores(respuesta_correcta, texto, concepto)
+
+        if len(distractores) < 3:
+            return None
+
+        opciones = [respuesta_correcta] + distractores[:3]
+        random.shuffle(opciones)
+
+        return {
+            "tipo": "alternativas",
+            "pregunta": f"¿Cuál es la mejor descripción de {concepto}?",
+            "opciones": opciones,
+            "respuesta_correcta": respuesta_correcta,
+            "explicacion": f"{concepto} se refiere a '{respuesta_correcta}', como se menciona en el texto."
+        }
+
+    def generar_pregunta_verdadero_falso(self, analisis: Dict[str, Any], texto: str) -> Dict[str, Any]:
+        """Genera preguntas de verdadero/falso más coherentes."""
+        if not analisis["oraciones"]:
+            return None
+
+        oracion = random.choice(analisis["oraciones"])
+        es_verdadero = random.choice([True, False])
+
+        if not es_verdadero:
+            oracion = self.alterar_oracion(oracion)
+
+        return {
+            "tipo": "verdadero_falso",
+            "pregunta": oracion,
+            "respuesta_correcta": "Verdadero" if es_verdadero else "Falso",
+            "explicacion": f"La afirmación es {'correcta' if es_verdadero else 'incorrecta'} porque refleja el contexto del texto."
+        }
+
+    def generar_distractores(self, respuesta: str, texto: str, concepto: str) -> List[str]:
+        """Genera distractores semánticamente relevantes."""
+        doc = self.nlp(texto)
+        distractores = []
+
+        for sent in doc.sents:
+            if concepto.lower() in sent.text.lower() and respuesta.lower() not in sent.text.lower():
+                distractores.append(sent.text.strip())
+
+        return list(set(distractores))
+
+    def alterar_oracion(self, oracion: str) -> str:
+        """Modifica una oración para crear una versión falsa."""
+        palabras = oracion.split()
+        if len(palabras) > 2:
+            palabras[random.randint(0, len(palabras) - 1)] = "no"
+        return " ".join(palabras)
+
+    def generar_cuestionario(self, texto: str, materia: str, fuente: str, num_preguntas: int = 10) -> Dict[str, Any]:
+        """Genera un cuestionario completo basado en un texto."""
+        preguntas = self.generar_preguntas(texto, num_preguntas)
         return {
             "materia": materia,
             "fuente": fuente,
             "preguntas": preguntas
         }
 
-    def generar_cuestionario_desde_json(self, ruta_entrada):
-        """Genera cuestionarios a partir del archivo quiz.json"""
-        # Cargar datos del JSON
-        with open(ruta_entrada, 'r', encoding='utf-8') as f:
-            datos = json.load(f)
+    def _validar_pregunta(self, pregunta: Dict[str, Any]) -> bool:
+        """Valida que una pregunta tenga el formato correcto"""
+        try:
+            # Verificar campos requeridos
+            campos_requeridos = ['tipo', 'pregunta', 'respuesta_correcta', 'explicacion']
+            if not all(campo in pregunta for campo in campos_requeridos):
+                return False
 
-        generador = GeneradorCuestionarios()
-        cuestionarios = []
+            # Validar tipo de pregunta
+            if pregunta['tipo'] not in ['alternativas', 'verdadero_falso']:
+                return False
 
-        # Generar cuestionarios para cada texto
-        for item in datos['quiz']:
-            cuestionario = generador.generar_cuestionario(
-                item['texto'],
-                item['materia'],
-                item['fuente']
-            )
-            cuestionarios.append(cuestionario)
+            # Validar pregunta de alternativas
+            if pregunta['tipo'] == 'alternativas':
+                if 'opciones' not in pregunta:
+                    return False
+                if not isinstance(pregunta['opciones'], list):
+                    return False
+                if len(pregunta['opciones']) != 4:
+                    return False
+                if pregunta['respuesta_correcta'] not in pregunta['opciones']:
+                    return False
 
-        # Guardar cuestionarios generados
-        with open('tutorApp/static/json/cuestionarios.json', 'w', encoding='utf-8') as f:
-            json.dump(cuestionarios, f, ensure_ascii=False, indent=4)
+            # Validar pregunta de verdadero/falso
+            if pregunta['tipo'] == 'verdadero_falso':
+                if pregunta['respuesta_correcta'] not in ['Verdadero', 'Falso']:
+                    return False
 
-        return cuestionarios
+            return True
+
+        except Exception:
+            return False
+
+    def procesar_json_entrada(self, ruta_json: str) -> List[Dict[str, Any]]:
+        """Procesa el archivo quiz.json y genera cuestionarios para cada texto"""
+        try:
+            # Verificar que el archivo existe
+            if not os.path.exists(ruta_json):
+                raise FileNotFoundError(f"No se encontró el archivo: {ruta_json}")
+
+            # Leer el archivo JSON
+            with open(ruta_json, 'r', encoding='utf-8') as f:
+                datos = json.load(f)
+
+            # Verificar estructura del JSON
+            if 'quiz' not in datos or not isinstance(datos['quiz'], list):
+                raise ValueError("Formato de JSON inválido: debe contener una lista 'quiz'")
+
+            cuestionarios = []
+            for item in datos['quiz']:
+                # Verificar campos requeridos en cada item
+                if not all(campo in item for campo in ['texto', 'materia', 'fuente']):
+                    print(f"Advertencia: item ignorado por falta de campos requeridos: {item}")
+                    continue
+
+                # Generar cuestionario
+                cuestionario = self.generar_cuestionario(
+                    texto=item['texto'],
+                    materia=item['materia'],
+                    fuente=item['fuente']
+                )
+                
+                # Verificar que el cuestionario tiene preguntas válidas
+                if cuestionario and cuestionario['preguntas']:
+                    cuestionarios.append(cuestionario)
+
+            return cuestionarios
+
+        except json.JSONDecodeError as e:
+            print(f"Error decodificando JSON: {str(e)}")
+            return []
+        except Exception as e:
+            print(f"Error procesando JSON de entrada: {str(e)}")
+            return []
+
+    def guardar_cuestionarios(self, cuestionarios: List[Dict[str, Any]], ruta_salida: str):
+        """Guarda los cuestionarios generados en un archivo JSON"""
+        try:
+            # Crear directorio si no existe
+            os.makedirs(os.path.dirname(ruta_salida), exist_ok=True)
+
+            # Verificar que hay cuestionarios para guardar
+            if not cuestionarios:
+                print("Advertencia: No hay cuestionarios para guardar")
+                return
+
+            # Guardar cuestionarios
+            with open(ruta_salida, 'w', encoding='utf-8') as f:
+                json.dump({
+                    "fecha_generacion": "2024-11-15",
+                    "total_cuestionarios": len(cuestionarios),
+                    "cuestionarios": cuestionarios
+                }, f, ensure_ascii=False, indent=4)
+
+            print(f"Cuestionarios guardados exitosamente en {ruta_salida}")
+
+        except Exception as e:
+            print(f"Error guardando cuestionarios: {str(e)}")
