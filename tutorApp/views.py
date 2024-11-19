@@ -1,7 +1,7 @@
 from .modelos.chatbot import predecir_clase_frase, obtener_respuesta, intentos
 from .modelos.traductor import escuchar_microfono
 from .modelos.clasificadorPDF import obtener_datos_materias
-from .modelos.generador_cuestionarios import GeneradorCuestionarios
+from .modelos.generador_cuestionarios import SistemaGeneradorCuestionarios
 from .models import MateriaCuestionario, TextoCuestionario, FormularioMateriaCuestionario, FormularioTextoCuestionario, PerfilUsuario, ResultadoCuestionario, CambiarPerfil, FotoPerfil
 from django.db.models import Avg
 from django.contrib import messages
@@ -23,9 +23,8 @@ import os
 historial_chatbot = []
 
 # Carga los cuestionarios una sola vez al iniciar la aplicación
-generador = GeneradorCuestionarios()
-cuestionarios = generador.procesar_json_entrada('tutorApp/static/json/quiz.json')
-generador.guardar_cuestionarios(cuestionarios, 'tutorApp/static/json/cuestionarios.json')
+generador = SistemaGeneradorCuestionarios()
+cuestionarios = generador.generar_cuestionarios('tutorApp/static/json/quiz.json', 'tutorApp/static/json/cuestionarios.json')
 # Fin carga de los cuestionarios
 
 # Obtén la ruta de la carpeta de PDFs
