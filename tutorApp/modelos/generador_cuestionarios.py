@@ -1,1552 +1,1386 @@
 # Generador de Cuestionarios
 # Por Franco Benassi
-import spacy
-import random
 import json
-import numpy as np
+import os
+import random
+import spacy
+import re
+from typing import List, Dict, Any
 from collections import defaultdict
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.decomposition import LatentDirichletAllocation
-from sklearn.metrics.pairwise import cosine_similarity
-from typing import List, Dict, Any, Tuple
+from transformers import pipeline
 
-class AnalizadorSemantico:
+class GeneradorCuestionarios:
     def __init__(self):
-        self.nlp = spacy.load('es_core_news_lg')
+        # Añadir stopwords en español
+        self.stopwords = set(['el', 'la', 'los', 'las', 'un', 'una', 'unos', 'unas', 'y', 'o', 'pero', 'si',
+                            'bien', 'mal', 'que', 'cual', 'quien', 'donde', 'cuando', 'como', 'para', 'por',
+                            'sin', 'sobre', 'entre', 'detrás', 'después', 'ante', 'antes', 'desde', 'hacia',
+                            'hasta', 'en', 'con', 'de', 'del', 'al', 'este', 'esta', 'estos', 'estas'])
         
-        self.vectorizer = TfidfVectorizer(
-            max_features=1000,
-            ngram_range=(1, 3),
-            stop_words=['spanish']
-        )
+        # Agregar diccionario de contrarios
+        self.contrarios = {
+            "aumenta": "disminuye",
+            "mejora": "empeora",
+            "incrementa": "reduce",
+            "positivo": "negativo",
+            "beneficioso": "perjudicial",
+            "siempre": "nunca",
+            "todos": "ninguno",
+            "más": "menos",
+            "mayor": "menor",
+            "mejor": "peor",
+            "superior": "inferior",
+            "alto": "bajo",
+            "mucho": "poco",
+            "rápido": "lento",
+            "fácil": "difícil"
+        }
         
-    def extraer_temas_principales(self, texto: str) -> List[Dict[str, Any]]:
-        """Extrae temas principales usando LDA"""
-        # Preprocesar texto
-        doc = self.nlp(texto)
-        oraciones = [sent.text for sent in doc.sents]
+        # Inicializar modelos
+        self.qa_model = pipeline("question-answering", model="dccuchile/bert-base-spanish-wwm-cased")
+        self.nlp = spacy.load("es_core_news_sm")
+
+    def _limpiar_oracion(self, oracion: str) -> str:
+        """Limpia y normaliza una oración."""
+        # Eliminar espacios extra
+        oracion = re.sub(r'\s+', ' ', oracion.strip())
         
-        # Vectorizar texto
-        vectores = self.vectorizer.fit_transform(oraciones)
+        # Eliminar caracteres no deseados
+        oracion = re.sub(r'[^\w\s.,;:¿?¡!áéíóúñÁÉÍÓÚÑ]', '', oracion)
         
-        # Aplicar LDA
-        lda = LatentDirichletAllocation(n_components=5, random_state=42)
-        temas = lda.fit_transform(vectores)
-        
-        # Extraer palabras clave por tema
-        feature_names = self.vectorizer.get_feature_names_out()
-        temas_principales = []
-        
-        for tema_idx, tema in enumerate(lda.components_):
-            top_palabras = [
-                feature_names[i]
-                for i in tema.argsort()[:-10:-1]
-            ]
-            temas_principales.append({
-                'id': tema_idx,
-                'palabras_clave': top_palabras,
-                'peso': np.mean(temas[:, tema_idx])
-            })
+        # Asegurar que empiece con mayúscula
+        if oracion and oracion[0].isalpha():
+            oracion = oracion[0].upper() + oracion[1:]
             
-        return temas_principales
+        return oracion
+
+    def _generar_pregunta_especifica(self, concepto: str, oracion: str) -> str:
+        """Genera una pregunta específica sobre un concepto."""
+        plantillas = [
+            f"¿Cuál de las siguientes afirmaciones describe mejor {concepto}?",
+            f"En relación con {concepto}, ¿qué afirmación es correcta?",
+            f"¿Qué característica es verdadera sobre {concepto}?",
+            f"Respecto a {concepto}, ¿cuál de las siguientes opciones es acertada?"
+        ]
+        return random.choice(plantillas)
+
+    def _extraer_informacion_relevante(self, oracion: str, concepto: str) -> str:
+        """Extrae la información relevante de una oración sobre un concepto."""
+        # Si la oración es lo suficientemente corta, usarla completa
+        if len(oracion.split()) < 30:
+            return oracion
+            
+        # Intentar extraer la parte más relevante usando el modelo QA
+        try:
+            respuesta = self.qa_model(
+                question=f"¿Qué se dice sobre {concepto}?",
+                context=oracion
+            )
+            if respuesta['score'] > 0.5:  # Si la confianza es suficiente
+                return respuesta['answer']
+        except:
+            pass
+            
+        # Si no se puede usar QA, retornar la oración completa
+        return oracion
+
+    def _es_distractor_valido(self, distractor: str, respuesta_correcta: str) -> bool:
+        """Verifica si un distractor es válido."""
+        if not distractor or not respuesta_correcta:
+            return False
+            
+        # Verificar longitud mínima
+        if len(distractor.split()) < 5:
+            return False
+            
+        # Verificar que no sea muy similar a la respuesta correcta
+        if self._calcular_similitud(distractor, respuesta_correcta) > 0.8:
+            return False
+            
+        # Verificar que no contenga patrones inválidos
+        patrones_invalidos = [
+            r'no\s+no',
+            r'\b(el|la|los|las)\s+\1\b',
+            r'\s{2,}',
+        ]
         
-    def analizar_estructura_semantica(self, texto: str) -> Dict[str, Any]:
-        """Analiza la estructura semántica del texto"""
-        doc = self.nlp(texto)
-        
-        # Identificar conceptos clave
-        conceptos = defaultdict(list)
-        for token in doc:
-            if token.pos_ in ['NOUN', 'PROPN']:
-                # Encontrar modificadores
-                modificadores = []
-                for hijo in token.children:
-                    if hijo.dep_ in ['amod', 'nmod']:
-                        modificadores.append(hijo.text)
-                        
-                concepto = {
-                    'texto': token.text,
-                    'pos': token.pos_,
-                    'modificadores': modificadores,
-                    'importancia': token.dep_ in ['nsubj', 'dobj']
-                }
-                conceptos[token.lemma_].append(concepto)
+        for patron in patrones_invalidos:
+            if re.search(patron, distractor.lower()):
+                return False
                 
-        # Identificar relaciones
-        relaciones = []
-        for token in doc:
-            if token.dep_ == 'ROOT' and token.pos_ == 'VERB':
-                for hijo in token.children:
-                    if hijo.dep_ in ['nsubj', 'dobj']:
-                        relacion = {
-                            'sujeto': hijo.text,
-                            'verbo': token.text,
-                            'objeto': next((c.text for c in token.children 
-                                         if c.dep_ == 'dobj'), None)
-                        }
-                        relaciones.append(relacion)
-                        
-        # Identificar estructuras causales
-        causales = []
-        for token in doc:
-            if token.dep_ == 'prep' and token.text in ['porque', 'ya que', 'debido a']:
-                causa = []
-                for r in token.rights:
-                    causa.extend([t.text for t in r.subtree])
-                causales.append(' '.join(causa))
+        return True
+
+    def _es_oracion_valida(self, oracion: str) -> bool:
+        """Verifica si una oración es válida."""
+        if not oracion:
+            return False
+            
+        # Verificar longitud mínima
+        if len(oracion.split()) < 5:
+            return False
+            
+        # Verificar que no tenga caracteres o patrones inválidos
+        patrones_invalidos = [
+            r'[^\w\s.,;:¿?¡!áéíóúñÁÉÍÓÚÑ]',
+            r'\s{2,}',
+            r'^[^A-ZÁÉÍÓÚÑ]'  # Debe empezar con mayúscula
+        ]
+        
+        for patron in patrones_invalidos:
+            if re.search(patron, oracion):
+                return False
                 
-        return {
-            'conceptos': conceptos,
-            'relaciones': relaciones, 
-            'causales': causales,
-            'oraciones': [sent.text for sent in doc.sents]  # Agregar esta línea
-        }
-    
-    def identificar_jerarquia_conceptos(self, texto: str) -> Dict[str, List[str]]:
-        """Identifica jerarquías entre conceptos"""
+        return True
+
+    def _generar_explicacion_vf_mejorada(self, oracion_base: str, pregunta: str, es_verdadero: bool, texto: str) -> str:
+        """Genera una explicación mejorada sin referencias directas al texto."""
         doc = self.nlp(texto)
-        jerarquias = defaultdict(list)
+        oracion_limpia = re.sub(r'\s+', ' ', oracion_base.strip())
+        
+        if es_verdadero:
+            explicacion = f"Esta afirmación es correcta. {self._extraer_razon_principal(oracion_limpia)}"
+            
+            # Agregar contexto adicional
+            contexto = self._extraer_contexto_relacionado(doc, oracion_limpia)
+            if contexto:
+                explicacion += f" Además, {self._generalizar_evidencia(contexto)}"
+        else:
+            version_correcta = self._obtener_version_correcta(oracion_limpia)
+            explicacion = f"Esta afirmación es incorrecta. {version_correcta}"
+        
+        return explicacion
+    
+    def _extraer_razon_principal(self, oracion: str) -> str:
+        """Extrae la razón principal de una afirmación."""
+        doc = self.nlp(oracion)
+        
+        # Identificar el verbo principal y su objeto
+        verbo_principal = None
+        objeto = None
         
         for token in doc:
-            if token.dep_ == 'nmod':
-                padre = token.head.text
-                hijo = token.text
-                jerarquias[padre].append(hijo)
-                
-        return dict(jerarquias)
-    
-    def calcular_similitud_semantica(self, texto1: str, texto2: str) -> float:
-        """Calcula la similitud semántica entre dos textos"""
-        doc1 = self.nlp(texto1)
-        doc2 = self.nlp(texto2)
+            if token.pos_ == 'VERB' and token.dep_ == 'ROOT':
+                verbo_principal = token
+            if token.dep_ in ['dobj', 'attr', 'iobj'] and not objeto:
+                objeto = token
         
-        # Comparar embeddings
-        similitud = doc1.similarity(doc2)
+        if verbo_principal and objeto:
+            return f"Esto se debe a que {verbo_principal.text} {objeto.text}"
         
-        # Comparar estructura sintáctica
-        similitud_pos = self._comparar_estructura_pos(doc1, doc2)
-        
-        # Comparar entidades nombradas
-        similitud_ents = self._comparar_entidades(doc1, doc2)
-        
-        # Combinar métricas
-        return np.mean([similitud, similitud_pos, similitud_ents])
-    
-    def _comparar_estructura_pos(self, doc1, doc2) -> float:
-        """Compara estructura POS entre documentos"""
-        pos1 = [token.pos_ for token in doc1]
-        pos2 = [token.pos_ for token in doc2]
-        
-        # Calcular secuencias comunes más largas
-        matriz = np.zeros((len(pos1) + 1, len(pos2) + 1))
-        for i, x in enumerate(pos1, 1):
-            for j, y in enumerate(pos2, 1):
-                if x == y:
-                    matriz[i,j] = matriz[i-1,j-1] + 1
-                    
-        max_len = np.max(matriz)
-        return max_len / max(len(pos1), len(pos2))
-    
-    def _comparar_entidades(self, doc1, doc2) -> float:
-        """Compara entidades nombradas entre documentos"""
-        ents1 = set([(ent.text, ent.label_) for ent in doc1.ents])
-        ents2 = set([(ent.text, ent.label_) for ent in doc2.ents])
-        
-        if not ents1 or not ents2:
-            return 0.0
-            
-        interseccion = len(ents1.intersection(ents2))
-        union = len(ents1.union(ents2))
-        
-        return interseccion / union
-    
-    def obtener_contexto_semantico(self, sujeto: str, verbo: str) -> Dict[str, Any]:
-        """Analiza el contexto semántico de una relación sujeto-verbo"""
-        doc_sujeto = self.nlp(sujeto)
-        doc_verbo = self.nlp(verbo)
-        
-        # Obtener clusters semánticos relacionados
-        cluster_sujeto = self._obtener_cluster_semantico(doc_sujeto)
-        cluster_verbo = self._obtener_cluster_semantico(doc_verbo)
-        
-        return {
-            'descripcion': self._generar_descripcion_contexto(cluster_sujeto, cluster_verbo),
-            'conceptos_relacionados': cluster_sujeto,
-            'acciones_relacionadas': cluster_verbo
-        }
-        
-    def _obtener_cluster_semantico(self, doc) -> List[str]:
-        """Obtiene palabras semánticamente relacionadas"""
-        cluster = []
+        return "La evidencia respalda esta afirmación"
+
+    def _modificar_sujeto(self, oracion: str) -> str:
+        """Modifica el sujeto de una oración."""
+        doc = self.nlp(oracion)
         for token in doc:
-            # Encontrar sinónimos y palabras relacionadas
-            similares = [
-                t.text for t in token.vocab 
-                if t.has_vector and token.similarity(t) > 0.7
-            ][:5]
-            cluster.extend(similares)
-            
-        return list(set(cluster))
-        
-    def _generar_descripcion_contexto(self, cluster_sujeto: List[str], 
-                                    cluster_verbo: List[str]) -> str:
-        """Genera una descripción contextual"""
-        return f"Contexto relacionado con {', '.join(cluster_sujeto)} " \
-               f"en términos de {', '.join(cluster_verbo)}"
-    
-class GeneradorPreguntasDinamico:
-    def __init__(self, analizador: AnalizadorSemantico):
-        self.analizador = analizador
-        self.nlp = spacy.load('es_core_news_lg')
-
-    def generar_preguntas(self, texto: str) -> List[Dict[str, Any]]:
-        """Método principal que usa el analizador para generar preguntas"""
-        # Obtener análisis completo del texto
-        temas = self.analizador.extraer_temas_principales(texto)
-        estructura = self.analizador.analizar_estructura_semantica(texto)
-        jerarquia = self.analizador.identificar_jerarquia_conceptos(texto)
-        
-        preguntas = []
-        
-        # Generar preguntas basadas en temas principales
-        for tema in temas:
-            pregunta = self._generar_pregunta_tema(tema, estructura)
-            if pregunta:
-                preguntas.append(pregunta)
-
-        # Generar preguntas basadas en relaciones semánticas
-        for concepto, relaciones in estructura['relaciones'].items():
-            pregunta = self._generar_pregunta_relacion(concepto, relaciones, estructura)
-            if pregunta:
-                preguntas.append(pregunta)
-
-        # Generar preguntas basadas en jerarquía de conceptos
-        for concepto_padre, conceptos_hijos in jerarquia.items():
-            pregunta = self._generar_pregunta_jerarquia(concepto_padre, conceptos_hijos, estructura)
-            if pregunta:
-                preguntas.append(pregunta)
-
-        return preguntas
-
-    def _calcular_densidad_informativa(self, oracion) -> float:
-        """Calcula qué tan informativa es una oración"""
-        palabras_contenido = 0
-        total_palabras = len([token for token in oracion])
-        
-        for token in oracion:
-            # Considerar palabras con significado
-            if token.pos_ in ['NOUN', 'VERB', 'ADJ', 'PROPN']:
-                # Pesar según importancia
-                peso = self._calcular_peso_token(token)
-                palabras_contenido += peso
-
-        return palabras_contenido / total_palabras if total_palabras > 0 else 0
-
-    def _calcular_peso_token(self, token) -> float:
-        """Calcula el peso semántico de un token"""
-        pesos = {
-            'NOUN': 1.0,
-            'PROPN': 1.0,
-            'VERB': 0.8,
-            'ADJ': 0.6
-        }
-        peso_base = pesos.get(token.pos_, 0.3)
-        
-        # Ajustar según dependencia sintáctica
-        if token.dep_ in ['ROOT', 'nsubj', 'dobj']:
-            peso_base *= 1.5
-            
-        return peso_base
-
-    def _analizar_estructura(self, oracion) -> Dict[str, Any]:
-        """Analiza la estructura semántica de una oración"""
-        elementos = {
-            'sujetos': [],
-            'verbos': [],
-            'objetos': [],
-            'circunstancias': []
-        }
-        
-        for token in oracion:
             if token.dep_ == 'nsubj':
-                elementos['sujetos'].append({
-                    'texto': token.text,
-                    'subtree': [t.text for t in token.subtree]
-                })
-            elif token.dep_ == 'ROOT' and token.pos_ == 'VERB':
-                elementos['verbos'].append({
-                    'texto': token.text,
-                    'tiempo': token.morph.get('Tense', [''])[0],
-                    'modo': token.morph.get('Mood', [''])[0]
-                })
-            elif token.dep_ in ['dobj', 'iobj']:
-                elementos['objetos'].append({
-                    'texto': token.text,
-                    'tipo': token.dep_
-                })
-            elif token.dep_ in ['advmod', 'prep']:
-                elementos['circunstancias'].append({
-                    'texto': token.text,
-                    'tipo': token.pos_
-                })
-                
-        return elementos
-
-    def _construir_pregunta(self, oracion_base: Dict, analisis: Dict) -> Dict[str, Any]:
-        estructura = oracion_base['estructura']
-        
-        # Determinar tipo de pregunta basado en la estructura
-        if len(estructura['sujetos']) > 0 and len(estructura['verbos']) > 0:
-            return self._generar_pregunta_proceso(estructura, analisis)
-        elif len(estructura['objetos']) > 1:
-            return self._generar_pregunta_relacion(estructura, analisis)
-        else:
-            return self._generar_pregunta_concepto(estructura, analisis)
-
-    def _generar_pregunta_proceso(self, estructura: Dict, analisis: Dict) -> Dict[str, Any]:
-        """Genera una pregunta sobre un proceso o acción"""
-        verbo_principal = estructura['verbos'][0]
-        sujeto = estructura['sujetos'][0]
-        
-        # Analizar el contexto semántico
-        contexto = self.analizador.obtener_contexto_semantico(
-            sujeto['texto'], 
-            verbo_principal['texto']
-        )
-        
-        # Construir pregunta basada en el contexto
-        elementos_pregunta = self._extraer_elementos_pregunta(contexto)
-        pregunta = self._componer_pregunta(elementos_pregunta)
-        
-        return {
-            'tipo': 'alternativas',
-            'pregunta': pregunta,
-            'contexto': contexto
-        }
-
-    def _generar_pregunta_tema(self, tema: Dict[str, Any], estructura: Dict[str, Any]) -> Dict[str, Any]:
-        """Genera pregunta basada en tema principal"""
-        # Usar palabras clave del tema
-        palabras_clave = tema['palabras_clave']
-        
-        # Encontrar oraciones relevantes usando el analizador
-        oraciones_relevantes = []
-        for oracion in estructura['oraciones']:
-            similitud = self.analizador.calcular_similitud_semantica(
-                ' '.join(palabras_clave),
-                oracion
-            )
-            if similitud > 0.5:
-                oraciones_relevantes.append(oracion)
-
-        if not oraciones_relevantes:
-            return None
-
-        # Analizar estructura de la oración más relevante
-        oracion = self.nlp(random.choice(oraciones_relevantes))
-        oracion_analizada = self._analizar_estructura(oracion)
-        elementos = {'estructura': oracion_analizada}
-        
-        # Construir pregunta basada en elementos identificados
-        pregunta = self._construir_pregunta(elementos)
-        
-        return pregunta if pregunta else None
-
-    def _generar_pregunta_relacion(self, concepto: str, relaciones: List[Dict], 
-                                estructura: Dict[str, Any]) -> Dict[str, Any]:
-        """Genera pregunta basada en relaciones semánticas"""
-        # Encontrar relación más significativa
-        relacion_principal = max(relaciones, key=lambda x: x.get('importancia', 0))
-        
-        # Analizar contexto de la relación
-        contexto = self._analizar_contexto_relacion(concepto, relacion_principal, estructura)
-        
-        # Construir pregunta basada en el análisis
-        elementos_pregunta = self._extraer_elementos_pregunta(contexto)
-        pregunta = self._componer_pregunta(elementos_pregunta)
-        
-        return {
-            'tipo': 'alternativas',
-            'pregunta': pregunta,
-            'contexto': contexto
-        } if pregunta else None
-
-    def _generar_pregunta_jerarquia(self, concepto_padre: str, conceptos_hijos: List[str],
-                                 estructura: Dict[str, Any]) -> Dict[str, Any]:
-        """Genera pregunta basada en jerarquía de conceptos"""
-        # Analizar relaciones jerárquicas
-        relaciones = self._analizar_relaciones_jerarquicas(
-            concepto_padre,
-            conceptos_hijos,
-            estructura
-        )
-        
-        if not relaciones:
-            return None
-            
-        # Construir pregunta basada en la jerarquía
-        elementos = {
-            'concepto_principal': concepto_padre,
-            'conceptos_relacionados': conceptos_hijos,
-            'tipo_relacion': relaciones['tipo'],
-            'contexto': relaciones['contexto']
-        }
-        
-        pregunta = self._construir_pregunta_jerarquica(elementos)
-        
-        return pregunta if pregunta else None
-
-    def _extraer_elementos_pregunta(self, contexto: Dict) -> Dict[str, str]:
-        """Extrae elementos para construir la pregunta"""
-        doc = self.nlp(contexto['descripcion'])
-        
-        elementos = {
-            'accion': None,
-            'entidad': None,
-            'aspecto': None
-        }
-        
-        for token in doc:
-            if token.pos_ == 'VERB' and not elementos['accion']:
-                elementos['accion'] = token.text
-            elif token.pos_ in ['NOUN', 'PROPN'] and not elementos['entidad']:
-                elementos['entidad'] = token.text
-            elif token.pos_ == 'ADJ' and not elementos['aspecto']:
-                elementos['aspecto'] = token.text
-                
-        return elementos
-
-    def _componer_pregunta(self, elementos: Dict[str, str]) -> str:
-        """Compone dinámicamente una pregunta basada en elementos semánticos"""
-        doc_elementos = self.nlp(' '.join(filter(None, elementos.values())))
-        
-        # Analizar estructura y generar pregunta
-        estructura_pregunta = {}
-        for token in doc_elementos:
-            if token.pos_ == 'VERB':
-                estructura_pregunta['verbo'] = token.lemma_
-            elif token.pos_ in ['NOUN', 'PROPN']:
-                if 'sujeto' not in estructura_pregunta:
-                    estructura_pregunta['sujeto'] = token.text
-                else:
-                    estructura_pregunta['objeto'] = token.text
-                    
-        # Componer pregunta según estructura identificada
-        pregunta = self._estructurar_pregunta(estructura_pregunta)
-        
-        return pregunta
-
-    def _estructurar_pregunta(self, estructura: Dict[str, str]) -> str:
-        """Estructura la pregunta final basada en análisis lingüístico"""
-        doc = self.nlp(' '.join(estructura.values()))
-        tokens_pregunta = []
-        
-        # Reorganizar elementos según reglas gramaticales
-        for token in doc:
-            if token.pos_ == 'VERB':
-                tokens_pregunta.insert(0, token.text)
-            else:
-                tokens_pregunta.append(token.text)
-                
-        pregunta = ' '.join(tokens_pregunta) + '?'
-        return pregunta.capitalize()
-    
-    def _analizar_contexto_relacion(self, concepto: str, relacion: Dict, 
-                                  estructura: Dict) -> Dict[str, Any]:
-        """Analiza el contexto completo de una relación"""
-        # Obtener todas las oraciones que mencionan el concepto
-        doc = self.nlp(concepto)
-        menciones = []
-        
-        for sent in estructura.get('oraciones', []):
-            doc_sent = self.nlp(sent)
-            if doc.similarity(doc_sent) > 0.6:
-                menciones.append({
-                    'texto': sent,
-                    'similitud': doc.similarity(doc_sent)
-                })
-                
-        # Ordenar por relevancia
-        menciones_ordenadas = sorted(menciones, 
-                                   key=lambda x: x['similitud'], 
-                                   reverse=True)
-        
-        return {
-            'descripcion': menciones_ordenadas[0]['texto'] if menciones_ordenadas else '',
-            'menciones_relacionadas': menciones_ordenadas,
-            'tipo_relacion': relacion.get('tipo', 'indefinida')
-        }
-
-    def _analizar_relaciones_jerarquicas(self, concepto_padre: str, 
-                                       conceptos_hijos: List[str],
-                                       estructura: Dict) -> Dict[str, Any]:
-        """Analiza las relaciones jerárquicas entre conceptos"""
-        # Determinar tipo de jerarquía
-        tipo_relacion = self._determinar_tipo_jerarquia(
-            concepto_padre, 
-            conceptos_hijos,
-            estructura
-        )
-        
-        # Encontrar contexto que explica la relación
-        contexto = self._encontrar_contexto_jerarquia(
-            concepto_padre,
-            conceptos_hijos,
-            estructura
-        )
-        
-        return {
-            'tipo': tipo_relacion,
-            'contexto': contexto,
-            'nivel': self._determinar_nivel_jerarquico(concepto_padre, estructura)
-        }
-        
-    def _determinar_tipo_jerarquia(self, padre: str, hijos: List[str], 
-                                 estructura: Dict) -> str:
-        """Determina el tipo de relación jerárquica"""
-        doc_padre = self.nlp(padre)
-        
-        # Analizar patrones de relación
-        patrones = {
-            'categoria': ['tipo', 'clase', 'grupo', 'categoría'],
-            'parte': ['parte', 'componente', 'elemento'],
-            'proceso': ['paso', 'etapa', 'fase']
-        }
-        
-        for tipo, indicadores in patrones.items():
-            if any(ind in padre.lower() for ind in indicadores):
-                return tipo
-                
-        return 'general'
-        
-    def _encontrar_contexto_jerarquia(self, padre: str, hijos: List[str],
-                                    estructura: Dict) -> str:
-        """Encuentra el contexto que explica la relación jerárquica"""
-        oraciones = estructura.get('oraciones', [])
-        
-        # Buscar oraciones que mencionan tanto al padre como a algún hijo
-        contextos = []
-        for oracion in oraciones:
-            if padre.lower() in oracion.lower() and \
-               any(hijo.lower() in oracion.lower() for hijo in hijos):
-                contextos.append(oracion)
-                
-        return max(contextos, key=len) if contextos else ''
-        
-    def _determinar_nivel_jerarquico(self, concepto: str, estructura: Dict) -> int:
-        """Determina el nivel jerárquico de un concepto"""
-        jerarquia = estructura.get('jerarquia', {})
-        nivel = 0
-        
-        # Buscar nivel en la jerarquía
-        for padre, hijos in jerarquia.items():
-            if concepto in hijos:
-                nivel = self._determinar_nivel_jerarquico(padre, estructura) + 1
-                break
-                
-        return nivel
-        
-    def _construir_pregunta_jerarquica(self, elementos: Dict) -> Dict[str, Any]:
-        """Construye una pregunta basada en relación jerárquica"""
-        concepto = elementos['concepto_principal']
-        relacionados = elementos['conceptos_relacionados']
-        tipo = elementos['tipo_relacion']
-        
-        doc = self.nlp(elementos['contexto'])
-        
-        # Identificar verbos de relación
-        verbos = [token.text for token in doc if token.pos_ == 'VERB']
-        
-        if not verbos:
-            return None
-            
-        estructura_pregunta = {
-            'sujeto': concepto,
-            'verbo': random.choice(verbos),
-            'objeto': ', '.join(relacionados[:2])  # Limitar a 2 conceptos relacionados
-        }
-        
-        return {
-            'tipo': 'alternativas',
-            'pregunta': self._estructurar_pregunta(estructura_pregunta)
-        }
-    
-class GeneradorAlternativasExplicaciones:
-    def __init__(self, analizador: AnalizadorSemantico):
-        self.analizador = analizador
-        self.nlp = spacy.load('es_core_news_lg')
-        self.contexto_actual = "" 
-
-    def _extraer_informacion_relevante(self, doc: spacy.tokens.Doc) -> Dict[str, Any]:
-        """Extrae información relevante del contexto"""
-        info = {
-            'conceptos_principales': [],
-            'relaciones': [],
-            'detalles_importantes': []
-        }
-        
-        # Identificar conceptos principales
-        for token in doc:
-            if token.pos_ in ['NOUN', 'PROPN'] and token.dep_ in ['nsubj', 'dobj']:
-                concepto = {
-                    'texto': token.text,
-                    'importancia': self._calcular_importancia_concepto(token),
-                    'contexto': self._obtener_contexto_concepto(token)
-                }
-                info['conceptos_principales'].append(concepto)
-                
-        # Identificar relaciones
-        for token in doc:
-            if token.dep_ == 'ROOT' and token.pos_ == 'VERB':
-                relacion = self._extraer_relacion(token)
-                if relacion:
-                    info['relaciones'].append(relacion)
-                    
-        # Identificar detalles importantes
-        for ent in doc.ents:
-            if ent.label_ in ['DATE', 'ORG', 'GPE', 'CARDINAL']:
-                info['detalles_importantes'].append({
-                    'texto': ent.text,
-                    'tipo': ent.label_
-                })
-                
-        return info
-
-    def _componer_explicacion_desde_info(self, info: Dict[str, Any], es_correcta: bool) -> str:
-        """Compone explicación usando información extraída"""
-        elementos_explicacion = []
-        
-        # Usar conceptos principales
-        if info['conceptos_principales']:
-            concepto = max(info['conceptos_principales'], 
-                        key=lambda x: x['importancia'])
-            contexto = concepto['contexto']
-            elementos_explicacion.append(
-                self._generar_oracion_concepto(concepto, contexto)
-            )
-            
-        # Usar relaciones relevantes
-        if info['relaciones']:
-            relacion = info['relaciones'][0]  # Tomar la más relevante
-            elementos_explicacion.append(
-                self._generar_oracion_relacion(relacion)
-            )
-            
-        # Agregar detalles
-        if info['detalles_importantes']:
-            elementos_explicacion.append(
-                self._generar_oracion_detalles(info['detalles_importantes'])
-            )
-            
-        # Componer explicación final
-        if elementos_explicacion:
-            return ' '.join(elementos_explicacion)
-        else:
-            return "No hay suficiente información para generar una explicación detallada."
-
-    def _calcular_importancia_relacion(self, token: spacy.tokens.Token) -> float:
-        """Calcula la importancia de una relación"""
-        importancia = 1.0
-        
-        # Factores que aumentan importancia
-        if token.dep_ == 'ROOT':
-            importancia *= 1.5
-        
-        # Considerar número de dependientes
-        num_deps = len(list(token.children))
-        importancia *= (1 + (num_deps * 0.1))
-        
-        # Considerar posición en la oración
-        pos_weight = 1 - (token.i / len(token.doc))
-        importancia *= (1 + pos_weight)
-        
-        return importancia
-
-    def _extraer_relacion(self, token: spacy.tokens.Token) -> Dict[str, str]:
-        """Extrae relación completa de un token verbal"""
-        relacion = {
-            'verbo': token.text,
-            'sujeto': None,
-            'objeto': None,
-            'modificadores': []
-        }
-        
-        for hijo in token.children:
-            if hijo.dep_ == 'nsubj':
-                relacion['sujeto'] = hijo.text
-            elif hijo.dep_ == 'dobj':
-                relacion['objeto'] = hijo.text
-            elif hijo.dep_ in ['advmod', 'amod']:
-                relacion['modificadores'].append(hijo.text)
-                
-        if relacion['sujeto'] and relacion['objeto']:
-            return relacion
+                # Intentar reemplazar con un sinónimo o relacionado
+                sinonimos = self._obtener_sinonimos_o_relacionados(token.text)
+                if sinonimos:
+                    return oracion.replace(token.text, random.choice(sinonimos))
         return None
 
-    def _extraer_caracteristicas(self, concepto: Dict[str, Any], 
-                            contexto: Dict[str, Any]) -> List[str]:
-        """Extrae características distintivas de un concepto"""
-        doc = self.nlp(concepto['texto'])
-        caracteristicas = []
-        
-        # Buscar modificadores directos
-        for token in doc[0].children:
-            if token.dep_ in ['amod', 'nmod']:
-                caracteristicas.append(token.text)
-                
-        # Buscar en el contexto más amplio
-        doc_contexto = self.nlp(contexto.get('descripcion', ''))
-        for sent in doc_contexto.sents:
-            if concepto['texto'] in sent.text:
-                # Extraer adjetivos y modificadores
-                for token in sent:
-                    if token.pos_ == 'ADJ' and token.head.text == concepto['texto']:
-                        caracteristicas.append(token.text)
-                        
-        return list(set(caracteristicas))
-
-    def _son_similares(self, caract1: str, caract2: str) -> bool:
-        """Determina si dos características son semánticamente similares"""
-        doc1 = self.nlp(caract1)
-        doc2 = self.nlp(caract2)
-        
-        # Calcular similitud
-        similitud = doc1.similarity(doc2)
-        return similitud > 0.7
-
-    def _buscar_conexiones(self, concepto1: str, concepto2: str, 
-                        contexto: Dict[str, Any]) -> List[str]:
-        """Busca conexiones entre dos conceptos en el contexto"""
-        conexiones = []
-        doc_contexto = self.nlp(contexto.get('descripcion', ''))
-        
-        # Buscar oraciones que mencionan ambos conceptos
-        for sent in doc_contexto.sents:
-            if concepto1 in sent.text and concepto2 in sent.text:
-                # Analizar la naturaleza de la conexión
-                conexion = self._analizar_conexion(sent, concepto1, concepto2)
-                if conexion:
-                    conexiones.append(conexion)
-                    
-        return conexiones
-
-    def _determinar_tipo_relacion(self, conexiones: List[str]) -> str:
-        """Determina el tipo de relación basado en las conexiones"""
-        if not conexiones:
-            return "indefinida"
-            
-        # Analizar palabras clave en las conexiones
-        palabras_clave = {
-            'causal': ['causa', 'produce', 'genera', 'resulta'],
-            'temporal': ['antes', 'después', 'durante', 'mientras'],
-            'espacial': ['dentro', 'fuera', 'cerca', 'lejos'],
-            'comparativa': ['más', 'menos', 'mejor', 'peor'],
-            'funcional': ['sirve', 'funciona', 'permite', 'facilita']
-        }
-        
-        conteo_tipos = defaultdict(int)
-        for conexion in conexiones:
-            doc = self.nlp(conexion.lower())
-            for tipo, palabras in palabras_clave.items():
-                if any(palabra in doc.text for palabra in palabras):
-                    conteo_tipos[tipo] += 1
-                    
-        if conteo_tipos:
-            return max(conteo_tipos.items(), key=lambda x: x[1])[0]
-        return "asociativa"
-
-    def _generar_oracion_concepto(self, concepto: Dict[str, Any], 
-                            contexto: Dict[str, Any]) -> str:
-        """Genera una oración describiendo un concepto"""
-        if not contexto:
-            return ""
-            
-        doc = self.nlp(concepto['texto'])
-        caracteristicas = []
-        
-        # Extraer información relevante
-        for token in doc[0].children:
-            if token.dep_ in ['amod', 'compound']:
-                caracteristicas.append(token.text)
-                
-        # Construir oración dinámicamente
-        elementos = []
-        elementos.append(concepto['texto'])
-        
-        if caracteristicas:
-            elementos.append("se caracteriza por")
-            elementos.append(" y ".join(caracteristicas))
-            
-        if contexto.get('verbos_asociados'):
-            elementos.append("y")
-            elementos.append(random.choice(contexto['verbos_asociados']))
-            
-        return " ".join(elementos)
-
-    def _generar_oracion_relacion(self, relacion: Dict[str, str]) -> str:
-        """Genera una oración describiendo una relación"""
-        elementos = [relacion['sujeto']]
-        
-        if relacion['modificadores']:
-            elementos.append(random.choice(relacion['modificadores']))
-            
-        elementos.append(relacion['verbo'])
-        
-        if relacion['objeto']:
-            elementos.append(relacion['objeto'])
-            
-        return " ".join(elementos)
-
-    def _generar_oracion_detalles(self, detalles: List[Dict[str, Any]]) -> str:
-        """Genera una oración con detalles importantes"""
-        elementos = []
-        
-        for detalle in detalles:
-            if detalle['tipo'] == 'DATE':
-                elementos.append(f"en {detalle['texto']}")
-            elif detalle['tipo'] == 'ORG':
-                elementos.append(f"por parte de {detalle['texto']}")
-            elif detalle['tipo'] == 'CARDINAL':
-                elementos.append(f"con {detalle['texto']}")
-                
-        if elementos:
-            return " ".join(elementos)
-        return ""
-
-    def _obtener_contexto_concepto(self, token: spacy.tokens.Token) -> Dict[str, Any]:
-        """Obtiene contexto detallado de un concepto"""
-        return {
-            'modificadores': [t.text for t in token.children if t.dep_ in ['amod', 'nmod']],
-            'verbos_asociados': [t.head.text for t in token.ancestors if t.pos_ == 'VERB'],
-            'entidades_relacionadas': [e.text for e in token.doc.ents if token in e]
-        }
-
-    def _analizar_conexion(self, sent: spacy.tokens.Span, 
-                        concepto1: str, concepto2: str) -> str:
-        """Analiza la naturaleza de la conexión entre conceptos en una oración"""
-        doc = self.nlp(sent.text)
-        
-        # Encontrar los tokens de los conceptos
-        token1 = None
-        token2 = None
+    def _modificar_verbo(self, oracion: str) -> str:
+        """Modifica el verbo principal de una oración."""
+        doc = self.nlp(oracion)
         for token in doc:
-            if token.text == concepto1:
-                token1 = token
-            elif token.text == concepto2:
-                token2 = token
-                
-        if not (token1 and token2):
-            return None
-            
-        # Analizar la ruta sintáctica entre los conceptos
-        ruta = []
+            if token.pos_ == 'VERB' and token.dep_ == 'ROOT':
+                modificadores = ['puede', 'debe', 'suele', 'tiende a']
+                return oracion.replace(token.text, f"{random.choice(modificadores)} {token.text}")
+        return None
+
+    def _modificar_objeto(self, oracion: str) -> str:
+        """Modifica el objeto de una oración."""
+        doc = self.nlp(oracion)
         for token in doc:
-            if token in token1.subtree and token in token2.subtree:
-                ruta.append(token.text)
-                
-        return " ".join(ruta) if ruta else None
+            if token.dep_ == 'dobj':
+                sinonimos = self._obtener_sinonimos_o_relacionados(token.text)
+                if sinonimos:
+                    return oracion.replace(token.text, random.choice(sinonimos))
+        return None
 
-    def generar_alternativas(self, pregunta: Dict[str, Any], texto: str) -> List[str]:
-        """Genera alternativas para una pregunta basada en análisis semántico"""
-        # Obtener contexto relevante
-        contexto = self._extraer_contexto_relevante(pregunta, texto)
-        
-        # Analizar la respuesta correcta
-        respuesta_correcta = pregunta['contexto']['descripcion']
-        doc_respuesta = self.nlp(respuesta_correcta)
-        
-        # Generar alternativas según el tipo de pregunta
-        if pregunta['tipo'] == 'alternativas':
-            return self._generar_alternativas_multiple(doc_respuesta, contexto)
-        else:  # verdadero_falso
-            return self._generar_alternativas_vf(doc_respuesta, contexto)
-            
-    def _extraer_contexto_relevante(self, pregunta: Dict[str, Any], texto: str) -> List[str]:
-        """Extrae oraciones relevantes al contexto de la pregunta"""
-        doc_pregunta = self.nlp(pregunta['pregunta'])
-        doc_texto = self.nlp(texto)
-        
-        # Encontrar oraciones relacionadas
-        oraciones_relevantes = []
-        for sent in doc_texto.sents:
-            similitud = doc_pregunta.similarity(sent)
-            if similitud > 0.5:  # Umbral ajustable
-                oraciones_relevantes.append({
-                    'texto': sent.text,
-                    'similitud': similitud
-                })
-                
-        # Ordenar por relevancia
-        return sorted(oraciones_relevantes, key=lambda x: x['similitud'], reverse=True)
-
-    def _generar_alternativas_multiple(self, doc_respuesta: spacy.tokens.Doc, 
-                                 contexto: List[Dict[str, Any]]) -> List[str]:
-        alternativas = []
-        
-        # 1. Alternativas por sustitución de conceptos clave
-        conceptos_clave = self._identificar_conceptos_clave(doc_respuesta)
-        for concepto in conceptos_clave:
-            alt = self._generar_por_sustitucion(concepto, contexto)
-            if alt:
-                alternativas.append(alt)
-
-        # 2. Alternativas por modificación de relaciones
-        relaciones = self._identificar_relaciones(doc_respuesta)
-        for relacion in relaciones:
-            alt = self._generar_por_modificacion_relacion(relacion, contexto)
-            if alt:
-                alternativas.append(alt)
-
-        # 3. Alternativas por variación semántica
-        alt_semanticas = self._generar_por_variacion_semantica(doc_respuesta, contexto)
-        alternativas.extend(alt_semanticas)
-
-        # Filtrar y seleccionar mejores alternativas
-        alternativas = self._filtrar_alternativas(alternativas, doc_respuesta)
-        
-        return alternativas[:3]  # Retornar las 3 mejores alternativas
-
-    def _identificar_conceptos_clave(self, doc: spacy.tokens.Doc) -> List[Dict[str, Any]]:
-        """Identifica conceptos clave en el texto"""
-        conceptos = []
-        for token in doc:
-            if token.pos_ in ['NOUN', 'PROPN'] and len(token.text) > 3:
-                # Analizar contexto del concepto
-                contexto = self._analizar_contexto_concepto(token)
-                conceptos.append({
-                    'texto': token.text,
-                    'tipo': token.pos_,
-                    'contexto': contexto,
-                    'importancia': self._calcular_importancia_concepto(token)
-                })
-        return sorted(conceptos, key=lambda x: x['importancia'], reverse=True)
-
-    def _analizar_contexto_concepto(self, token: spacy.tokens.Token) -> Dict[str, Any]:
-        """Analiza el contexto lingüístico de un concepto"""
-        return {
-            'modificadores': [t.text for t in token.children if t.dep_ in ['amod', 'nmod']],
-            'verbos_asociados': [t.head.text for t in token.ancestors if t.pos_ == 'VERB'],
-            'entidades_relacionadas': [e.text for e in token.doc.ents if token in e]
-        }
-
-    def _calcular_importancia_concepto(self, token: spacy.tokens.Token) -> float:
-        """Calcula la importancia de un concepto"""
-        importancia = 1.0
-        
-        # Factores que aumentan importancia
-        if token.dep_ in ['nsubj', 'dobj']:
-            importancia *= 1.5
-        if any(t.dep_ == 'ROOT' for t in token.ancestors):
-            importancia *= 1.3
-        if token.ent_type_:
-            importancia *= 1.2
-        if len(list(token.children)) > 2:
-            importancia *= 1.1
-            
-        return importancia
-
-    def _generar_por_sustitucion(self, concepto: Dict[str, Any], 
-                                contexto: List[Dict[str, Any]]) -> str:
-        """Genera alternativa sustituyendo conceptos clave"""
-        # Encontrar conceptos similares en el contexto
-        similares = self._encontrar_conceptos_similares(
-            concepto['texto'],
-            [c['texto'] for c in contexto]
-        )
-        
-        if not similares:
-            return None
-            
-        # Seleccionar concepto similar
-        concepto_similar = random.choice(similares)
-        
-        # Construir alternativa manteniendo estructura
-        return self._construir_alternativa_con_sustitucion(
-            concepto['texto'],
-            concepto_similar,
-            concepto['contexto']
-        )
-
-    def _generar_por_modificacion_relacion(self, relacion: Dict[str, Any],
-                                         contexto: List[Dict[str, Any]]) -> str:
-        """Genera alternativa modificando relaciones entre conceptos"""
-        # Analizar la relación original
-        sujeto = relacion['sujeto']
-        verbo = relacion['verbo']
-        objeto = relacion['objeto']
-        
-        # Buscar relaciones alternativas en el contexto
-        relaciones_alt = self._encontrar_relaciones_alternativas(
-            sujeto, verbo, objeto, contexto
-        )
-        
-        if not relaciones_alt:
-            return None
-            
-        # Seleccionar y construir alternativa
-        relacion_alt = random.choice(relaciones_alt)
-        return self._construir_alternativa_con_relacion(relacion_alt)
-
-    def _generar_por_variacion_semantica(self, doc: spacy.tokens.Doc,
-                                       contexto: List[Dict[str, Any]]) -> List[str]:
-        """Genera alternativas por variación semántica"""
-        variaciones = []
-        
-        # Obtener significado principal
-        significado = self._extraer_significado_principal(doc)
-        
-        # Generar variaciones manteniendo estructura pero cambiando significado
-        for _ in range(3):
-            variacion = self._generar_variacion_significado(
-                significado,
-                contexto
-            )
-            if variacion:
-                variaciones.append(variacion)
-                
-        return variaciones
-
-    def _filtrar_alternativas(self, alternativas: List[str], 
-                            doc_respuesta: spacy.tokens.Doc) -> List[str]:
-        """Filtra y selecciona las mejores alternativas"""
-        alternativas_filtradas = []
-        
-        for alt in alternativas:
-            # Verificar que sea suficientemente diferente
-            if self._es_alternativa_valida(alt, doc_respuesta):
-                alternativas_filtradas.append(alt)
-                
-        return alternativas_filtradas
-
-    def _es_alternativa_valida(self, alternativa: str, 
-                             doc_respuesta: spacy.tokens.Doc) -> bool:
-        """Verifica si una alternativa es válida"""
-        doc_alt = self.nlp(alternativa)
-        
-        # Calcular similitud
-        similitud = doc_alt.similarity(doc_respuesta)
-        
-        # No debe ser muy similar ni muy diferente
-        if 0.3 <= similitud <= 0.7:
-            return True
-            
-        return False
-
-    def generar_explicacion(self, pregunta: Dict[str, Any], respuesta: str, 
-                          es_correcta: bool) -> str:
-        """Genera una explicación detallada de la respuesta"""
-        # Analizar pregunta y respuesta
-        doc_pregunta = self.nlp(pregunta['pregunta'])
-        doc_respuesta = self.nlp(respuesta)
-        
-        # Construir explicación basada en análisis
-        return self._construir_explicacion(
-            doc_pregunta,
-            doc_respuesta,
-            es_correcta,
-            pregunta['contexto']
-        )
-
-    def _construir_explicacion(self, doc_pregunta: spacy.tokens.Doc,
-                             doc_respuesta: spacy.tokens.Doc,
-                             es_correcta: bool,
-                             contexto: Dict[str, Any]) -> str:
-        """Construye una explicación detallada"""
-        # Analizar elementos clave
-        conceptos_pregunta = self._identificar_conceptos_clave(doc_pregunta)
-        conceptos_respuesta = self._identificar_conceptos_clave(doc_respuesta)
-        
-        # Generar explicación
-        if es_correcta:
-            return self._generar_explicacion_correcta(
-                conceptos_pregunta,
-                conceptos_respuesta,
-                contexto
-            )
-        else:
-            return self._generar_explicacion_incorrecta(
-                conceptos_pregunta,
-                conceptos_respuesta,
-                contexto
-            )
-
-    def _generar_explicacion_correcta(self, conceptos_pregunta: List[Dict[str, Any]],
-                                    conceptos_respuesta: List[Dict[str, Any]],
-                                    contexto: Dict[str, Any]) -> str:
-        """Genera explicación para respuesta correcta"""
-        # Identificar relaciones clave
-        relaciones = self._identificar_relaciones_explicativas(
-            conceptos_pregunta,
-            conceptos_respuesta,
-            contexto
-        )
-        
-        # Construir explicación
-        return self._componer_explicacion(relaciones, True)
-
-    def _generar_explicacion_incorrecta(self, conceptos_pregunta: List[Dict[str, Any]],
-                                      conceptos_respuesta: List[Dict[str, Any]],
-                                      contexto: Dict[str, Any]) -> str:
-        """Genera explicación para respuesta incorrecta"""
-        # Identificar diferencias clave
-        diferencias = self._identificar_diferencias(
-            conceptos_pregunta,
-            conceptos_respuesta,
-            contexto
-        )
-        
-        # Construir explicación
-        return self._componer_explicacion(diferencias, False)
-
-    def _identificar_relaciones_explicativas(self, conceptos_pregunta: List[Dict[str, Any]],
-                                          conceptos_respuesta: List[Dict[str, Any]],
-                                          contexto: Dict[str, Any]) -> List[Dict[str, Any]]:
-        """Identifica relaciones para explicación"""
-        relaciones = []
-        
-        # Analizar conexiones entre conceptos
-        for cp in conceptos_pregunta:
-            for cr in conceptos_respuesta:
-                relacion = self._analizar_relacion_conceptos(cp, cr, contexto)
-                if relacion:
-                    relaciones.append(relacion)
-                    
-        return relaciones
-
-    def _identificar_diferencias(self, conceptos_pregunta: List[Dict[str, Any]],
-                               conceptos_respuesta: List[Dict[str, Any]],
-                               contexto: Dict[str, Any]) -> List[Dict[str, Any]]:
-        """Identifica diferencias para explicación"""
-        diferencias = []
-        
-        # Comparar conceptos
-        for cp in conceptos_pregunta:
-            for cr in conceptos_respuesta:
-                diferencia = self._analizar_diferencia_conceptos(cp, cr, contexto)
-                if diferencia:
-                    diferencias.append(diferencia)
-                    
-        return diferencias
-
-    def _componer_explicacion(self, elementos: List[Dict[str, Any]], 
-                            es_correcta: bool) -> str:
-        """Compone la explicación final"""
-        if es_correcta:
-            return self._componer_explicacion_correcta(elementos)
-        else:
-            return self._componer_explicacion_incorrecta(elementos)
-
-    def _componer_explicacion_correcta(self, elementos: List[Dict[str, Any]]) -> str:
-        """Compone explicación para respuesta correcta"""
-        if not elementos:
-            return "La respuesta es correcta según el contexto."
-            
-        partes = []
-        for elem in elementos:
-            parte = self._generar_parte_explicacion(elem)
-            if parte:
-                partes.append(parte)
-                
-        if not partes:
-            return "La respuesta es correcta según el contexto."
-            
-        return " ".join(partes)
-
-    def _componer_explicacion_incorrecta(self, elementos: List[Dict[str, Any]]) -> str:
-        """Compone explicación para respuesta incorrecta"""
-        if not elementos:
-            return "La respuesta es incorrecta según el contexto."
-            
-        partes = []
-        for elem in elementos:
-            parte = self._generar_parte_explicacion(elem, es_correcta=False)
-            if parte:
-                partes.append(parte)
-                
-        if not partes:
-            return "La respuesta es incorrecta según el contexto."
-            
-        return " ".join(partes)
+    def _invertir_significado(self, oracion: str) -> str:
+        """Invierte el significado principal de una oración."""
+        for palabra, contrario in self.contrarios.items():
+            if palabra in oracion.lower():
+                return oracion.replace(palabra, contrario)
+        return None
     
-    def _encontrar_conceptos_similares(self, concepto: str, contexto: List[str]) -> List[str]:
-        """Encuentra conceptos semánticamente similares"""
-        doc_concepto = self.nlp(concepto)
-        conceptos_similares = []
-        
-        for texto in contexto:
-            doc = self.nlp(texto)
-            # Buscar sustantivos y entidades nombradas
-            for token in doc:
-                if token.pos_ in ['NOUN', 'PROPN']:
-                    similitud = doc_concepto.similarity(token)
-                    if 0.4 < similitud < 0.8:  # Similar pero no idéntico
-                        conceptos_similares.append({
-                            'texto': token.text,
-                            'similitud': similitud
-                        })
-                        
-        # Ordenar por similitud y eliminar duplicados
-        conceptos_unicos = {}
-        for c in sorted(conceptos_similares, key=lambda x: x['similitud'], reverse=True):
-            if c['texto'].lower() not in conceptos_unicos:
-                conceptos_unicos[c['texto'].lower()] = c['texto']
-                
-        return list(conceptos_unicos.values())
-
-    def _construir_alternativa_con_sustitucion(self, concepto_original: str, 
-                                            concepto_nuevo: str, 
-                                            contexto: Dict[str, Any]) -> str:
-        """Construye alternativa sustituyendo conceptos"""
-        # Usar el contexto para mantener coherencia
-        verbos = contexto.get('verbos_asociados', [])
-        modificadores = contexto.get('modificadores', [])
-        
-        # Construir frase con elementos del contexto
-        elementos = []
-        if modificadores:
-            elementos.append(random.choice(modificadores))
-        elementos.append(concepto_nuevo)
-        if verbos:
-            elementos.append(random.choice(verbos))
-            
-        return ' '.join(elementos)
-
-    def _identificar_relaciones(self, doc: spacy.tokens.Doc) -> List[Dict[str, Any]]:
-        """Identifica relaciones sintácticas en el texto"""
-        relaciones = []
-        
+    def _invertir_significado_principal(self, oracion: str) -> str:
+        """Invierte el significado principal de forma más natural."""
+        doc = self.nlp(oracion)
         for token in doc:
-            if token.dep_ == 'ROOT' and token.pos_ == 'VERB':
-                # Buscar sujeto y objeto
-                sujeto = None
-                objeto = None
-                for hijo in token.children:
-                    if hijo.dep_ == 'nsubj':
-                        sujeto = hijo.text
-                    elif hijo.dep_ == 'dobj':
-                        objeto = hijo.text
-                        
-                if sujeto and objeto:
-                    relaciones.append({
-                        'sujeto': sujeto,
-                        'verbo': token.text,
-                        'objeto': objeto,
-                        'importancia': self._calcular_importancia_relacion(token)
-                    })
-                    
+            if token.pos_ == 'VERB' and token.dep_ == 'ROOT':
+                # Buscar negaciones existentes
+                tiene_negacion = any(t.dep_ == 'neg' for t in token.children)
+                if tiene_negacion:
+                    # Quitar negación
+                    return re.sub(r'no\s+' + token.text, token.text, oracion)
+                else:
+                    # Agregar negación
+                    return oracion.replace(token.text, f"no {token.text}")
+        return None
+
+
+    def _cambiar_cantidad(self, oracion: str) -> str:
+        """Cambia las cantidades numéricas en una oración."""
+        def modificar_numero(match):
+            num = int(match.group())
+            return str(num * 2 if num < 100 else num // 2)
+        
+        return re.sub(r'\d+', modificar_numero, oracion)
+
+    def _calcular_similitud(self, texto1: str, texto2: str) -> float:
+        """Calcula la similitud entre textos usando una métrica más robusta."""
+        # Tokenizar y normalizar
+        tokens1 = set(token.lower() for token in texto1.split() if token.lower() not in self.stopwords)
+        tokens2 = set(token.lower() for token in texto2.split() if token.lower() not in self.stopwords)
+        
+        # Calcular coeficiente de Jaccard
+        interseccion = len(tokens1.intersection(tokens2))
+        union = len(tokens1.union(tokens2))
+        
+        return interseccion / union if union > 0 else 0.0
+
+    def _tienen_palabras_comunes(self, texto1: str, texto2: str) -> bool:
+        """Verifica si dos textos tienen palabras significativas en común."""
+        palabras1 = set(token.text.lower() for token in self.nlp(texto1) 
+                        if token.pos_ in ['NOUN', 'VERB', 'ADJ'] and len(token.text) > 3)
+        palabras2 = set(token.text.lower() for token in self.nlp(texto2) 
+                        if token.pos_ in ['NOUN', 'VERB', 'ADJ'] and len(token.text) > 3)
+        return bool(palabras1 & palabras2)
+
+    def analizar_texto(self, texto: str) -> Dict[str, Any]:
+        """Analiza el texto para identificar conceptos clave y estructuras importantes."""
+        doc = self.nlp(texto)
+        
+        # Mejorar la extracción de oraciones
+        oraciones = [sent.text.strip() for sent in doc.sents 
+                    if len(sent.text.split()) > 10 and not sent.text.startswith('?')]
+        
+        # Mejorar la extracción de entidades
+        entidades = []
+        for ent in doc.ents:
+            if (ent.label_ in ["PER", "ORG", "CONCEPT", "EVENT", "MISC"] and 
+                len(ent.text.split()) <= 4 and 
+                ent.text.strip() not in entidades):
+                entidades.append(ent.text.strip())
+        
+        # Mejorar la extracción de conceptos
+        conceptos = []
+        for chunk in doc.noun_chunks:
+            if (2 <= len(chunk.text.split()) <= 4 and 
+                not any(char in chunk.text for char in '?¿!¡') and
+                chunk.text.strip() not in conceptos):
+                conceptos.append(chunk.text.strip())
+        
+        # Extraer palabras clave adicionales
+        keywords = [token.text for token in doc 
+                if token.pos_ in ['NOUN', 'PROPN'] 
+                and len(token.text) > 4 
+                and token.text.lower() not in self.stopwords]  # Usar self.stopwords
+        
+        return {
+            "oraciones": oraciones,
+            "entidades": entidades,
+            "conceptos": conceptos,
+            "keywords": list(set(keywords))
+        }
+
+    def _extraer_conceptos(self, texto: str) -> List[str]:
+        """Extrae conceptos clave del texto"""
+        # Buscar frases con mayúsculas iniciales y términos técnicos
+        conceptos = re.findall(r'\b[A-Z][a-zA-Z\s]+\b|\b[a-zA-Z]+(?:\s+[a-zA-Z]+)*\b', texto)
+        
+        # Filtrar y limpiar conceptos
+        conceptos = [c.strip() for c in conceptos if len(c.split()) <= 4 and len(c) > 3]
+        
+        # Eliminar duplicados y ordenar por longitud
+        return sorted(list(set(conceptos)), key=len, reverse=True)[:10]
+
+    def _extraer_definiciones(self, oraciones: List[str]) -> List[Dict[str, str]]:
+        """Extrae definiciones del texto"""
+        definiciones = []
+        patrones_definicion = [
+            r'([^.]+)\s+es\s+([^.]+)',
+            r'([^.]+)\s+se define como\s+([^.]+)',
+            r'([^.]+)\s+significa\s+([^.]+)',
+            r'([^.]+)\s+se refiere a\s+([^.]+)'
+        ]
+
+        for oracion in oraciones:
+            for patron in patrones_definicion:
+                matches = re.findall(patron, oracion, re.IGNORECASE)
+                for match in matches:
+                    if len(match) == 2:
+                        definiciones.append({
+                            'concepto': match[0].strip(),
+                            'definicion': match[1].strip()
+                        })
+
+        return definiciones
+
+    def _extraer_relaciones(self, oraciones: List[str]) -> List[Dict[str, Any]]:
+        """Extrae relaciones entre conceptos"""
+        relaciones = []
+        patrones_relacion = [
+            r'([^.]+)\s+depende de\s+([^.]+)',
+            r'([^.]+)\s+influye en\s+([^.]+)',
+            r'([^.]+)\s+afecta a\s+([^.]+)',
+            r'([^.]+)\s+se relaciona con\s+([^.]+)'
+        ]
+
+        for oracion in oraciones:
+            for patron in patrones_relacion:
+                matches = re.findall(patron, oracion, re.IGNORECASE)
+                for match in matches:
+                    if len(match) == 2:
+                        relaciones.append({
+                            'concepto1': match[0].strip(),
+                            'concepto2': match[1].strip(),
+                            'tipo_relacion': 'asociación'
+                        })
+
         return relaciones
 
-    def _encontrar_relaciones_alternativas(self, sujeto: str, verbo: str, 
-                                        objeto: str, contexto: List[Dict[str, Any]]) -> List[Dict[str, str]]:
-        """Encuentra relaciones alternativas en el contexto"""
-        relaciones_alt = []
-        
-        for oracion in contexto:
-            doc = self.nlp(oracion['texto'])
-            
-            for token in doc:
-                if token.pos_ == 'VERB' and token.text != verbo:
-                    # Buscar nueva relación
-                    nueva_rel = self._extraer_relacion(token)
-                    if nueva_rel and nueva_rel['sujeto'] != sujeto:
-                        relaciones_alt.append(nueva_rel)
-                        
-        return relaciones_alt
+    def _extraer_procesos(self, oraciones: List[str]) -> List[Dict[str, List[str]]]:
+        """Extrae procesos o secuencias del texto"""
+        procesos = []
+        inicio_proceso = [
+            'primero', 'inicialmente', 'para comenzar',
+            'el proceso comienza', 'el primer paso'
+        ]
 
-    def _construir_alternativa_con_relacion(self, relacion: Dict[str, str]) -> str:
-        """Construye alternativa usando una relación"""
-        return f"{relacion['sujeto']} {relacion['verbo']} {relacion['objeto']}"
+        proceso_actual = None
+        pasos = []
 
-    def _extraer_significado_principal(self, doc: spacy.tokens.Doc) -> Dict[str, Any]:
-        """Extrae el significado principal del texto"""
-        # Encontrar verbo principal y sus argumentos
-        raiz = None
-        argumentos = []
-        
-        for token in doc:
-            if token.dep_ == 'ROOT':
-                raiz = token
-                # Recolectar argumentos
-                for hijo in token.children:
-                    if hijo.dep_ in ['nsubj', 'dobj', 'iobj']:
-                        argumentos.append({
-                            'texto': hijo.text,
-                            'tipo': hijo.dep_,
-                            'pos': hijo.pos_
-                        })
-                        
+        for oracion in oraciones:
+            # Detectar inicio de proceso
+            if any(inicio in oracion.lower() for inicio in inicio_proceso):
+                if proceso_actual and pasos:
+                    procesos.append({
+                        'nombre': proceso_actual,
+                        'pasos': pasos
+                    })
+                proceso_actual = oracion
+                pasos = []
+            # Continuar proceso actual
+            elif proceso_actual and any(conector in oracion.lower() for conector in ['luego', 'después', 'entonces', 'finalmente']):
+                pasos.append(oracion)
+
+        # Agregar último proceso si existe
+        if proceso_actual and pasos:
+            procesos.append({
+                'nombre': proceso_actual,
+                'pasos': pasos
+            })
+
+        return procesos
+
+    def _generar_pregunta_definicion(self, analisis: Dict[str, Any]) -> Dict[str, Any]:
+        """Genera una pregunta sobre definición de conceptos"""
+        if not analisis['definiciones']:
+            return None
+
+        definicion = random.choice(analisis['definiciones'])
+        concepto = definicion['concepto']
+        def_correcta = definicion['definicion']
+
+        # Generar distractores modificando la definición correcta
+        distractores = []
+        palabras = def_correcta.split()
+        for _ in range(3):
+            distractor = palabras.copy()
+            # Modificar algunas palabras al azar
+            for i in range(min(3, len(distractor))):
+                pos = random.randint(0, len(distractor)-1)
+                distractor[pos] = random.choice(['diferente', 'similar', 'específico', 'general', 'único', 'especial'])
+            distractores.append(' '.join(distractor))
+
+        opciones = [def_correcta] + distractores
+        random.shuffle(opciones)
+
         return {
-            'raiz': raiz.text if raiz else None,
-            'argumentos': argumentos,
-            'tipo': raiz.pos_ if raiz else None
+            "tipo": "alternativas",
+            "pregunta": f"¿Cuál es la definición correcta de {concepto}?",
+            "opciones": opciones,
+            "respuesta_correcta": def_correcta,
+            "explicacion": f"La definición correcta de {concepto} es '{def_correcta}'. Esta definición captura la esencia del concepto y sus características principales."
         }
 
-    def _generar_variacion_significado(self, significado: Dict[str, Any], 
-                                    contexto: List[Dict[str, Any]]) -> str:
-        """Genera variación manteniendo estructura pero cambiando significado"""
-        if not significado['raiz'] or not significado['argumentos']:
+    def _generar_pregunta_concepto(self, analisis: Dict[str, Any]) -> Dict[str, Any]:
+        """Genera una pregunta sobre características de conceptos"""
+        if not analisis['conceptos']:
+            return None
+
+        concepto = random.choice(analisis['conceptos'])
+        # Buscar oraciones que mencionan el concepto
+        oraciones_relacionadas = [
+            o for o in analisis['oraciones'] 
+            if concepto.lower() in o.lower()
+        ]
+
+        if not oraciones_relacionadas:
+            return None
+
+        oracion_principal = random.choice(oraciones_relacionadas)
+        caracteristica_correcta = oracion_principal.replace(concepto, "").strip()
+
+        return {
+            "tipo": "verdadero_falso",
+            "pregunta": f"{concepto} {caracteristica_correcta}",
+            "respuesta_correcta": "Verdadero",
+            "explicacion": f"Esta afirmación es verdadera porque {oracion_principal.lower()}"
+        }
+
+    def _generar_pregunta_relacion(self, analisis: Dict[str, Any]) -> Dict[str, Any]:
+        """Genera una pregunta sobre relaciones entre conceptos"""
+        if not analisis['relaciones']:
+            return None
+
+        relacion = random.choice(analisis['relaciones'])
+        concepto1 = relacion['concepto1']
+        concepto2 = relacion['concepto2']
+
+        # Generar opciones de respuesta
+        opciones = [
+            f"{concepto1} está directamente relacionado con {concepto2}",
+            f"{concepto1} es independiente de {concepto2}",
+            f"{concepto1} no tiene relación con {concepto2}",
+            f"{concepto2} es opuesto a {concepto1}"
+        ]
+
+        return {
+            "tipo": "alternativas",
+            "pregunta": f"¿Cuál es la relación correcta entre {concepto1} y {concepto2}?",
+            "opciones": opciones,
+            "respuesta_correcta": opciones[0],
+            "explicacion": f"Existe una relación directa entre {concepto1} y {concepto2} porque {relacion.get('tipo_relacion', 'están conectados en el contexto dado')}"
+        }
+
+    def _generar_pregunta_proceso(self, analisis: Dict[str, Any]) -> Dict[str, Any]:
+        """Genera una pregunta sobre procesos o secuencias"""
+        if not analisis['procesos']:
+            return None
+
+        proceso = random.choice(analisis['procesos'])
+        pasos = proceso['pasos']
+
+        if len(pasos) < 2:
+            return None
+
+        # Crear una afirmación sobre el orden de los pasos
+        paso1 = random.choice(pasos)
+        paso2 = random.choice([p for p in pasos if p != paso1])
+        orden_correcto = pasos.index(paso1) < pasos.index(paso2)
+
+        afirmacion = f"En el proceso de {proceso['nombre']}, {paso1} ocurre antes que {paso2}"
+
+        return {
+            "tipo": "verdadero_falso",
+            "pregunta": afirmacion,
+            "respuesta_correcta": "Verdadero" if orden_correcto else "Falso",
+            "explicacion": f"Esta afirmación es {'correcta' if orden_correcto else 'incorrecta'} porque en el proceso descrito, {'' if orden_correcto else 'no'} se sigue esta secuencia específica."
+        }
+
+    def _generar_pregunta_aplicacion(self, analisis: Dict[str, Any]) -> Dict[str, Any]:
+        """Genera una pregunta sobre aplicación práctica de conceptos"""
+        if not analisis['conceptos']:
+            return None
+
+        concepto = random.choice(analisis['conceptos'])
+        
+        # Generar opciones de aplicación
+        opciones = [
+            f"Aplicar {concepto} en situaciones prácticas",
+            f"Memorizar la definición de {concepto}",
+            f"Ignorar {concepto} en la práctica",
+            f"Evitar el uso de {concepto}"
+        ]
+
+        return {
+            "tipo": "alternativas",
+            "pregunta": f"¿Cuál es la mejor manera de utilizar el conocimiento sobre {concepto}?",
+            "opciones": opciones,
+            "respuesta_correcta": opciones[0],
+            "explicacion": f"La mejor manera de utilizar el conocimiento sobre {concepto} es aplicándolo en situaciones prácticas, ya que esto permite comprender su utilidad real y desarrollar competencias efectivas."
+        }
+    
+    def generar_preguntas(self, texto: str, num_preguntas: int = 10) -> List[Dict[str, Any]]:
+        """Genera una mezcla balanceada de preguntas."""
+        analisis = self.analizar_texto(texto)
+        preguntas = []
+        preguntas_hash = set()  # Para evitar duplicados
+        
+        # Intentar generar igual número de cada tipo
+        num_cada_tipo = num_preguntas // 2
+        
+        # Generar preguntas de alternativas
+        intentos_alt = 0
+        while len([p for p in preguntas if p['tipo'] == 'alternativas']) < num_cada_tipo and intentos_alt < num_cada_tipo * 3:
+            pregunta = self.generar_pregunta_alternativas(analisis, texto)
+            if pregunta and self._es_pregunta_valida_mejorada(pregunta):
+                hash_pregunta = hash(pregunta['pregunta'])
+                if hash_pregunta not in preguntas_hash:
+                    preguntas.append(pregunta)
+                    preguntas_hash.add(hash_pregunta)
+            intentos_alt += 1
+        
+        # Generar preguntas V/F
+        intentos_vf = 0
+        while len([p for p in preguntas if p['tipo'] == 'verdadero_falso']) < num_cada_tipo and intentos_vf < num_cada_tipo * 3:
+            pregunta = self.generar_pregunta_verdadero_falso(analisis, texto)
+            if pregunta and self._es_pregunta_valida_mejorada(pregunta):
+                hash_pregunta = hash(pregunta['pregunta'])
+                if hash_pregunta not in preguntas_hash:
+                    preguntas.append(pregunta)
+                    preguntas_hash.add(hash_pregunta)
+            intentos_vf += 1
+        
+        # Generar el tipo que falte si no se llegó al número deseado
+        while len(preguntas) < num_preguntas:
+            if random.random() < 0.5:
+                tipo_faltante = "alternativas"
+                generador = self.generar_pregunta_alternativas
+            else:
+                tipo_faltante = "verdadero_falso"
+                generador = self.generar_pregunta_verdadero_falso
+            
+            pregunta = generador(analisis, texto)
+            if pregunta and self._es_pregunta_valida_mejorada(pregunta):
+                hash_pregunta = hash(pregunta['pregunta'])
+                if hash_pregunta not in preguntas_hash:
+                    preguntas.append(pregunta)
+                    preguntas_hash.add(hash_pregunta)
+        
+        random.shuffle(preguntas)
+        return preguntas[:num_preguntas]
+    
+    def _generar_hash_pregunta(self, pregunta: Dict[str, Any]) -> int:
+        """Genera un hash más robusto para detectar duplicados."""
+        elementos = [
+            pregunta['pregunta'],
+            pregunta['respuesta_correcta'],
+            pregunta['tipo']
+        ]
+        if pregunta['tipo'] == 'alternativas':
+            elementos.extend(pregunta['opciones'])
+        
+        return hash('||'.join(str(e) for e in elementos))
+    
+    def _seleccionar_mejores_preguntas(self, candidatas: List[Dict[str, Any]], 
+                                  num_requeridas: int) -> List[Dict[str, Any]]:
+        """Selecciona las mejores preguntas basado en criterios de calidad."""
+        if not candidatas:
+            return []
+            
+        # Calcular puntuación para cada pregunta
+        puntuaciones = []
+        for pregunta in candidatas:
+            puntuacion = 0
+            # Longitud adecuada
+            palabras = len(pregunta['pregunta'].split())
+            if 10 <= palabras <= 30:
+                puntuacion += 2
+            # Calidad de explicación
+            if len(pregunta['explicacion'].split()) > 20:
+                puntuacion += 2
+            # Diversidad de opciones (para alternativas)
+            if pregunta['tipo'] == 'alternativas':
+                similitudes = []
+                for i, opcion1 in enumerate(pregunta['opciones']):
+                    for j, opcion2 in enumerate(pregunta['opciones'][i+1:], i+1):
+                        similitud = self._calcular_similitud(opcion1, opcion2)
+                        similitudes.append(similitud)
+                if max(similitudes) < 0.7:  # Opciones suficientemente diferentes
+                    puntuacion += 3
+            
+            puntuaciones.append((puntuacion, pregunta))
+        
+        # Ordenar por puntuación y seleccionar las mejores
+        puntuaciones.sort(reverse=True)
+        return [p[1] for p in puntuaciones[:num_requeridas]]
+
+    def generar_pregunta_alternativas(self, analisis: Dict[str, Any], texto: str) -> Dict[str, Any]:
+        """Genera preguntas de alternativas mejoradas."""
+        if not analisis["conceptos"] or not analisis["oraciones"]:
             return None
             
-        # Buscar elementos similares en el contexto
-        elementos_similares = self._buscar_elementos_similares(
-            significado, 
-            contexto
-        )
+        # Seleccionar concepto y contexto
+        concepto = random.choice(analisis["conceptos"])
+        contexto = self._extraer_contexto_concepto(concepto, texto)
         
-        if not elementos_similares:
+        # Generar pregunta más natural
+        pregunta = self._generar_pregunta_natural(concepto, contexto)
+        
+        # Generar opciones
+        respuesta_correcta = self._extraer_respuesta_correcta(contexto, concepto)
+        distractores = self._generar_distractores_mejorados(texto, concepto, respuesta_correcta, [])
+        
+        if not respuesta_correcta or len(distractores) < 3:
             return None
             
-        # Construir nueva variación
-        return self._construir_variacion(
-            significado['raiz'],
-            elementos_similares
-        )
-
-    def _buscar_elementos_similares(self, significado: Dict[str, Any], 
-                                contexto: List[Dict[str, Any]]) -> Dict[str, List[str]]:
-        """Busca elementos similares en el contexto"""
-        elementos = {
-            'raices': [],
-            'argumentos': []
-        }
+        opciones = [respuesta_correcta] + distractores[:3]
+        random.shuffle(opciones)
         
-        for oracion in contexto:
-            doc = self.nlp(oracion['texto'])
-            for token in doc:
-                if token.pos_ == significado['tipo']:
-                    similitud = self.nlp(significado['raiz']).similarity(token)
-                    if 0.3 < similitud < 0.7:
-                        elementos['raices'].append(token.text)
-                        
-                for arg in significado['argumentos']:
-                    if token.pos_ == arg['pos']:
-                        similitud = self.nlp(arg['texto']).similarity(token)
-                        if 0.3 < similitud < 0.7:
-                            elementos['argumentos'].append(token.text)
-                            
-        return elementos
+        # Generar explicación sin referencias al texto
+        explicacion = self._generar_explicacion_conceptual(concepto, respuesta_correcta)
+        
+        return {
+            "tipo": "alternativas",
+            "pregunta": pregunta,
+            "opciones": opciones,
+            "respuesta_correcta": respuesta_correcta,
+            "explicacion": explicacion
+        }
+    
+    def _extraer_respuesta_correcta(self, contexto: str, concepto: str) -> str:
+        """Extrae una respuesta correcta del contexto sobre un concepto."""
+        # Intentar extraer con QA
+        try:
+            respuesta = self.qa_model(
+                question=f"¿Qué característica principal tiene {concepto}?",
+                context=contexto
+            )
+            if respuesta['score'] > 0.5:
+                return self._limpiar_oracion(respuesta['answer'])
+        except Exception:
+            pass
+        
+        # Si falla QA, extraer la oración más relevante
+        doc = self.nlp(contexto)
+        oraciones_relevantes = []
+        for sent in doc.sents:
+            if concepto.lower() in sent.text.lower():
+                oraciones_relevantes.append(sent.text)
+        
+        if oraciones_relevantes:
+            return self._limpiar_oracion(max(oraciones_relevantes, key=len))
+        
+        return None
 
-    def _construir_variacion(self, raiz: str, elementos: Dict[str, List[str]]) -> str:
-        """Construye una variación usando elementos similares"""
-        if not elementos['raices'] or not elementos['argumentos']:
+    def generar_pregunta_verdadero_falso(self, analisis: Dict[str, Any], texto: str) -> Dict[str, Any]:
+        """Genera una pregunta de verdadero/falso mejorada."""
+        if not analisis["oraciones"]:
             return None
-            
-        nueva_raiz = random.choice(elementos['raices'])
-        nuevos_args = random.sample(elementos['argumentos'], 
-                                min(2, len(elementos['argumentos'])))
-                                
-        return f"{nuevos_args[0]} {nueva_raiz} {nuevos_args[1] if len(nuevos_args) > 1 else ''}"
-
-    def _analizar_relacion_conceptos(self, concepto1: Dict[str, Any], 
-                                concepto2: Dict[str, Any], 
-                                contexto: Dict[str, Any]) -> Dict[str, Any]:
-        """Analiza la relación entre dos conceptos"""
-        # Calcular similitud
-        doc1 = self.nlp(concepto1['texto'])
-        doc2 = self.nlp(concepto2['texto'])
-        similitud = doc1.similarity(doc2)
         
-        # Buscar conexiones en el contexto
-        conexiones = self._buscar_conexiones(
-            concepto1['texto'],
-            concepto2['texto'],
-            contexto
-        )
+        # Filtrar oraciones válidas
+        oraciones_validas = [
+            o for o in analisis["oraciones"]
+            if len(o.split()) >= 10
+            and not any(p in o.lower() for p in ['?', '¿', '!', '¡'])
+            and self._es_oracion_valida(o)
+        ]
         
-        return {
-            'concepto1': concepto1['texto'],
-            'concepto2': concepto2['texto'],
-            'similitud': similitud,
-            'conexiones': conexiones,
-            'tipo': self._determinar_tipo_relacion(conexiones)
-        }
-
-    def _analizar_diferencia_conceptos(self, concepto1: Dict[str, Any], 
-                                    concepto2: Dict[str, Any], 
-                                    contexto: Dict[str, Any]) -> Dict[str, Any]:
-        """Analiza las diferencias entre dos conceptos"""
-        # Analizar características distintivas
-        caract1 = self._extraer_caracteristicas(concepto1, contexto)
-        caract2 = self._extraer_caracteristicas(concepto2, contexto)
+        if not oraciones_validas:
+            return None
         
-        # Encontrar diferencias
-        diferencias = []
-        for c1 in caract1:
-            if not any(self._son_similares(c1, c2) for c2 in caract2):
-                diferencias.append(c1)
-                
-        return {
-            'concepto1': concepto1['texto'],
-            'concepto2': concepto2['texto'],
-            'diferencias': diferencias,
-            'importancia': len(diferencias)
-        }
-
-    def _generar_parte_explicacion(self, elemento: Dict[str, Any], 
-                            es_correcta: bool = True) -> str:
-        """Genera una parte de la explicación dinámicamente"""
-        doc = None
+        # Seleccionar una oración al azar
+        oracion_base = random.choice(oraciones_validas)
+        es_verdadero = random.choice([True, False])
         
-        if es_correcta:
-            if 'conexiones' in elemento:
-                # Analizar el contexto de la conexión
-                doc = self.nlp(elemento['conexiones'][0] if elemento['conexiones'] else '')
-            elif 'valor' in elemento:
-                # Analizar la característica
-                doc = self.nlp(elemento['valor'])
+        if es_verdadero:
+            pregunta = self._limpiar_oracion(oracion_base)
         else:
-            if 'diferencias' in elemento:
-                # Analizar las diferencias
-                doc = self.nlp(elemento['diferencias'][0] if elemento['diferencias'] else '')
-            elif 'razon' in elemento:
-                # Analizar la razón del error
-                doc = self.nlp(elemento['razon'])
-                
-        if not doc:
-            return None
-            
-        # Construir explicación basada en análisis
-        elementos_explicacion = self._analizar_elementos_explicacion(doc)
-        return self._construir_explicacion_dinamica(elementos_explicacion, es_correcta)
-
-    def _analizar_elementos_explicacion(self, doc: spacy.tokens.Doc) -> Dict[str, Any]:
-        """Analiza elementos para construir explicación"""
-        elementos = {
-            'hechos': [],
-            'causas': [],
-            'consecuencias': []
+            # Generar una versión falsa de la oración
+            pregunta = self._generar_version_falsa_mejorada(oracion_base)
+            if not pregunta:
+                return None
+        
+        # Generar explicación contextualizada
+        if es_verdadero:
+            explicacion = f"Esta afirmación es correcta porque {oracion_base.lower()}"
+        else:
+            explicacion = f"Esta afirmación es incorrecta. Lo correcto es que {oracion_base.lower()}"
+        
+        return {
+            "tipo": "verdadero_falso",
+            "pregunta": pregunta,
+            "respuesta_correcta": "Verdadero" if es_verdadero else "Falso",
+            "explicacion": explicacion
         }
+    
+    def _generar_pregunta_natural(self, concepto: str, contexto: str) -> str:
+        """Genera una pregunta más natural sobre un concepto."""
+        plantillas = [
+            f"¿Cuál es la principal característica de {concepto}?",
+            f"¿Qué aspecto es fundamental para entender {concepto}?",
+            f"¿Qué caracteriza mejor a {concepto}?",
+            f"¿Cuál es el papel principal de {concepto}?",
+            f"¿Qué define mejor a {concepto}?"
+        ]
+        return random.choice(plantillas)
+
+    def _extraer_contexto_concepto(self, concepto: str, texto: str) -> str:
+        """Extrae el contexto relevante para un concepto sin depender del texto original."""
+        doc = self.nlp(texto)
+        contexto_relevante = []
         
         for sent in doc.sents:
-            # Identificar tipo de información
-            if any(token.dep_ == 'ROOT' and token.pos_ == 'VERB' for token in sent):
-                elementos['hechos'].append(sent.text)
-            elif any(token.dep_ == 'prep' and token.text in ['porque', 'ya que'] for token in sent):
-                elementos['causas'].append(sent.text)
-            elif any(token.dep_ == 'prep' and token.text in ['por lo tanto', 'entonces'] for token in sent):
-                elementos['consecuencias'].append(sent.text)
-                
-        return elementos
+            if concepto.lower() in sent.text.lower():
+                contexto_relevante.append(sent.text)
+        
+        return " ".join(contexto_relevante[:2])
 
-    def _construir_explicacion_dinamica(self, elementos: Dict[str, List[str]], 
-                                    es_correcta: bool) -> str:
-        """Construye explicación dinámicamente"""
-        partes = []
-        
-        # Construir basado en elementos disponibles
-        if elementos['hechos']:
-            partes.extend(elementos['hechos'])
-        if elementos['causas']:
-            partes.extend(elementos['causas'])
-        if elementos['consecuencias']:
-            partes.extend(elementos['consecuencias'])
-            
-        # Si no hay elementos suficientes, analizar el contexto más amplio
-        if not partes:
-            return self._generar_explicacion_alternativa(es_correcta)
-            
-        return ' '.join(partes)
+    def _generar_explicacion_conceptual(self, concepto: str, respuesta: str) -> str:
+        """Genera una explicación basada en conceptos sin referencias al texto."""
+        return f"Esta respuesta es correcta porque representa la característica fundamental de {concepto}. " \
+            f"{respuesta.capitalize()} es un aspecto esencial que define cómo funciona y se aplica {concepto}."
 
-    def _generar_explicacion_alternativa(self, es_correcta: bool) -> str:
-        """Genera explicación alternativa basada en análisis del contexto"""
-        # Analizar contexto general
-        doc = self.nlp(self.contexto_actual)  # Necesitaríamos mantener un contexto actual
+    def _identificar_dominio(self, concepto: str) -> str:
+        """Identifica el dominio del concepto basado en palabras clave."""
+        dominios = {
+            "programacion": ["algoritmo", "código", "programación", "desarrollo", "software"],
+            "medicina": ["tratamiento", "diagnóstico", "paciente", "clínico", "médico"],
+            "pedagogia": ["aprendizaje", "enseñanza", "educación", "didáctica", "pedagógico"]
+        }
         
-        # Extraer información relevante
-        info_relevante = self._extraer_informacion_relevante(doc)
-        
-        # Construir explicación
-        return self._componer_explicacion_desde_info(info_relevante, es_correcta)
+        for dominio, palabras_clave in dominios.items():
+            if any(palabra in concepto.lower() for palabra in palabras_clave):
+                return dominio
+        return "general"
     
-
-class SistemaGeneradorCuestionarios:
-    def __init__(self):
-        self.analizador = AnalizadorSemantico()
-        self.generador_preguntas = GeneradorPreguntasDinamico(self.analizador)
-        self.generador_alternativas = GeneradorAlternativasExplicaciones(self.analizador)
+    def _modificar_tiempo_verbal(self, oracion: str) -> str:
+        """Modifica el tiempo verbal de una oración."""
+        doc = self.nlp(oracion)
+        modificaciones = {
+            'presente': {'es': 'era', 'son': 'eran', 'está': 'estaba', 'están': 'estaban'},
+            'pasado': {'era': 'es', 'eran': 'son', 'estaba': 'está', 'estaban': 'están'},
+            'futuro': {'es': 'será', 'son': 'serán', 'está': 'estará', 'están': 'estarán'}
+        }
         
-    def generar_cuestionarios(self, ruta_entrada: str, ruta_salida: str):
-        """Genera cuestionarios completos desde JSON"""
+        for token in doc:
+            if token.pos_ == 'VERB':
+                for tiempo, cambios in modificaciones.items():
+                    if token.text.lower() in cambios:
+                        return oracion.replace(token.text, cambios[token.text.lower()])
+        return None
+    
+    def _modificar_actor(self, oracion: str) -> str:
+        """Modifica el actor principal de la oración."""
+        doc = self.nlp(oracion)
+        for token in doc:
+            if token.dep_ == 'nsubj':
+                # Identificar el tipo de actor
+                if token.text.lower() in ['el', 'la', 'los', 'las']:
+                    continue
+                    
+                actores_alternativos = {
+                    'sistema': ['proceso', 'método', 'mecanismo'],
+                    'persona': ['individuo', 'sujeto', 'participante'],
+                    'grupo': ['equipo', 'conjunto', 'colectivo'],
+                    'profesional': ['especialista', 'experto', 'técnico']
+                }
+                
+                # Encontrar categoría más apropiada
+                for categoria, alternativas in actores_alternativos.items():
+                    if any(palabra in token.text.lower() for palabra in [categoria] + alternativas):
+                        return oracion.replace(token.text, random.choice(alternativas))
+        
+        return None
+    
+    def _cambiar_accion(self, oracion: str) -> str:
+        """Cambia la acción principal por una alternativa."""
+        doc = self.nlp(oracion)
+        for token in doc:
+            if token.pos_ == 'VERB' and token.dep_ == 'ROOT':
+                acciones_alternativas = {
+                    'aumentar': ['reducir', 'disminuir', 'decrecer'],
+                    'mejorar': ['empeorar', 'degradar', 'deteriorar'],
+                    'facilitar': ['dificultar', 'complicar', 'obstaculizar'],
+                    'permitir': ['impedir', 'prohibir', 'restringir'],
+                    'incluir': ['excluir', 'omitir', 'descartar']
+                }
+                
+                for base, alternativas in acciones_alternativas.items():
+                    if token.lemma_.lower() == base:
+                        return oracion.replace(token.text, random.choice(alternativas))
+        
+        return None
+
+    def _generar_version_falsa_mejorada(self, oracion: str) -> str:
+        """Genera una versión falsa de manera más significativa."""
+        doc = self.nlp(oracion)
+        estrategias = [
+            self._invertir_significado_principal,
+            self._cambiar_cuantificadores,
+            self._modificar_actor,
+            self._cambiar_accion
+        ]
+        
+        modificaciones = []
+        for estrategia in estrategias:
+            try:
+                modificacion = estrategia(oracion)
+                if modificacion and modificacion != oracion:
+                    modificaciones.append(modificacion)
+            except Exception:
+                continue
+        
+        if modificaciones:
+            return random.choice(modificaciones)
+            
+        return None
+    
+    def _es_pregunta_valida(self, pregunta: str) -> bool:
+        """Valida que una pregunta cumpla con los criterios de calidad."""
+        if not pregunta:
+            return False
+            
+        # Verificar longitud mínima
+        if len(pregunta.split()) < 8:
+            return False
+            
+        # Evitar preguntas que empiezan con negación
+        if pregunta.lower().startswith(('no ', 'no es')):
+            return False
+            
+        # Evitar preguntas que contienen ciertos patrones problemáticos
+        patrones_invalidos = [
+            r'no\s+no',
+            r'\b(el|la|los|las)\s+\1\b',
+            r'\b(y|o)\s+\1\b',
+            r'\s{2,}',
+        ]
+        
+        for patron in patrones_invalidos:
+            if re.search(patron, pregunta.lower()):
+                return False
+                
+        return True
+    
+    def _es_pregunta_valida_mejorada(self, pregunta: Dict[str, Any]) -> bool:
+        """Validación mejorada de preguntas."""
+        if not pregunta or not isinstance(pregunta, dict):
+            return False
+            
+        # Verificar campos requeridos
+        campos_requeridos = ['tipo', 'pregunta', 'respuesta_correcta', 'explicacion']
+        if not all(campo in pregunta for campo in campos_requeridos):
+            return False
+        
+        # Validar longitud de la pregunta
+        if len(pregunta['pregunta'].split()) < 8:
+            return False
+        
+        # Validar tipo específico
+        if pregunta['tipo'] == 'alternativas':
+            if 'opciones' not in pregunta or len(pregunta['opciones']) != 4:
+                return False
+            if pregunta['respuesta_correcta'] not in pregunta['opciones']:
+                return False
+            
+            # Verificar que las opciones son suficientemente diferentes
+            for i, opcion1 in enumerate(pregunta['opciones']):
+                for opcion2 in pregunta['opciones'][i+1:]:
+                    if self._calcular_similitud(opcion1, opcion2) > 0.8:
+                        return False
+        
+        elif pregunta['tipo'] == 'verdadero_falso':
+            if pregunta['respuesta_correcta'] not in ['Verdadero', 'Falso']:
+                return False
+        
+        else:
+            return False
+        
+        # Validar explicación
+        if len(pregunta['explicacion'].split()) < 10:
+            return False
+        
+        return True
+
+
+    def _obtener_sinonimos_o_relacionados(self, palabra: str) -> List[str]:
+        """Retorna sinónimos o palabras relacionadas para generar distractores."""
+        relacionados = {
+            'aumentar': ['incrementar', 'crecer', 'subir'],
+            'reducir': ['disminuir', 'bajar', 'decrecer'],
+            'mejorar': ['optimizar', 'perfeccionar', 'desarrollar'],
+            'importante': ['relevante', 'significativo', 'esencial'],
+            'necesario': ['requerido', 'indispensable', 'fundamental'],
+            'actual': ['presente', 'vigente', 'contemporáneo']
+        }
+        
+        # Buscar en el diccionario de palabras relacionadas
+        for key, values in relacionados.items():
+            if palabra.lower().startswith(key):
+                return values
+        
+        return []
+
+    def _generar_explicacion_detallada(self, concepto: str, respuesta: str, oracion: str, texto: str) -> str:
+        """Genera una explicación más detallada y contextualizada sin referencias al texto."""
+        explicacion = f"La respuesta es correcta porque {respuesta.lower()}. "
+        
+        # Agregar contexto adicional sin referencias al texto
+        doc = self.nlp(texto)
+        evidencias = []
+        for sent in doc.sents:
+            if concepto.lower() in sent.text.lower() and sent.text != oracion:
+                similitud = self._calcular_similitud(sent.text, respuesta)
+                if similitud > 0.3:
+                    evidencias.append(self._generalizar_evidencia(sent.text))
+        
+        if evidencias:
+            explicacion += f"Esto se fundamenta en que {evidencias[0].lower()}"
+            if len(evidencias) > 1:
+                explicacion += f". Adicionalmente, {evidencias[1].lower()}"
+        
+        return explicacion.strip()
+    
+    def _generalizar_evidencia(self, evidencia: str) -> str:
+        """Convierte una evidencia específica en una declaración más general."""
+        # Eliminar referencias específicas
+        evidencia = re.sub(r'como se menciona|según el texto|como dice|como se indica', '', evidencia)
+        # Convertir a presente simple
+        evidencia = re.sub(r'mencionó|indicó|mostró', 'muestra', evidencia)
+        return evidencia.strip()
+    
+    def _modificar_argumento(self, oracion: str) -> str:
+        """Modifica argumentos específicos en la oración."""
+        doc = self.nlp(oracion)
+        for token in doc:
+            if token.dep_ in ['dobj', 'pobj', 'attr']:
+                # Buscar argumentos específicos para modificar
+                if any(palabra in token.text.lower() for palabra in ['todos', 'siempre', 'nunca', 'nadie']):
+                    return oracion.replace(token.text, random.choice(['algunos', 'ocasionalmente', 'raramente']))
+                # Modificar cantidades o medidas
+                if token.like_num:
+                    num = int(token.text)
+                    nuevo_num = num * 2 if num < 100 else num // 2
+                    return oracion.replace(token.text, str(nuevo_num))
+        return None
+
+    def _agregar_excepcion(self, oracion: str) -> str:
+        """Añade una excepción que invalida la afirmación principal."""
+        excepciones = [
+            ', excepto en casos específicos',
+            ', aunque no siempre es así',
+            ', pero con importantes limitaciones',
+            ', si se cumplen ciertas condiciones',
+            ', dependiendo del contexto'
+        ]
+        
+        # Verificar que no termine en punto
+        if oracion.endswith('.'):
+            oracion = oracion[:-1]
+        
+        return oracion + random.choice(excepciones) + '.'
+    
+    def _invertir_afirmacion(self, oracion: str) -> str:
+        """Invierte el significado de una afirmación."""
+        # Negaciones simples
+        if not oracion:
+            return None
+            
+        # Patrones comunes de negación
+        patrones_negacion = [
+            (r'\bes\b', 'no es'),
+            (r'\bson\b', 'no son'),
+            (r'\bhay\b', 'no hay'),
+            (r'\btiene\b', 'no tiene'),
+            (r'\bpuede\b', 'no puede'),
+            (r'\bsiempre\b', 'nunca'),
+            (r'\btodos\b', 'ninguno'),
+            (r'\bnadie\b', 'todos'),
+            (r'\bnunca\b', 'siempre'),
+        ]
+        
+        # Intentar cada patrón de negación
+        for patron, reemplazo in patrones_negacion:
+            if re.search(patron, oracion.lower()):
+                return re.sub(patron, reemplazo, oracion, flags=re.IGNORECASE)
+                
+        # Si no se encuentra un patrón específico, agregar "no" al principio
+        # de la primera cláusula verbal
+        doc = self.nlp(oracion)
+        for token in doc:
+            if token.pos_ == 'VERB':
+                index = token.i
+                partes = list(token.text for token in doc)
+                partes.insert(index, "no")
+                return " ".join(partes)
+                
+        return oracion
+
+    
+    def _generar_distractores_mejorados(self, texto: str, concepto: str, 
+                                respuesta_correcta: str, oraciones_relacionadas: List[str]) -> List[str]:
+        """Genera distractores más naturales y variados."""
+        distractores = set()
+        
+        # 1. Modificación semántica
+        modificaciones = [
+            (self._invertir_significado, "opuesto"),
+            (self._modificar_alcance, "parcial"),
+            (self._cambiar_contexto, "diferente contexto"),
+            (self._agregar_condicion, "condicional")
+        ]
+        
+        for modificar, tipo in modificaciones:
+            distractor = modificar(respuesta_correcta)
+            if distractor and self._es_distractor_valido(distractor, respuesta_correcta):
+                distractores.add(distractor)
+        
+        # 2. Uso de conocimiento del dominio
+        patrones_dominio = self._obtener_patrones_dominio(concepto)
+        for patron in patrones_dominio:
+            distractor = patron.format(concepto=concepto)
+            if self._es_distractor_valido(distractor, respuesta_correcta):
+                distractores.add(distractor)
+        
+        # 3. Generación basada en contexto
+        for oracion in oraciones_relacionadas:
+            if oracion != respuesta_correcta:
+                version_modificada = self._modificar_oracion_semanticamente(oracion)
+                if version_modificada and self._es_distractor_valido(version_modificada, respuesta_correcta):
+                    distractores.add(version_modificada)
+        
+        distractores = list(distractores)[:3]
+        return distractores
+    
+    def _modificar_alcance(self, oracion: str) -> str:
+        """Modifica el alcance o amplitud de una afirmación."""
+        modificadores = {
+            'todos': 'algunos',
+            'siempre': 'a veces',
+            'nunca': 'raramente',
+            'completamente': 'parcialmente',
+            'absolutamente': 'relativamente',
+            'totalmente': 'parcialmente',
+            'globalmente': 'localmente'
+        }
+        
+        for palabra, modificador in modificadores.items():
+            if palabra in oracion.lower():
+                return oracion.replace(palabra, modificador)
+        
+        # Si no encuentra palabras específicas, agregar un modificador de alcance
+        doc = self.nlp(oracion)
+        for token in doc:
+            if token.pos_ in ['VERB', 'ADJ']:
+                return oracion.replace(token.text, f"parcialmente {token.text}")
+        
+        return None
+    
+    def _cambiar_contexto(self, oracion: str) -> str:
+        """Cambia el contexto de aplicación de una afirmación."""
+        # Agregar limitadores de contexto
+        limitadores = [
+            "solo en ambientes controlados",
+            "únicamente en casos específicos",
+            "exclusivamente en ciertos contextos",
+            "bajo ciertas condiciones",
+            "en situaciones particulares"
+        ]
+        
+        if oracion.endswith('.'):
+            oracion = oracion[:-1]
+        
+        return f"{oracion} {random.choice(limitadores)}."
+
+    def _agregar_condicion(self, oracion: str) -> str:
+        """Agrega una condición que limita la validez de la afirmación."""
+        condiciones = [
+            "siempre y cuando se cumplan los requisitos necesarios",
+            "cuando se dispone de los recursos adecuados",
+            "si se siguen los procedimientos correctos",
+            "dependiendo de las circunstancias específicas",
+            "sujeto a validación caso por caso"
+        ]
+        
+        if oracion.endswith('.'):
+            oracion = oracion[:-1]
+        
+        return f"{oracion} {random.choice(condiciones)}."
+
+    def _cambiar_cuantificador(self, oracion: str) -> str:
+        """Cambia los cuantificadores en una oración."""
+        cuantificadores = {
+            'todos': 'pocos',
+            'muchos': 'algunos',
+            'siempre': 'ocasionalmente',
+            'nunca': 'raramente',
+            'cada': 'algún',
+            'cualquier': 'cierto',
+            'ningún': 'algún',
+            'todo': 'parte'
+        }
+        
+        for cuant, reemplazo in cuantificadores.items():
+            if cuant in oracion.lower():
+                return oracion.replace(cuant, reemplazo)
+        
+        return None
+    
+    def _cambiar_cuantificadores(self, oracion: str) -> str:
+        """Cambia los cuantificadores de forma más sofisticada."""
+        cambios = {
+            r'\btodos\b': 'pocos',
+            r'\bsiempre\b': 'raramente',
+            r'\bnunca\b': 'frecuentemente',
+            r'\bcada\b': 'algunos',
+            r'\bmucho[s]?\b': 'poco',
+            r'\bpoco[s]?\b': 'mucho',
+            r'\bla mayoría\b': 'la minoría',
+            r'\bcompletamente\b': 'parcialmente'
+        }
+        
+        oracion_modificada = oracion
+        for patron, reemplazo in cambios.items():
+            if re.search(patron, oracion_modificada, re.IGNORECASE):
+                oracion_modificada = re.sub(patron, reemplazo, oracion_modificada, flags=re.IGNORECASE)
+                return oracion_modificada
+        
+        return None
+
+    def _modificar_tiempo(self, oracion: str) -> str:
+        """Cambia el tiempo verbal de las acciones en la oración."""
+        # Mapeo de tiempos verbales comunes
+        tiempos = {
+            'es': 'será',
+            'son': 'serán',
+            'está': 'estará',
+            'están': 'estarán',
+            'ha': 'habrá',
+            'han': 'habrán',
+            'puede': 'podrá',
+            'pueden': 'podrán'
+        }
+        
+        for tiempo, futuro in tiempos.items():
+            if f" {tiempo} " in oracion:
+                return oracion.replace(f" {tiempo} ", f" {futuro} ")
+        
+        return None
+
+    def _cambiar_agente(self, oracion: str) -> str:
+        """Cambia el agente o sujeto principal de la oración."""
+        doc = self.nlp(oracion)
+        for token in doc:
+            if token.dep_ == 'nsubj':
+                # Intentar generalizar o especificar el sujeto
+                if token.text.lower() in ['el', 'la', 'los', 'las']:
+                    continue
+                agentes_alternativos = [
+                    'algunos expertos',
+                    'ciertos especialistas',
+                    'diversos estudios',
+                    'investigaciones recientes',
+                    'análisis preliminares'
+                ]
+                return oracion.replace(token.text, random.choice(agentes_alternativos))
+        return None
+    
+    def _obtener_patrones_dominio(self, concepto: str) -> List[str]:
+        """Obtiene patrones de respuesta específicos del dominio."""
+        patrones_generales = {
+            "programacion": [
+                "La {concepto} es una técnica obsoleta que ha sido reemplazada",
+                "La {concepto} solo funciona en casos muy específicos",
+                "La {concepto} requiere recursos computacionales excesivos"
+            ],
+            "medicina": [
+                "El {concepto} solo se aplica en casos de emergencia",
+                "El {concepto} no tiene efectos significativos en el tratamiento",
+                "El {concepto} presenta más riesgos que beneficios"
+            ],
+            # Agregar más dominios según sea necesario
+        }
+        
+        # Determinar el dominio basado en el concepto
+        dominio = self._identificar_dominio(concepto)
+        return patrones_generales.get(dominio, [])
+
+    def _generar_distractor_generico(self, concepto: str, respuesta_correcta: str) -> str:
+        """Genera un distractor genérico cuando otras estrategias fallan."""
+        plantillas = [
+            f"El {concepto} no tiene relación con este tema",
+            f"El {concepto} funciona de manera opuesta",
+            f"No existe evidencia sobre {concepto}",
+            f"Los estudios no han demostrado efectos de {concepto}"
+        ]
+        return random.choice(plantillas)
+    
+    def _generar_contradiccion(self, oracion: str) -> str:
+        """Genera una contradicción lógica de la oración."""
+        doc = self.nlp(oracion)
+        
+        # Intentar diferentes estrategias de contradicción
+        estrategias = [
+            self._invertir_afirmacion,
+            self._cambiar_cuantificador,
+            self._modificar_tiempo,
+            self._cambiar_agente
+        ]
+        
+        for estrategia in estrategias:
+            resultado = estrategia(oracion)
+            if resultado and resultado != oracion:
+                return resultado
+                
+        return None
+    
+    def _modificar_oracion_semanticamente(self, oracion: str) -> str:
+        """Modifica una oración manteniendo su estructura pero cambiando su significado."""
+        doc = self.nlp(oracion)
+        palabras = oracion.split()
+        
+        # Identificar y modificar verbos o adjetivos
+        for token in doc:
+            if token.pos_ in ['VERB', 'ADJ']:
+                modificadores = {
+                    'VERB': ['puede', 'debe', 'suele', 'tiende a'],
+                    'ADJ': ['parcialmente', 'ocasionalmente', 'raramente', 'potencialmente']
+                }
+                modificador = random.choice(modificadores[token.pos_])
+                palabras.insert(token.i, modificador)
+        
+        return ' '.join(palabras)
+
+    def alterar_oracion(self, oracion: str) -> str:
+        """Modifica una oración para crear una versión falsa."""
+        palabras = oracion.split()
+        if len(palabras) > 2:
+            palabras[random.randint(0, len(palabras) - 1)] = "no"
+        return " ".join(palabras)
+
+    def generar_cuestionario(self, texto: str, materia: str, fuente: str, num_preguntas: int = 10) -> Dict[str, Any]:
+        """Genera un cuestionario completo basado en un texto."""
+        preguntas = self.generar_preguntas(texto, num_preguntas)
+        return {
+            "materia": materia,
+            "fuente": fuente,
+            "preguntas": preguntas
+        }
+
+    def _validar_pregunta(self, pregunta: Dict[str, Any]) -> bool:
+        """Valida que una pregunta tenga el formato correcto"""
         try:
-            # Cargar datos de entrada
-            with open(ruta_entrada, 'r', encoding='utf-8') as f:
+            # Verificar campos requeridos
+            campos_requeridos = ['tipo', 'pregunta', 'respuesta_correcta', 'explicacion']
+            if not all(campo in pregunta for campo in campos_requeridos):
+                return False
+
+            # Validar tipo de pregunta
+            if pregunta['tipo'] not in ['alternativas', 'verdadero_falso']:
+                return False
+
+            # Validar pregunta de alternativas
+            if pregunta['tipo'] == 'alternativas':
+                if 'opciones' not in pregunta:
+                    return False
+                if not isinstance(pregunta['opciones'], list):
+                    return False
+                if len(pregunta['opciones']) != 4:
+                    return False
+                if pregunta['respuesta_correcta'] not in pregunta['opciones']:
+                    return False
+
+            # Validar pregunta de verdadero/falso
+            if pregunta['tipo'] == 'verdadero_falso':
+                if pregunta['respuesta_correcta'] not in ['Verdadero', 'Falso']:
+                    return False
+
+            return True
+
+        except Exception:
+            return False
+        
+    def _validar_pregunta_mejorada(self, pregunta: Dict[str, Any]) -> bool:
+        """Validación mejorada de preguntas."""
+        try:
+            # Validaciones básicas
+            if not self._validar_pregunta(pregunta):
+                return False
+
+            # Validación de longitud y contenido
+            if len(pregunta['pregunta'].split()) < 8:
+                return False
+                
+            if pregunta['tipo'] == 'alternativas':
+                # Verificar que las opciones son suficientemente diferentes
+                opciones = pregunta['opciones']
+                for i, opcion1 in enumerate(opciones):
+                    for opcion2 in opciones[i+1:]:
+                        if self._calcular_similitud(opcion1, opcion2) > 0.8:
+                            return False
+                            
+                # Verificar que la respuesta correcta es válida
+                if pregunta['respuesta_correcta'] not in opciones:
+                    return False
+                    
+            # Verificar que la explicación es relevante
+            if self._calcular_similitud(pregunta['pregunta'], pregunta['explicacion']) < 0.2:
+                return False
+                
+            return True
+            
+        except Exception:
+            return False
+
+    def procesar_json_entrada(self, ruta_json: str) -> List[Dict[str, Any]]:
+        """Procesa el archivo quiz.json y genera cuestionarios para cada texto"""
+        try:
+            # Verificar que el archivo existe
+            if not os.path.exists(ruta_json):
+                raise FileNotFoundError(f"No se encontró el archivo: {ruta_json}")
+
+            # Leer el archivo JSON
+            with open(ruta_json, 'r', encoding='utf-8') as f:
                 datos = json.load(f)
-                
-            if 'quiz' not in datos:
-                raise ValueError("JSON inválido: falta clave 'quiz'")
-                
-            # Procesar cada texto
+
+            # Verificar estructura del JSON
+            if 'quiz' not in datos or not isinstance(datos['quiz'], list):
+                raise ValueError("Formato de JSON inválido: debe contener una lista 'quiz'")
+
             cuestionarios = []
             for item in datos['quiz']:
-                cuestionario = self._procesar_texto(
+                # Verificar campos requeridos en cada item
+                if not all(campo in item for campo in ['texto', 'materia', 'fuente']):
+                    print(f"Advertencia: item ignorado por falta de campos requeridos: {item}")
+                    continue
+
+                # Generar cuestionario
+                cuestionario = self.generar_cuestionario(
                     texto=item['texto'],
                     materia=item['materia'],
                     fuente=item['fuente']
                 )
-                if cuestionario:
+                
+                # Verificar que el cuestionario tiene preguntas válidas
+                if cuestionario and cuestionario['preguntas']:
                     cuestionarios.append(cuestionario)
-                    
-            # Guardar resultados
-            self._guardar_cuestionarios(cuestionarios, ruta_salida)
-            
+
+            return cuestionarios
+
+        except json.JSONDecodeError as e:
+            print(f"Error decodificando JSON: {str(e)}")
+            return []
         except Exception as e:
-            print(f"Error procesando cuestionarios: {str(e)}")
-            
-    def _procesar_texto(self, texto: str, materia: str, fuente: str) -> Dict[str, Any]:
-        """Procesa un texto y genera su cuestionario"""
+            print(f"Error procesando JSON de entrada: {str(e)}")
+            return []
+
+    def guardar_cuestionarios(self, cuestionarios: List[Dict[str, Any]], ruta_salida: str):
+        """Guarda los cuestionarios generados en un archivo JSON"""
         try:
-            # 1. Generar preguntas base
-            preguntas_base = self.generador_preguntas.generar_preguntas(texto)
-            
-            # 2. Generar alternativas y explicaciones
-            preguntas_completas = []
-            for pregunta in preguntas_base:
-                # Generar alternativas
-                alternativas = self.generador_alternativas.generar_alternativas(
-                    pregunta, texto
-                )
-                
-                if not alternativas:
-                    continue
-                    
-                # Asignar respuesta correcta
-                respuesta_correcta = alternativas[0]  # La primera es la correcta
-                
-                # Generar explicación
-                explicacion = self.generador_alternativas.generar_explicacion(
-                    pregunta,
-                    respuesta_correcta,
-                    True  # Es correcta
-                )
-                
-                preguntas_completas.append({
-                    'tipo': pregunta['tipo'],
-                    'pregunta': pregunta['pregunta'],
-                    'opciones': alternativas if pregunta['tipo'] == 'alternativas' else None,
-                    'respuesta_correcta': respuesta_correcta,
-                    'explicacion': explicacion
-                })
-                
-            return {
-                'materia': materia,
-                'fuente': fuente,
-                'preguntas': preguntas_completas
-            }
-            
-        except Exception as e:
-            print(f"Error procesando texto: {str(e)}")
-            return None
-            
-    def _guardar_cuestionarios(self, cuestionarios: List[Dict], ruta: str):
-        """Guarda los cuestionarios generados"""
-        try:
-            # Guardar JSON
-            with open(ruta, 'w', encoding='utf-8') as f:
+            # Crear directorio si no existe
+            os.makedirs(os.path.dirname(ruta_salida), exist_ok=True)
+
+            # Verificar que hay cuestionarios para guardar
+            if not cuestionarios:
+                print("Advertencia: No hay cuestionarios para guardar")
+                return
+
+            # Guardar cuestionarios
+            with open(ruta_salida, 'w', encoding='utf-8') as f:
                 json.dump({
-                    'cuestionarios': cuestionarios
-                }, f, ensure_ascii=False, indent=2)
-                
-            print(f"Cuestionarios guardados en {ruta}")
-            
+                    "fecha_generacion": "2024-11-15",
+                    "total_cuestionarios": len(cuestionarios),
+                    "cuestionarios": cuestionarios
+                }, f, ensure_ascii=False, indent=4)
+
+            print(f"Cuestionarios guardados exitosamente en {ruta_salida}")
+
         except Exception as e:
             print(f"Error guardando cuestionarios: {str(e)}")
