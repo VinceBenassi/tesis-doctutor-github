@@ -1,5 +1,6 @@
 # Generador de Cuestionarios
 # Por Franco Benassi
+import torch
 import json
 import os
 import random
@@ -17,7 +18,7 @@ class GeneradorCuestionarios:
                             'sin', 'sobre', 'entre', 'detrás', 'después', 'ante', 'antes', 'desde', 'hacia',
                             'hasta', 'en', 'con', 'de', 'del', 'al', 'este', 'esta', 'estos', 'estas'])
         
-        # Agregar diccionario de contrarios
+        # Expandir diccionario de contrarios con más pares relevantes
         self.contrarios = {
             "aumenta": "disminuye",
             "mejora": "empeora",
@@ -33,24 +34,54 @@ class GeneradorCuestionarios:
             "alto": "bajo",
             "mucho": "poco",
             "rápido": "lento",
-            "fácil": "difícil"
+            "fácil": "difícil",
+            "correcto": "incorrecto",
+            "verdadero": "falso",
+            "claro": "confuso",
+            "importante": "insignificante",
+            "efectivo": "inefectivo",
+            "útil": "inútil",
+            "necesario": "innecesario",
+            "simple": "complejo",
+            "directo": "indirecto",
+            "favorable": "desfavorable"
         }
         
-        # Inicializar modelos
-        self.qa_model = pipeline("question-answering", model="dccuchile/bert-base-spanish-wwm-cased")
-        self.nlp = spacy.load("es_core_news_sm")
+        # Inicializar modelos con configuración mejorada
+        try:
+            self.nlp = spacy.load("es_core_news_lg")  # Intentar cargar modelo grande primero
+        except OSError:
+            try:
+                self.nlp = spacy.load("es_core_news_md")  # Intentar modelo mediano como fallback
+            except OSError:
+                print("Warning: Using small model. For better results, install a larger model:")
+                print("python -m spacy download es_core_news_lg")
+                self.nlp = spacy.load("es_core_news_sm")
+        
+        self.qa_model = pipeline("question-answering", 
+                            model="dccuchile/bert-base-spanish-wwm-cased",
+                            device="cuda" if torch.cuda.is_available() else "cpu")
 
     def _limpiar_oracion(self, oracion: str) -> str:
-        """Limpia y normaliza una oración."""
-        # Eliminar espacios extra
-        oracion = re.sub(r'\s+', ' ', oracion.strip())
+        """Limpia y normaliza una oración de manera más robusta."""
+        # Eliminar espacios y caracteres innecesarios al inicio
+        oracion = re.sub(r'^\s*[,\s]*', '', oracion.strip())
         
-        # Eliminar caracteres no deseados
-        oracion = re.sub(r'[^\w\s.,;:¿?¡!áéíóúñÁÉÍÓÚÑ]', '', oracion)
+        # Eliminar espacios múltiples y normalizar puntuación
+        oracion = re.sub(r'\s+', ' ', oracion)
+        oracion = re.sub(r'([.,;:¿?¡!])\s*([.,;:¿?¡!])', r'\1', oracion)
+        
+        # Corregir espacios alrededor de puntuación
+        oracion = re.sub(r'\s*([.,;:¿?¡!])', r'\1', oracion)
+        oracion = re.sub(r'([¿¡])\s*', r'\1', oracion)
         
         # Asegurar que empiece con mayúscula
         if oracion and oracion[0].isalpha():
             oracion = oracion[0].upper() + oracion[1:]
+            
+        # Asegurar punto final
+        if not oracion.endswith('.'):
+            oracion = oracion.rstrip('.,') + '.'
             
         return oracion
 
@@ -133,41 +164,26 @@ class GeneradorCuestionarios:
         return True
 
     def _generar_explicacion_vf_mejorada(self, oracion_base: str, pregunta: str, es_verdadero: bool, texto: str) -> str:
-        """Genera una explicación mejorada sin referencias directas al texto."""
+        """Genera una explicación mejorada para preguntas de verdadero/falso."""
         doc = self.nlp(texto)
-        oracion_limpia = re.sub(r'\s+', ' ', oracion_base.strip())
         
+        # Encontrar oraciones relacionadas
+        oraciones_relacionadas = []
+        for sent in doc.sents:
+            if sent.text != oracion_base and self._tienen_palabras_comunes(sent.text, oracion_base):
+                oraciones_relacionadas.append(sent.text)
+        
+        # Construir explicación
         if es_verdadero:
-            explicacion = f"Esta afirmación es correcta. {self._extraer_razon_principal(oracion_limpia)}"
-            
-            # Agregar contexto adicional
-            contexto = self._extraer_contexto_relacionado(doc, oracion_limpia)
-            if contexto:
-                explicacion += f" Además, {self._generalizar_evidencia(contexto)}"
+            explicacion = f"Esta afirmación es correcta porque {oracion_base.lower()}"
+            if oraciones_relacionadas:
+                explicacion += f", lo cual se evidencia también cuando el texto menciona que {oraciones_relacionadas[0].lower()}"
         else:
-            version_correcta = self._obtener_version_correcta(oracion_limpia)
-            explicacion = f"Esta afirmación es incorrecta. {version_correcta}"
+            explicacion = f"Esta afirmación es incorrecta. Lo correcto es que {oracion_base.lower()}"
+            if oraciones_relacionadas:
+                explicacion += f". Esto se confirma cuando el texto menciona que {oraciones_relacionadas[0].lower()}"
         
         return explicacion
-    
-    def _extraer_razon_principal(self, oracion: str) -> str:
-        """Extrae la razón principal de una afirmación."""
-        doc = self.nlp(oracion)
-        
-        # Identificar el verbo principal y su objeto
-        verbo_principal = None
-        objeto = None
-        
-        for token in doc:
-            if token.pos_ == 'VERB' and token.dep_ == 'ROOT':
-                verbo_principal = token
-            if token.dep_ in ['dobj', 'attr', 'iobj'] and not objeto:
-                objeto = token
-        
-        if verbo_principal and objeto:
-            return f"Esto se debe a que {verbo_principal.text} {objeto.text}"
-        
-        return "La evidencia respalda esta afirmación"
 
     def _modificar_sujeto(self, oracion: str) -> str:
         """Modifica el sujeto de una oración."""
@@ -205,22 +221,6 @@ class GeneradorCuestionarios:
             if palabra in oracion.lower():
                 return oracion.replace(palabra, contrario)
         return None
-    
-    def _invertir_significado_principal(self, oracion: str) -> str:
-        """Invierte el significado principal de forma más natural."""
-        doc = self.nlp(oracion)
-        for token in doc:
-            if token.pos_ == 'VERB' and token.dep_ == 'ROOT':
-                # Buscar negaciones existentes
-                tiene_negacion = any(t.dep_ == 'neg' for t in token.children)
-                if tiene_negacion:
-                    # Quitar negación
-                    return re.sub(r'no\s+' + token.text, token.text, oracion)
-                else:
-                    # Agregar negación
-                    return oracion.replace(token.text, f"no {token.text}")
-        return None
-
 
     def _cambiar_cantidad(self, oracion: str) -> str:
         """Cambia las cantidades numéricas en una oración."""
@@ -231,16 +231,10 @@ class GeneradorCuestionarios:
         return re.sub(r'\d+', modificar_numero, oracion)
 
     def _calcular_similitud(self, texto1: str, texto2: str) -> float:
-        """Calcula la similitud entre textos usando una métrica más robusta."""
-        # Tokenizar y normalizar
-        tokens1 = set(token.lower() for token in texto1.split() if token.lower() not in self.stopwords)
-        tokens2 = set(token.lower() for token in texto2.split() if token.lower() not in self.stopwords)
-        
-        # Calcular coeficiente de Jaccard
-        interseccion = len(tokens1.intersection(tokens2))
-        union = len(tokens1.union(tokens2))
-        
-        return interseccion / union if union > 0 else 0.0
+        """Calcula la similitud entre dos textos."""
+        doc1 = self.nlp(texto1.lower())
+        doc2 = self.nlp(texto2.lower())
+        return doc1.similarity(doc2)
 
     def _tienen_palabras_comunes(self, texto1: str, texto2: str) -> bool:
         """Verifica si dos textos tienen palabras significativas en común."""
@@ -288,15 +282,25 @@ class GeneradorCuestionarios:
         }
 
     def _extraer_conceptos(self, texto: str) -> List[str]:
-        """Extrae conceptos clave del texto"""
-        # Buscar frases con mayúsculas iniciales y términos técnicos
-        conceptos = re.findall(r'\b[A-Z][a-zA-Z\s]+\b|\b[a-zA-Z]+(?:\s+[a-zA-Z]+)*\b', texto)
+        """Extrae conceptos clave del texto de manera más precisa."""
+        doc = self.nlp(texto)
+        conceptos = []
         
-        # Filtrar y limpiar conceptos
-        conceptos = [c.strip() for c in conceptos if len(c.split()) <= 4 and len(c) > 3]
+        # Buscar sustantivos compuestos y entidades nombradas
+        for chunk in doc.noun_chunks:
+            if 2 <= len(chunk.text.split()) <= 4:
+                concepto = self._limpiar_oracion(chunk.text)
+                if self._es_concepto_valido(concepto):
+                    conceptos.append(concepto)
+                    
+        # Añadir entidades nombradas relevantes
+        for ent in doc.ents:
+            if ent.label_ in ["CONCEPT", "PRODUCT", "ORG", "PERSON"]:
+                concepto = self._limpiar_oracion(ent.text)
+                if self._es_concepto_valido(concepto):
+                    conceptos.append(concepto)
         
-        # Eliminar duplicados y ordenar por longitud
-        return sorted(list(set(conceptos)), key=len, reverse=True)[:10]
+        return list(set(conceptos))
 
     def _extraer_definiciones(self, oraciones: List[str]) -> List[Dict[str, str]]:
         """Extrae definiciones del texto"""
@@ -507,125 +511,105 @@ class GeneradorCuestionarios:
         }
     
     def generar_preguntas(self, texto: str, num_preguntas: int = 10) -> List[Dict[str, Any]]:
-        """Genera una mezcla balanceada de preguntas."""
+        """Genera múltiples preguntas dinámicamente."""
         analisis = self.analizar_texto(texto)
         preguntas = []
-        preguntas_hash = set()  # Para evitar duplicados
-        
-        # Intentar generar igual número de cada tipo
-        num_cada_tipo = num_preguntas // 2
-        
-        # Generar preguntas de alternativas
-        intentos_alt = 0
-        while len([p for p in preguntas if p['tipo'] == 'alternativas']) < num_cada_tipo and intentos_alt < num_cada_tipo * 3:
-            pregunta = self.generar_pregunta_alternativas(analisis, texto)
-            if pregunta and self._es_pregunta_valida_mejorada(pregunta):
-                hash_pregunta = hash(pregunta['pregunta'])
-                if hash_pregunta not in preguntas_hash:
-                    preguntas.append(pregunta)
-                    preguntas_hash.add(hash_pregunta)
-            intentos_alt += 1
-        
-        # Generar preguntas V/F
-        intentos_vf = 0
-        while len([p for p in preguntas if p['tipo'] == 'verdadero_falso']) < num_cada_tipo and intentos_vf < num_cada_tipo * 3:
-            pregunta = self.generar_pregunta_verdadero_falso(analisis, texto)
-            if pregunta and self._es_pregunta_valida_mejorada(pregunta):
-                hash_pregunta = hash(pregunta['pregunta'])
-                if hash_pregunta not in preguntas_hash:
-                    preguntas.append(pregunta)
-                    preguntas_hash.add(hash_pregunta)
-            intentos_vf += 1
-        
-        # Generar el tipo que falte si no se llegó al número deseado
-        while len(preguntas) < num_preguntas:
-            if random.random() < 0.5:
-                tipo_faltante = "alternativas"
-                generador = self.generar_pregunta_alternativas
-            else:
-                tipo_faltante = "verdadero_falso"
-                generador = self.generar_pregunta_verdadero_falso
-            
-            pregunta = generador(analisis, texto)
-            if pregunta and self._es_pregunta_valida_mejorada(pregunta):
-                hash_pregunta = hash(pregunta['pregunta'])
-                if hash_pregunta not in preguntas_hash:
-                    preguntas.append(pregunta)
-                    preguntas_hash.add(hash_pregunta)
-        
-        random.shuffle(preguntas)
-        return preguntas[:num_preguntas]
-    
-    def _generar_hash_pregunta(self, pregunta: Dict[str, Any]) -> int:
-        """Genera un hash más robusto para detectar duplicados."""
-        elementos = [
-            pregunta['pregunta'],
-            pregunta['respuesta_correcta'],
-            pregunta['tipo']
+        preguntas_hash = set()  # Control de duplicados
+        intentos = 0
+        max_intentos = num_preguntas * 3  # Limitar intentos para evitar bucles infinitos
+
+        # Añadir información del análisis
+        analisis['definiciones'] = self._extraer_definiciones(analisis['oraciones'])
+        analisis['relaciones'] = self._extraer_relaciones(analisis['oraciones'])
+        analisis['procesos'] = self._extraer_procesos(analisis['oraciones'])
+
+        # Lista de generadores de preguntas disponibles
+        generadores = [
+            ('alternativas', self.generar_pregunta_alternativas),
+            ('verdadero_falso', self.generar_pregunta_verdadero_falso),
+            ('definicion', self._generar_pregunta_definicion),
+            ('concepto', self._generar_pregunta_concepto),
+            ('relacion', self._generar_pregunta_relacion),
+            ('proceso', self._generar_pregunta_proceso),
+            ('aplicacion', self._generar_pregunta_aplicacion)
         ]
-        if pregunta['tipo'] == 'alternativas':
-            elementos.extend(pregunta['opciones'])
-        
-        return hash('||'.join(str(e) for e in elementos))
-    
-    def _seleccionar_mejores_preguntas(self, candidatas: List[Dict[str, Any]], 
-                                  num_requeridas: int) -> List[Dict[str, Any]]:
-        """Selecciona las mejores preguntas basado en criterios de calidad."""
-        if not candidatas:
-            return []
+
+        while len(preguntas) < num_preguntas and intentos < max_intentos:
+            # Seleccionar tipo de pregunta y generador
+            tipo, generador = random.choice(generadores)
             
-        # Calcular puntuación para cada pregunta
-        puntuaciones = []
-        for pregunta in candidatas:
-            puntuacion = 0
-            # Longitud adecuada
-            palabras = len(pregunta['pregunta'].split())
-            if 10 <= palabras <= 30:
-                puntuacion += 2
-            # Calidad de explicación
-            if len(pregunta['explicacion'].split()) > 20:
-                puntuacion += 2
-            # Diversidad de opciones (para alternativas)
-            if pregunta['tipo'] == 'alternativas':
-                similitudes = []
-                for i, opcion1 in enumerate(pregunta['opciones']):
-                    for j, opcion2 in enumerate(pregunta['opciones'][i+1:], i+1):
-                        similitud = self._calcular_similitud(opcion1, opcion2)
-                        similitudes.append(similitud)
-                if max(similitudes) < 0.7:  # Opciones suficientemente diferentes
-                    puntuacion += 3
-            
-            puntuaciones.append((puntuacion, pregunta))
-        
-        # Ordenar por puntuación y seleccionar las mejores
-        puntuaciones.sort(reverse=True)
-        return [p[1] for p in puntuaciones[:num_requeridas]]
+            try:
+                pregunta = generador(analisis, texto) if tipo in ['alternativas', 'verdadero_falso'] else generador(analisis)
+                
+                if pregunta and self._validar_pregunta(pregunta):
+                    # Crear hash de la pregunta para control de duplicados
+                    pregunta_hash = hash(f"{pregunta['pregunta']}_{pregunta['respuesta_correcta']}")
+                    
+                    if pregunta_hash not in preguntas_hash:
+                        preguntas_hash.add(pregunta_hash)
+                        preguntas.append(pregunta)
+            except Exception as e:
+                print(f"Error generando pregunta tipo {tipo}: {str(e)}")
+                
+            intentos += 1
+
+        return preguntas
 
     def generar_pregunta_alternativas(self, analisis: Dict[str, Any], texto: str) -> Dict[str, Any]:
-        """Genera preguntas de alternativas mejoradas."""
+        """Genera preguntas de opción múltiple más naturales y coherentes."""
         if not analisis["conceptos"] or not analisis["oraciones"]:
             return None
             
-        # Seleccionar concepto y contexto
-        concepto = random.choice(analisis["conceptos"])
-        contexto = self._extraer_contexto_concepto(concepto, texto)
+        # 1. Selección mejorada de concepto y contexto
+        conceptos_relevantes = [
+            c for c in analisis["conceptos"]
+            if sum(1 for o in analisis["oraciones"] if c.lower() in o.lower()) >= 2
+        ]
         
-        # Generar pregunta más natural
-        pregunta = self._generar_pregunta_natural(concepto, contexto)
-        
-        # Generar opciones
-        respuesta_correcta = self._extraer_respuesta_correcta(contexto, concepto)
-        distractores = self._generar_distractores_mejorados(texto, concepto, respuesta_correcta, [])
-        
-        if not respuesta_correcta or len(distractores) < 3:
+        if not conceptos_relevantes:
             return None
             
+        concepto = random.choice(conceptos_relevantes)
+        
+        # 2. Búsqueda de oraciones relacionadas mejorada
+        oraciones_relacionadas = [
+            o for o in analisis["oraciones"]
+            if concepto.lower() in o.lower() 
+            and len(o.split()) >= 15  # Asegurar oraciones sustanciales
+            and not any(p in o.lower() for p in ['?', '¿', '!', '¡'])
+            and self._es_oracion_informativa(o)
+        ]
+
+        if not oraciones_relacionadas:
+            return None
+
+        # 3. Selección y preparación de la oración principal
+        oracion_principal = self._seleccionar_mejor_oracion(oraciones_relacionadas)
+        oracion_principal = self._limpiar_oracion(oracion_principal)
+        
+        # 4. Generación de pregunta contextual
+        pregunta = self._generar_pregunta_contextual(concepto, oracion_principal)
+        
+        # 5. Generación de respuesta correcta mejorada
+        respuesta_correcta = self._extraer_respuesta_correcta(oracion_principal, concepto)
+        
+        # 6. Generación de distractores más realistas
+        distractores = self._generar_distractores_mejorados(
+            texto, concepto, respuesta_correcta, oraciones_relacionadas
+        )
+
+        if len(distractores) < 3:
+            return None
+
+        # 7. Validación y formato final
         opciones = [respuesta_correcta] + distractores[:3]
         random.shuffle(opciones)
-        
-        # Generar explicación sin referencias al texto
-        explicacion = self._generar_explicacion_conceptual(concepto, respuesta_correcta)
-        
+
+        # 8. Generación de explicación contextualizada
+        explicacion = self._generar_explicacion_detallada(
+            concepto, respuesta_correcta, oracion_principal, texto
+        )
+
         return {
             "tipo": "alternativas",
             "pregunta": pregunta,
@@ -633,112 +617,179 @@ class GeneradorCuestionarios:
             "respuesta_correcta": respuesta_correcta,
             "explicacion": explicacion
         }
-    
-    def _extraer_respuesta_correcta(self, contexto: str, concepto: str) -> str:
-        """Extrae una respuesta correcta del contexto sobre un concepto."""
-        # Intentar extraer con QA
-        try:
-            respuesta = self.qa_model(
-                question=f"¿Qué característica principal tiene {concepto}?",
-                context=contexto
-            )
-            if respuesta['score'] > 0.5:
-                return self._limpiar_oracion(respuesta['answer'])
-        except Exception:
-            pass
+
+    def _es_oracion_informativa(self, oracion: str) -> bool:
+        """Verifica si una oración contiene información sustancial."""
+        doc = self.nlp(oracion)
         
-        # Si falla QA, extraer la oración más relevante
-        doc = self.nlp(contexto)
-        oraciones_relevantes = []
-        for sent in doc.sents:
-            if concepto.lower() in sent.text.lower():
-                oraciones_relevantes.append(sent.text)
+        # Verificar presencia de elementos informativos
+        tiene_verbo = any(token.pos_ == "VERB" for token in doc)
+        tiene_sustantivo = any(token.pos_ == "NOUN" for token in doc)
+        tiene_contexto = len([token for token in doc if token.pos_ in ["ADJ", "ADV"]]) >= 1
         
-        if oraciones_relevantes:
-            return self._limpiar_oracion(max(oraciones_relevantes, key=len))
+        return tiene_verbo and tiene_sustantivo and tiene_contexto
+
+    def _seleccionar_mejor_oracion(self, oraciones: List[str]) -> str:
+        """Selecciona la oración más apropiada para generar una pregunta."""
+        oraciones_puntuadas = []
         
-        return None
+        for oracion in oraciones:
+            puntuacion = 0
+            doc = self.nlp(oracion)
+            
+            # Criterios de puntuación
+            if len(oracion.split()) >= 15 and len(oracion.split()) <= 40:
+                puntuacion += 3
+            
+            if any(token.pos_ == "VERB" for token in doc):
+                puntuacion += 2
+                
+            if any(token.dep_ == "nsubj" for token in doc):
+                puntuacion += 2
+                
+            if not any(token.text.lower() in self.stopwords for token in doc):
+                puntuacion += 1
+                
+            oraciones_puntuadas.append((oracion, puntuacion))
+        
+        return max(oraciones_puntuadas, key=lambda x: x[1])[0]
+
+    def _generar_pregunta_contextual(self, concepto: str, oracion: str) -> str:
+        """Genera una pregunta más natural y contextualizada."""
+        doc = self.nlp(oracion)
+        
+        # Análisis más profundo del contexto
+        contexto = {
+            "definicion": any(token.text.lower() in ["es", "son", "significa", "consiste", "representa", "constituye"] 
+                            for token in doc),
+            "proceso": any(token.text.lower() in ["primero", "luego", "después", "finalmente", "siguiente", "entonces", 
+                                                "posteriormente", "antes", "durante"] for token in doc),
+            "caracteristica": any(token.pos_ in ["ADJ", "ADV"] for token in doc),
+            "comparacion": any(token.text.lower() in ["más", "menos", "mayor", "menor", "mejor", "peor", "como"] 
+                            for token in doc),
+            "causa_efecto": any(token.text.lower() in ["porque", "debido", "causa", "produce", "genera", "resulta"] 
+                            for token in doc)
+        }
+        
+        # Plantillas específicas por tipo de contenido
+        plantillas = {
+            "definicion": [
+                f"¿Cuál de las siguientes afirmaciones define mejor {concepto}?",
+                f"¿Qué descripción caracteriza más precisamente a {concepto}?",
+                f"En el contexto presentado, ¿qué se entiende por {concepto}?",
+                f"¿Cuál es la definición más precisa de {concepto}?",
+                f"¿Cómo se define mejor {concepto} en este contexto?"
+            ],
+            "proceso": [
+                f"¿Cómo se desarrolla el proceso relacionado con {concepto}?",
+                f"¿Cuál es la secuencia correcta que describe {concepto}?",
+                f"¿Qué afirmación explica mejor el funcionamiento de {concepto}?",
+                f"En relación con {concepto}, ¿qué pasos se siguen?",
+                f"¿Cómo se lleva a cabo el proceso de {concepto}?"
+            ],
+            "caracteristica": [
+                f"¿Qué característica define mejor a {concepto}?",
+                f"¿Cuál es el aspecto más relevante de {concepto}?",
+                f"¿Qué rasgo distintivo presenta {concepto}?",
+                f"¿Cuál es la cualidad más importante de {concepto}?",
+                f"¿Qué caracteriza principalmente a {concepto}?"
+            ],
+            "comparacion": [
+                f"¿Qué diferencia a {concepto} de otros elementos similares?",
+                f"En comparación con otros aspectos, ¿qué distingue a {concepto}?",
+                f"¿Cuál es la principal ventaja de {concepto}?",
+                f"¿Qué hace único a {concepto}?",
+                f"¿Cómo se diferencia {concepto} de otras alternativas?"
+            ],
+            "causa_efecto": [
+                f"¿Qué efectos produce {concepto}?",
+                f"¿Cuál es la consecuencia principal de {concepto}?",
+                f"¿Qué relación causal existe con {concepto}?",
+                f"¿Cómo influye {concepto} en su contexto?",
+                f"¿Qué impacto tiene {concepto}?"
+            ],
+            "general": [
+                f"¿Qué aspecto de {concepto} se destaca en el texto?",
+                f"¿Cuál es la idea principal sobre {concepto}?",
+                f"¿Qué se puede afirmar con certeza sobre {concepto}?",
+                f"¿Qué plantea el texto acerca de {concepto}?",
+                f"¿Cuál es el punto más relevante sobre {concepto}?"
+            ]
+        }
+        
+        # Seleccionar tipo de pregunta basado en el contexto
+        tipo_pregunta = max(contexto.items(), key=lambda x: x[1])[0] if any(contexto.values()) else "general"
+        
+        return random.choice(plantillas[tipo_pregunta])
+
+    def _extraer_respuesta_correcta(self, oracion: str, concepto: str) -> str:
+        """Extrae una respuesta correcta más precisa y natural."""
+        doc = self.nlp(oracion)
+        
+        # Identificar la parte más relevante de la oración
+        inicio_respuesta = None
+        fin_respuesta = None
+        
+        for i, token in enumerate(doc):
+            # Buscar el inicio después del concepto
+            if concepto.lower() in token.text.lower():
+                inicio_respuesta = i + 1
+                continue
+                
+            # Buscar un punto natural de corte
+            if inicio_respuesta and token.dep_ in ["punct", "cc"]:
+                fin_respuesta = i
+                break
+        
+        if inicio_respuesta:
+            if not fin_respuesta:
+                fin_respuesta = len(doc)
+                
+            respuesta = doc[inicio_respuesta:fin_respuesta].text
+            return self._limpiar_oracion(respuesta)
+            
+        return self._limpiar_oracion(oracion)
 
     def generar_pregunta_verdadero_falso(self, analisis: Dict[str, Any], texto: str) -> Dict[str, Any]:
-        """Genera una pregunta de verdadero/falso mejorada."""
+        """Genera preguntas de verdadero/falso más sofisticadas."""
         if not analisis["oraciones"]:
             return None
-        
-        # Filtrar oraciones válidas
+
+        # Filtrar y seleccionar oraciones válidas
         oraciones_validas = [
             o for o in analisis["oraciones"]
-            if len(o.split()) >= 10
-            and not any(p in o.lower() for p in ['?', '¿', '!', '¡'])
-            and self._es_oracion_valida(o)
+            if (len(o.split()) > 12 and
+                not any(p in o.lower() for p in ['?', '¿', '!', '¡']) and
+                any(c in o.lower() for c in analisis["conceptos"]))
         ]
-        
+
         if not oraciones_validas:
             return None
-        
-        # Seleccionar una oración al azar
+
+        # Seleccionar oración base y determinar veracidad
         oracion_base = random.choice(oraciones_validas)
         es_verdadero = random.choice([True, False])
-        
+
         if es_verdadero:
             pregunta = self._limpiar_oracion(oracion_base)
         else:
-            # Generar una versión falsa de la oración
             pregunta = self._generar_version_falsa_mejorada(oracion_base)
-            if not pregunta:
-                return None
-        
+
+        # Verificar que la pregunta sea válida
+        if not self._es_pregunta_valida(pregunta):
+            return None
+
         # Generar explicación contextualizada
-        if es_verdadero:
-            explicacion = f"Esta afirmación es correcta porque {oracion_base.lower()}"
-        else:
-            explicacion = f"Esta afirmación es incorrecta. Lo correcto es que {oracion_base.lower()}"
-        
+        explicacion = self._generar_explicacion_vf_mejorada(
+            oracion_base, pregunta, es_verdadero, texto
+        )
+
         return {
             "tipo": "verdadero_falso",
             "pregunta": pregunta,
             "respuesta_correcta": "Verdadero" if es_verdadero else "Falso",
             "explicacion": explicacion
         }
-    
-    def _generar_pregunta_natural(self, concepto: str, contexto: str) -> str:
-        """Genera una pregunta más natural sobre un concepto."""
-        plantillas = [
-            f"¿Cuál es la principal característica de {concepto}?",
-            f"¿Qué aspecto es fundamental para entender {concepto}?",
-            f"¿Qué caracteriza mejor a {concepto}?",
-            f"¿Cuál es el papel principal de {concepto}?",
-            f"¿Qué define mejor a {concepto}?"
-        ]
-        return random.choice(plantillas)
-
-    def _extraer_contexto_concepto(self, concepto: str, texto: str) -> str:
-        """Extrae el contexto relevante para un concepto sin depender del texto original."""
-        doc = self.nlp(texto)
-        contexto_relevante = []
-        
-        for sent in doc.sents:
-            if concepto.lower() in sent.text.lower():
-                contexto_relevante.append(sent.text)
-        
-        return " ".join(contexto_relevante[:2])
-
-    def _generar_explicacion_conceptual(self, concepto: str, respuesta: str) -> str:
-        """Genera una explicación basada en conceptos sin referencias al texto."""
-        return f"Esta respuesta es correcta porque representa la característica fundamental de {concepto}. " \
-            f"{respuesta.capitalize()} es un aspecto esencial que define cómo funciona y se aplica {concepto}."
-
-    def _identificar_dominio(self, concepto: str) -> str:
-        """Identifica el dominio del concepto basado en palabras clave."""
-        dominios = {
-            "programacion": ["algoritmo", "código", "programación", "desarrollo", "software"],
-            "medicina": ["tratamiento", "diagnóstico", "paciente", "clínico", "médico"],
-            "pedagogia": ["aprendizaje", "enseñanza", "educación", "didáctica", "pedagógico"]
-        }
-        
-        for dominio, palabras_clave in dominios.items():
-            if any(palabra in concepto.lower() for palabra in palabras_clave):
-                return dominio
-        return "general"
     
     def _modificar_tiempo_verbal(self, oracion: str) -> str:
         """Modifica el tiempo verbal de una oración."""
@@ -755,71 +806,31 @@ class GeneradorCuestionarios:
                     if token.text.lower() in cambios:
                         return oracion.replace(token.text, cambios[token.text.lower()])
         return None
-    
-    def _modificar_actor(self, oracion: str) -> str:
-        """Modifica el actor principal de la oración."""
-        doc = self.nlp(oracion)
-        for token in doc:
-            if token.dep_ == 'nsubj':
-                # Identificar el tipo de actor
-                if token.text.lower() in ['el', 'la', 'los', 'las']:
-                    continue
-                    
-                actores_alternativos = {
-                    'sistema': ['proceso', 'método', 'mecanismo'],
-                    'persona': ['individuo', 'sujeto', 'participante'],
-                    'grupo': ['equipo', 'conjunto', 'colectivo'],
-                    'profesional': ['especialista', 'experto', 'técnico']
-                }
-                
-                # Encontrar categoría más apropiada
-                for categoria, alternativas in actores_alternativos.items():
-                    if any(palabra in token.text.lower() for palabra in [categoria] + alternativas):
-                        return oracion.replace(token.text, random.choice(alternativas))
-        
-        return None
-    
-    def _cambiar_accion(self, oracion: str) -> str:
-        """Cambia la acción principal por una alternativa."""
-        doc = self.nlp(oracion)
-        for token in doc:
-            if token.pos_ == 'VERB' and token.dep_ == 'ROOT':
-                acciones_alternativas = {
-                    'aumentar': ['reducir', 'disminuir', 'decrecer'],
-                    'mejorar': ['empeorar', 'degradar', 'deteriorar'],
-                    'facilitar': ['dificultar', 'complicar', 'obstaculizar'],
-                    'permitir': ['impedir', 'prohibir', 'restringir'],
-                    'incluir': ['excluir', 'omitir', 'descartar']
-                }
-                
-                for base, alternativas in acciones_alternativas.items():
-                    if token.lemma_.lower() == base:
-                        return oracion.replace(token.text, random.choice(alternativas))
-        
-        return None
 
     def _generar_version_falsa_mejorada(self, oracion: str) -> str:
-        """Genera una versión falsa de manera más significativa."""
+        """Genera una versión falsa más sofisticada de una oración."""
         doc = self.nlp(oracion)
+        
+        # Lista de estrategias ordenadas por prioridad
         estrategias = [
-            self._invertir_significado_principal,
-            self._cambiar_cuantificadores,
-            self._modificar_actor,
-            self._cambiar_accion
+            self._invertir_significado,        # Cambiar el significado usando contrarios
+            self._modificar_argumento,         # Modificar argumentos específicos
+            self._cambiar_cantidad,            # Cambiar números/cantidades
+            self._cambiar_alcance,             # Modificar el alcance/generalización
+            self._agregar_excepcion,           # Añadir una excepción
+            self._negar_verbo                  # Última opción: negar el verbo
         ]
         
-        modificaciones = []
-        for estrategia in estrategias:
+        # Intentar cada estrategia hasta encontrar una modificación válida
+        for estrategia in [e for e in estrategias if hasattr(self, e.__name__)]:
             try:
-                modificacion = estrategia(oracion)
-                if modificacion and modificacion != oracion:
-                    modificaciones.append(modificacion)
-            except Exception:
+                mod = estrategia(oracion) if estrategia.__name__ != '_negar_verbo' else estrategia(oracion, None)
+                if mod and mod != oracion and self._es_oracion_valida(mod):
+                    return mod
+            except Exception as e:
                 continue
         
-        if modificaciones:
-            return random.choice(modificaciones)
-            
+        # Si ninguna estrategia funcionó, retornar None
         return None
     
     def _es_pregunta_valida(self, pregunta: str) -> bool:
@@ -849,46 +860,28 @@ class GeneradorCuestionarios:
                 
         return True
     
-    def _es_pregunta_valida_mejorada(self, pregunta: Dict[str, Any]) -> bool:
-        """Validación mejorada de preguntas."""
-        if not pregunta or not isinstance(pregunta, dict):
-            return False
-            
-        # Verificar campos requeridos
-        campos_requeridos = ['tipo', 'pregunta', 'respuesta_correcta', 'explicacion']
-        if not all(campo in pregunta for campo in campos_requeridos):
-            return False
+    def _negar_verbo(self, oracion: str, token) -> str:
+        """Niega un verbo de manera más natural."""
+        palabras = oracion.split()
+        pos = token.i
         
-        # Validar longitud de la pregunta
-        if len(pregunta['pregunta'].split()) < 8:
-            return False
+        negaciones = {
+            'es': 'no es',
+            'son': 'no son',
+            'está': 'no está',
+            'están': 'no están',
+            'puede': 'no puede',
+            'tienen': 'no tienen',
+            'ha': 'no ha',
+            'han': 'no han'
+        }
         
-        # Validar tipo específico
-        if pregunta['tipo'] == 'alternativas':
-            if 'opciones' not in pregunta or len(pregunta['opciones']) != 4:
-                return False
-            if pregunta['respuesta_correcta'] not in pregunta['opciones']:
-                return False
-            
-            # Verificar que las opciones son suficientemente diferentes
-            for i, opcion1 in enumerate(pregunta['opciones']):
-                for opcion2 in pregunta['opciones'][i+1:]:
-                    if self._calcular_similitud(opcion1, opcion2) > 0.8:
-                        return False
-        
-        elif pregunta['tipo'] == 'verdadero_falso':
-            if pregunta['respuesta_correcta'] not in ['Verdadero', 'Falso']:
-                return False
-        
+        if token.text.lower() in negaciones:
+            palabras[pos] = negaciones[token.text.lower()]
         else:
-            return False
+            palabras.insert(pos, 'no')
         
-        # Validar explicación
-        if len(pregunta['explicacion'].split()) < 10:
-            return False
-        
-        return True
-
+        return ' '.join(palabras)
 
     def _obtener_sinonimos_o_relacionados(self, palabra: str) -> List[str]:
         """Retorna sinónimos o palabras relacionadas para generar distractores."""
@@ -908,33 +901,75 @@ class GeneradorCuestionarios:
         
         return []
 
-    def _generar_explicacion_detallada(self, concepto: str, respuesta: str, oracion: str, texto: str) -> str:
-        """Genera una explicación más detallada y contextualizada sin referencias al texto."""
-        explicacion = f"La respuesta es correcta porque {respuesta.lower()}. "
-        
-        # Agregar contexto adicional sin referencias al texto
+    def _generar_explicacion_detallada(self, concepto: str, respuesta: str, 
+                                 oracion: str, texto: str, es_correcta: bool = True) -> str:
+        """Genera una explicación más clara y variada."""
         doc = self.nlp(texto)
         evidencias = []
+        
+        # Encontrar evidencias relevantes
         for sent in doc.sents:
             if concepto.lower() in sent.text.lower() and sent.text != oracion:
-                similitud = self._calcular_similitud(sent.text, respuesta)
+                similitud = self._calcular_similitud_semantica(sent.text, respuesta)
                 if similitud > 0.3:
-                    evidencias.append(self._generalizar_evidencia(sent.text))
+                    evidencias.append((sent.text, similitud))
         
-        if evidencias:
-            explicacion += f"Esto se fundamenta en que {evidencias[0].lower()}"
-            if len(evidencias) > 1:
-                explicacion += f". Adicionalmente, {evidencias[1].lower()}"
+        # Ordenar y seleccionar evidencias
+        evidencias.sort(key=lambda x: x[1], reverse=True)
+        evidencias = [ev[0] for ev in evidencias]
         
-        return explicacion.strip()
-    
-    def _generalizar_evidencia(self, evidencia: str) -> str:
-        """Convierte una evidencia específica en una declaración más general."""
-        # Eliminar referencias específicas
-        evidencia = re.sub(r'como se menciona|según el texto|como dice|como se indica', '', evidencia)
-        # Convertir a presente simple
-        evidencia = re.sub(r'mencionó|indicó|mostró', 'muestra', evidencia)
-        return evidencia.strip()
+        # Construir explicación
+        if es_correcta:
+            plantillas_inicio = [
+                f"Esta respuesta es correcta ya que {respuesta.lower()}.",
+                f"La afirmación es acertada porque {respuesta.lower()}.",
+                f"Es correcto dado que {respuesta.lower()}."
+            ]
+            explicacion = [random.choice(plantillas_inicio)]
+            
+            if evidencias:
+                plantillas_evidencia = [
+                    f"El texto lo confirma al mencionar que {evidencias[0].lower()}",
+                    f"Esto se respalda cuando se indica que {evidencias[0].lower()}",
+                    f"Se evidencia en el texto cuando señala que {evidencias[0].lower()}"
+                ]
+                explicacion.append(random.choice(plantillas_evidencia))
+        else:
+            plantillas_inicio = [
+                f"Esta respuesta es incorrecta.",
+                f"La afirmación no es precisa.",
+                f"El planteamiento es erróneo."
+            ]
+            explicacion = [random.choice(plantillas_inicio)]
+            explicacion.append(f"Lo correcto es que {oracion.lower()}")
+            
+            if evidencias:
+                explicacion.append(f"Esto se demuestra cuando el texto menciona que {evidencias[0].lower()}")
+        
+        return " ".join(explicacion)
+
+    def _calcular_similitud_semantica(self, texto1: str, texto2: str) -> float:
+        """Calcula una similitud semántica más precisa entre textos."""
+        doc1 = self.nlp(texto1.lower())
+        doc2 = self.nlp(texto2.lower())
+        
+        # Extraer palabras clave
+        palabras_clave1 = set(token.text for token in doc1 
+                            if token.pos_ in ['NOUN', 'VERB', 'ADJ'] 
+                            and not token.is_stop)
+        palabras_clave2 = set(token.text for token in doc2 
+                            if token.pos_ in ['NOUN', 'VERB', 'ADJ'] 
+                            and not token.is_stop)
+        
+        # Calcular similitud de Jaccard de palabras clave
+        similitud_jaccard = len(palabras_clave1 & palabras_clave2) / len(palabras_clave1 | palabras_clave2) if palabras_clave1 | palabras_clave2 else 0
+        
+        # Combinar con similitud de spaCy si está disponible
+        try:
+            similitud_spacy = doc1.similarity(doc2)
+            return (similitud_jaccard + similitud_spacy) / 2
+        except:
+            return similitud_jaccard
     
     def _modificar_argumento(self, oracion: str) -> str:
         """Modifica argumentos específicos en la oración."""
@@ -949,6 +984,23 @@ class GeneradorCuestionarios:
                     num = int(token.text)
                     nuevo_num = num * 2 if num < 100 else num // 2
                     return oracion.replace(token.text, str(nuevo_num))
+        return None
+
+    def _cambiar_alcance(self, oracion: str) -> str:
+        """Cambia el alcance o la generalización de una afirmación."""
+        cuantificadores = {
+            'todos': 'algunos',
+            'siempre': 'a veces',
+            'nunca': 'raramente',
+            'completamente': 'parcialmente',
+            'absolutamente': 'relativamente',
+            'globalmente': 'localmente',
+            'mundialmente': 'regionalmente'
+        }
+        
+        for original, modificado in cuantificadores.items():
+            if original in oracion.lower():
+                return oracion.replace(original, modificado)
         return None
 
     def _agregar_excepcion(self, oracion: str) -> str:
@@ -966,260 +1018,339 @@ class GeneradorCuestionarios:
             oracion = oracion[:-1]
         
         return oracion + random.choice(excepciones) + '.'
-    
-    def _invertir_afirmacion(self, oracion: str) -> str:
-        """Invierte el significado de una afirmación."""
-        # Negaciones simples
-        if not oracion:
-            return None
-            
-        # Patrones comunes de negación
-        patrones_negacion = [
-            (r'\bes\b', 'no es'),
-            (r'\bson\b', 'no son'),
-            (r'\bhay\b', 'no hay'),
-            (r'\btiene\b', 'no tiene'),
-            (r'\bpuede\b', 'no puede'),
-            (r'\bsiempre\b', 'nunca'),
-            (r'\btodos\b', 'ninguno'),
-            (r'\bnadie\b', 'todos'),
-            (r'\bnunca\b', 'siempre'),
+
+
+    def _generar_distractores_mejorados(self, texto: str, concepto: str, 
+                                  respuesta_correcta: str, 
+                                  oraciones_relacionadas: List[str]) -> List[str]:
+        """Genera distractores más naturales y coherentes."""
+        distractores = set()
+        doc_respuesta = self.nlp(respuesta_correcta)
+        
+        # 1. Modificación basada en contrarios semánticos
+        for token in doc_respuesta:
+            if token.pos_ in ['VERB', 'ADJ', 'ADV'] and token.text.lower() in self.contrarios:
+                nueva_oracion = respuesta_correcta.replace(
+                    token.text, 
+                    self.contrarios[token.text.lower()]
+                )
+                if self._es_distractor_valido(nueva_oracion, respuesta_correcta):
+                    distractores.add(self._limpiar_oracion(nueva_oracion))
+        
+        # 2. Uso de información relacionada pero incorrecta
+        for oracion in oraciones_relacionadas:
+            if oracion != respuesta_correcta:
+                doc_oracion = self.nlp(oracion)
+                for chunk in doc_oracion.noun_chunks:
+                    if len(chunk.text.split()) > 2 and concepto.lower() not in chunk.text.lower():
+                        mod = self._modificar_chunk_semanticamente(chunk.text, oracion)
+                        if mod and self._es_distractor_valido(mod, respuesta_correcta):
+                            distractores.add(self._limpiar_oracion(mod))
+        
+        # 3. Modificación de estructura manteniendo significado similar
+        modificaciones = [
+            self._cambiar_orden_componentes(respuesta_correcta),
+            self._agregar_modificador(respuesta_correcta),
+            self._cambiar_tiempo_verbal(respuesta_correcta),
+            self._modificar_determinantes(respuesta_correcta)
         ]
         
-        # Intentar cada patrón de negación
-        for patron, reemplazo in patrones_negacion:
-            if re.search(patron, oracion.lower()):
-                return re.sub(patron, reemplazo, oracion, flags=re.IGNORECASE)
+        for mod in modificaciones:
+            if mod and self._es_distractor_valido(mod, respuesta_correcta):
+                distractores.add(self._limpiar_oracion(mod))
+        
+        # Filtrar y seleccionar los mejores distractores
+        distractores = list(distractores)
+        distractores.sort(key=lambda x: self._evaluar_calidad_distractor(x, respuesta_correcta))
+        
+        return [d for d in distractores[:3] if self._es_oracion_coherente(d)]
+
+    def _cambiar_tiempo_verbal(self, oracion: str) -> str:
+        """Modifica el tiempo verbal de una oración de manera más robusta."""
+        doc = self.nlp(oracion)
+        palabras = oracion.split()
+        
+        # Mapeo más completo de tiempos verbales
+        modificaciones = {
+            # Presente a pasado
+            'es': 'era',
+            'son': 'eran',
+            'está': 'estaba',
+            'están': 'estaban',
+            'tiene': 'tenía',
+            'tienen': 'tenían',
+            'puede': 'podía',
+            'pueden': 'podían',
+            'hace': 'hacía',
+            'hacen': 'hacían',
+            'va': 'iba',
+            'van': 'iban',
+            
+            # Pasado a presente
+            'era': 'es',
+            'eran': 'son',
+            'estaba': 'está',
+            'estaban': 'están',
+            'tenía': 'tiene',
+            'tenían': 'tienen',
+            'podía': 'puede',
+            'podían': 'pueden',
+            'hacía': 'hace',
+            'hacían': 'hacen',
+            'iba': 'va',
+            'iban': 'van',
+            
+            # Presente a futuro
+            'será': 'es',
+            'serán': 'son',
+            'estará': 'está',
+            'estarán': 'están',
+            'tendrá': 'tiene',
+            'tendrán': 'tienen',
+            'podrá': 'puede',
+            'podrán': 'pueden',
+            'hará': 'hace',
+            'harán': 'hacen',
+            'irá': 'va',
+            'irán': 'van'
+        }
+        
+        # Buscar y reemplazar verbos
+        for token in doc:
+            if token.pos_ == 'VERB' or token.pos_ == 'AUX':
+                if token.text.lower() in modificaciones:
+                    palabras[token.i] = modificaciones[token.text.lower()]
+                    # Ajustar el resto de la oración si es necesario
+                    if token.dep_ == 'ROOT':
+                        # Modificar tiempos de verbos dependientes
+                        for child in token.children:
+                            if child.pos_ == 'VERB' and child.text.lower() in modificaciones:
+                                palabras[child.i] = modificaciones[child.text.lower()]
+        
+        nueva_oracion = ' '.join(palabras)
+        # Asegurar que la oración sigue siendo válida
+        if self._es_oracion_valida(nueva_oracion):
+            return nueva_oracion
+        return None
+
+    def _es_verbo_conjugado(self, token) -> bool:
+        """Verifica si un token es un verbo conjugado."""
+        return (token.pos_ in ['VERB', 'AUX'] and 
+                not token.tag_.startswith('VB') and  # No infinitivo
+                not token.tag_.startswith('VBG') and  # No gerundio
+                not token.tag_.startswith('VBN'))     # No participio
+
+    def _ajustar_concordancia(self, oracion: str) -> str:
+        """Ajusta la concordancia gramatical después de modificar verbos."""
+        doc = self.nlp(oracion)
+        palabras = oracion.split()
+        
+        for token in doc:
+            if token.pos_ == 'VERB':
+                # Buscar sujeto
+                sujeto = None
+                for child in token.children:
+                    if child.dep_ == 'nsubj':
+                        sujeto = child
+                        break
                 
-        # Si no se encuentra un patrón específico, agregar "no" al principio
-        # de la primera cláusula verbal
+                if sujeto:
+                    # Ajustar artículos y determinantes
+                    for det in sujeto.children:
+                        if det.pos_ == 'DET':
+                            # Implementar ajustes de concordancia específicos
+                            pass
+        
+        return ' '.join(palabras)
+
+
+    def _modificar_chunk_semanticamente(self, chunk: str, oracion_contexto: str) -> str:
+        """Modifica un fragmento de texto manteniendo coherencia semántica."""
+        doc = self.nlp(chunk)
+        palabras = chunk.split()
+        
+        # 1. Modificación basada en partes del discurso
+        for token in doc:
+            if token.pos_ in ['VERB', 'ADJ', 'ADV']:
+                # Modificar verbos y adjetivos
+                if token.text.lower() in self.contrarios:
+                    chunk = chunk.replace(token.text, self.contrarios[token.text.lower()])
+                    return chunk
+        
+        # 2. Agregar modificadores
+        for token in doc:
+            if token.pos_ == 'NOUN':
+                modificadores = ['algunos', 'ciertos', 'diversos', 'diferentes', 'varios']
+                return f"{random.choice(modificadores)} {chunk}"
+        
+        return chunk
+
+    def _cambiar_orden_componentes(self, oracion: str) -> str:
+        """Reorganiza los componentes de la oración manteniendo gramaticalidad."""
+        doc = self.nlp(oracion)
+        componentes = []
+        
+        # Identificar sujeto, verbo y complementos
+        sujeto = None
+        verbo = None
+        complementos = []
+        
+        for token in doc:
+            if token.dep_ == 'nsubj':
+                sujeto = token.text
+            elif token.pos_ == 'VERB':
+                verbo = token.text
+            elif token.dep_ in ['dobj', 'pobj', 'attr']:
+                span = self._obtener_span_complemento(token)
+                if span:
+                    complementos.append(span)
+        
+        # Si no se identificaron los componentes principales, retornar None
+        if not (sujeto and verbo):
+            return None
+        
+        # Generar variantes de orden
+        if complementos:
+            comp = ' '.join(complementos)
+            variantes = [
+                f"{sujeto} {verbo} {comp}",
+                f"{comp}, {sujeto} {verbo}",
+                f"En cuanto a {sujeto}, {verbo} {comp}"
+            ]
+            return random.choice(variantes)
+        
+        return None
+
+    def _agregar_modificador(self, oracion: str) -> str:
+        """Agrega modificadores para cambiar sutilmente el significado."""
+        modificadores = {
+            'frecuencia': ['generalmente', 'usualmente', 'frecuentemente', 'a menudo'],
+            'intensidad': ['considerablemente', 'significativamente', 'notablemente', 'marcadamente'],
+            'modo': ['gradualmente', 'progresivamente', 'sistemáticamente', 'metodológicamente'],
+            'certeza': ['probablemente', 'posiblemente', 'presumiblemente', 'aparentemente']
+        }
+        
+        # Seleccionar tipo de modificador al azar
+        tipo = random.choice(list(modificadores.keys()))
+        modificador = random.choice(modificadores[tipo])
+        
+        # Insertar el modificador en una posición apropiada
         doc = self.nlp(oracion)
         for token in doc:
             if token.pos_ == 'VERB':
-                index = token.i
-                partes = list(token.text for token in doc)
-                partes.insert(index, "no")
-                return " ".join(partes)
-                
-        return oracion
+                return oracion.replace(token.text, f"{modificador} {token.text}")
+        
+        # Si no se encuentra una posición adecuada, agregar al inicio
+        return f"{modificador}, {oracion}"
 
-    
-    def _generar_distractores_mejorados(self, texto: str, concepto: str, 
-                                respuesta_correcta: str, oraciones_relacionadas: List[str]) -> List[str]:
-        """Genera distractores más naturales y variados."""
-        distractores = set()
-        
-        # 1. Modificación semántica
-        modificaciones = [
-            (self._invertir_significado, "opuesto"),
-            (self._modificar_alcance, "parcial"),
-            (self._cambiar_contexto, "diferente contexto"),
-            (self._agregar_condicion, "condicional")
-        ]
-        
-        for modificar, tipo in modificaciones:
-            distractor = modificar(respuesta_correcta)
-            if distractor and self._es_distractor_valido(distractor, respuesta_correcta):
-                distractores.add(distractor)
-        
-        # 2. Uso de conocimiento del dominio
-        patrones_dominio = self._obtener_patrones_dominio(concepto)
-        for patron in patrones_dominio:
-            distractor = patron.format(concepto=concepto)
-            if self._es_distractor_valido(distractor, respuesta_correcta):
-                distractores.add(distractor)
-        
-        # 3. Generación basada en contexto
-        for oracion in oraciones_relacionadas:
-            if oracion != respuesta_correcta:
-                version_modificada = self._modificar_oracion_semanticamente(oracion)
-                if version_modificada and self._es_distractor_valido(version_modificada, respuesta_correcta):
-                    distractores.add(version_modificada)
-        
-        distractores = list(distractores)[:3]
-        return distractores
-    
-    def _modificar_alcance(self, oracion: str) -> str:
-        """Modifica el alcance o amplitud de una afirmación."""
-        modificadores = {
-            'todos': 'algunos',
-            'siempre': 'a veces',
-            'nunca': 'raramente',
-            'completamente': 'parcialmente',
-            'absolutamente': 'relativamente',
-            'totalmente': 'parcialmente',
-            'globalmente': 'localmente'
-        }
-        
-        for palabra, modificador in modificadores.items():
-            if palabra in oracion.lower():
-                return oracion.replace(palabra, modificador)
-        
-        # Si no encuentra palabras específicas, agregar un modificador de alcance
+    def _modificar_determinantes(self, oracion: str) -> str:
+        """Modifica los determinantes para cambiar el alcance."""
         doc = self.nlp(oracion)
-        for token in doc:
-            if token.pos_ in ['VERB', 'ADJ']:
-                return oracion.replace(token.text, f"parcialmente {token.text}")
+        palabras = oracion.split()
         
-        return None
-    
-    def _cambiar_contexto(self, oracion: str) -> str:
-        """Cambia el contexto de aplicación de una afirmación."""
-        # Agregar limitadores de contexto
-        limitadores = [
-            "solo en ambientes controlados",
-            "únicamente en casos específicos",
-            "exclusivamente en ciertos contextos",
-            "bajo ciertas condiciones",
-            "en situaciones particulares"
-        ]
-        
-        if oracion.endswith('.'):
-            oracion = oracion[:-1]
-        
-        return f"{oracion} {random.choice(limitadores)}."
-
-    def _agregar_condicion(self, oracion: str) -> str:
-        """Agrega una condición que limita la validez de la afirmación."""
-        condiciones = [
-            "siempre y cuando se cumplan los requisitos necesarios",
-            "cuando se dispone de los recursos adecuados",
-            "si se siguen los procedimientos correctos",
-            "dependiendo de las circunstancias específicas",
-            "sujeto a validación caso por caso"
-        ]
-        
-        if oracion.endswith('.'):
-            oracion = oracion[:-1]
-        
-        return f"{oracion} {random.choice(condiciones)}."
-
-    def _cambiar_cuantificador(self, oracion: str) -> str:
-        """Cambia los cuantificadores en una oración."""
-        cuantificadores = {
-            'todos': 'pocos',
-            'muchos': 'algunos',
-            'siempre': 'ocasionalmente',
-            'nunca': 'raramente',
-            'cada': 'algún',
-            'cualquier': 'cierto',
-            'ningún': 'algún',
-            'todo': 'parte'
+        determinantes = {
+            'el': ['cada', 'todo', 'cualquier'],
+            'la': ['cada', 'toda', 'cualquier'],
+            'los': ['algunos', 'varios', 'diversos'],
+            'las': ['algunas', 'varias', 'diversas'],
+            'un': ['algún', 'cualquier', 'cada'],
+            'una': ['alguna', 'cualquier', 'cada']
         }
         
-        for cuant, reemplazo in cuantificadores.items():
-            if cuant in oracion.lower():
-                return oracion.replace(cuant, reemplazo)
-        
-        return None
-    
-    def _cambiar_cuantificadores(self, oracion: str) -> str:
-        """Cambia los cuantificadores de forma más sofisticada."""
-        cambios = {
-            r'\btodos\b': 'pocos',
-            r'\bsiempre\b': 'raramente',
-            r'\bnunca\b': 'frecuentemente',
-            r'\bcada\b': 'algunos',
-            r'\bmucho[s]?\b': 'poco',
-            r'\bpoco[s]?\b': 'mucho',
-            r'\bla mayoría\b': 'la minoría',
-            r'\bcompletamente\b': 'parcialmente'
-        }
-        
-        oracion_modificada = oracion
-        for patron, reemplazo in cambios.items():
-            if re.search(patron, oracion_modificada, re.IGNORECASE):
-                oracion_modificada = re.sub(patron, reemplazo, oracion_modificada, flags=re.IGNORECASE)
-                return oracion_modificada
+        # Buscar y reemplazar determinantes
+        for i, token in enumerate(doc):
+            if token.text.lower() in determinantes:
+                nuevo_det = random.choice(determinantes[token.text.lower()])
+                palabras[token.i] = nuevo_det
+                return ' '.join(palabras)
         
         return None
 
-    def _modificar_tiempo(self, oracion: str) -> str:
-        """Cambia el tiempo verbal de las acciones en la oración."""
-        # Mapeo de tiempos verbales comunes
-        tiempos = {
-            'es': 'será',
-            'son': 'serán',
-            'está': 'estará',
-            'están': 'estarán',
-            'ha': 'habrá',
-            'han': 'habrán',
-            'puede': 'podrá',
-            'pueden': 'podrán'
-        }
+    def _obtener_span_complemento(self, token) -> str:
+        """Obtiene el span completo de un complemento."""
+        inicio = token.i
+        fin = token.i + 1
         
-        for tiempo, futuro in tiempos.items():
-            if f" {tiempo} " in oracion:
-                return oracion.replace(f" {tiempo} ", f" {futuro} ")
+        # Buscar el inicio real del complemento
+        while inicio > 0 and token.doc[inicio - 1].dep_ in ['det', 'amod', 'compound']:
+            inicio -= 1
         
-        return None
+        # Buscar el final real del complemento
+        while fin < len(token.doc) and token.doc[fin].dep_ in ['prep', 'pobj', 'acl', 'amod']:
+            fin += 1
+        
+        return token.doc[inicio:fin].text
 
-    def _cambiar_agente(self, oracion: str) -> str:
-        """Cambia el agente o sujeto principal de la oración."""
-        doc = self.nlp(oracion)
-        for token in doc:
-            if token.dep_ == 'nsubj':
-                # Intentar generalizar o especificar el sujeto
-                if token.text.lower() in ['el', 'la', 'los', 'las']:
-                    continue
-                agentes_alternativos = [
-                    'algunos expertos',
-                    'ciertos especialistas',
-                    'diversos estudios',
-                    'investigaciones recientes',
-                    'análisis preliminares'
-                ]
-                return oracion.replace(token.text, random.choice(agentes_alternativos))
-        return None
-    
-    def _obtener_patrones_dominio(self, concepto: str) -> List[str]:
-        """Obtiene patrones de respuesta específicos del dominio."""
-        patrones_generales = {
-            "programacion": [
-                "La {concepto} es una técnica obsoleta que ha sido reemplazada",
-                "La {concepto} solo funciona en casos muy específicos",
-                "La {concepto} requiere recursos computacionales excesivos"
-            ],
-            "medicina": [
-                "El {concepto} solo se aplica en casos de emergencia",
-                "El {concepto} no tiene efectos significativos en el tratamiento",
-                "El {concepto} presenta más riesgos que beneficios"
-            ],
-            # Agregar más dominios según sea necesario
-        }
+    def _es_concepto_valido(self, concepto: str) -> bool:
+        """Verifica si un concepto es válido para generar preguntas."""
+        # Verificar longitud
+        if len(concepto.split()) < 2 or len(concepto.split()) > 4:
+            return False
         
-        # Determinar el dominio basado en el concepto
-        dominio = self._identificar_dominio(concepto)
-        return patrones_generales.get(dominio, [])
+        # Verificar que no sea solo stopwords
+        palabras_contenido = [p for p in concepto.split() 
+                            if p.lower() not in self.stopwords]
+        if not palabras_contenido:
+            return False
+        
+        # Verificar estructura básica
+        doc = self.nlp(concepto)
+        tiene_sustantivo = any(token.pos_ == 'NOUN' for token in doc)
+        tiene_determinante = any(token.pos_ == 'DET' for token in doc)
+        
+        return tiene_sustantivo and tiene_determinante
 
-    def _generar_distractor_generico(self, concepto: str, respuesta_correcta: str) -> str:
-        """Genera un distractor genérico cuando otras estrategias fallan."""
-        plantillas = [
-            f"El {concepto} no tiene relación con este tema",
-            f"El {concepto} funciona de manera opuesta",
-            f"No existe evidencia sobre {concepto}",
-            f"Los estudios no han demostrado efectos de {concepto}"
-        ]
-        return random.choice(plantillas)
-    
-    def _generar_contradiccion(self, oracion: str) -> str:
-        """Genera una contradicción lógica de la oración."""
+    def _es_oracion_coherente(self, oracion: str) -> bool:
+        """Verifica que una oración tenga estructura y sentido coherente."""
         doc = self.nlp(oracion)
         
-        # Intentar diferentes estrategias de contradicción
-        estrategias = [
-            self._invertir_afirmacion,
-            self._cambiar_cuantificador,
-            self._modificar_tiempo,
-            self._cambiar_agente
-        ]
+        # Verificar estructura básica
+        tiene_sujeto = any(token.dep_ == "nsubj" for token in doc)
+        tiene_verbo = any(token.pos_ == "VERB" for token in doc)
+        tiene_predicado = any(token.dep_ in ["dobj", "attr", "acomp"] for token in doc)
         
-        for estrategia in estrategias:
-            resultado = estrategia(oracion)
-            if resultado and resultado != oracion:
-                return resultado
-                
-        return None
+        if not (tiene_sujeto and tiene_verbo):
+            return False
+            
+        # Verificar coherencia semántica
+        tiene_sentido = all(not token.is_oov for token in doc)
+        
+        # Verificar gramática
+        es_gramatical = not any(token.dep_ == "dep" for token in doc)
+        
+        return tiene_sentido and es_gramatical
+
+    def _evaluar_calidad_distractor(self, distractor: str, respuesta_correcta: str) -> float:
+        """Evalúa la calidad de un distractor."""
+        # Inicializar puntuación
+        puntuacion = 0.0
+        
+        # Verificar longitud similar
+        ratio_longitud = len(distractor) / len(respuesta_correcta)
+        if 0.7 <= ratio_longitud <= 1.3:
+            puntuacion += 0.3
+            
+        # Verificar estructura gramatical
+        doc_distractor = self.nlp(distractor)
+        doc_respuesta = self.nlp(respuesta_correcta)
+        
+        tiene_verbo_distractor = any(token.pos_ == "VERB" for token in doc_distractor)
+        tiene_verbo_respuesta = any(token.pos_ == "VERB" for token in doc_respuesta)
+        
+        if tiene_verbo_distractor == tiene_verbo_respuesta:
+            puntuacion += 0.3
+            
+        # Verificar palabras clave similares pero no idénticas
+        palabras_distractor = set(token.text.lower() for token in doc_distractor 
+                                if token.pos_ in ["NOUN", "ADJ", "VERB"])
+        palabras_respuesta = set(token.text.lower() for token in doc_respuesta 
+                               if token.pos_ in ["NOUN", "ADJ", "VERB"])
+        
+        palabras_comunes = len(palabras_distractor & palabras_respuesta)
+        if 1 <= palabras_comunes <= 3:
+            puntuacion += 0.4
+            
+        return puntuacion
     
     def _modificar_oracion_semanticamente(self, oracion: str) -> str:
         """Modifica una oración manteniendo su estructura pero cambiando su significado."""
@@ -1255,11 +1386,15 @@ class GeneradorCuestionarios:
         }
 
     def _validar_pregunta(self, pregunta: Dict[str, Any]) -> bool:
-        """Valida que una pregunta tenga el formato correcto"""
+        """Valida que una pregunta tenga el formato correcto y contenido válido"""
         try:
             # Verificar campos requeridos
             campos_requeridos = ['tipo', 'pregunta', 'respuesta_correcta', 'explicacion']
             if not all(campo in pregunta for campo in campos_requeridos):
+                return False
+
+            # Validar que los campos no estén vacíos
+            if not all(pregunta[campo] for campo in campos_requeridos):
                 return False
 
             # Validar tipo de pregunta
@@ -1276,46 +1411,23 @@ class GeneradorCuestionarios:
                     return False
                 if pregunta['respuesta_correcta'] not in pregunta['opciones']:
                     return False
+                # Verificar que las opciones son únicas
+                if len(set(pregunta['opciones'])) != 4:
+                    return False
 
             # Validar pregunta de verdadero/falso
             if pregunta['tipo'] == 'verdadero_falso':
                 if pregunta['respuesta_correcta'] not in ['Verdadero', 'Falso']:
                     return False
 
-            return True
-
-        except Exception:
-            return False
-        
-    def _validar_pregunta_mejorada(self, pregunta: Dict[str, Any]) -> bool:
-        """Validación mejorada de preguntas."""
-        try:
-            # Validaciones básicas
-            if not self._validar_pregunta(pregunta):
+            # Validar longitud mínima de la pregunta y explicación
+            if len(pregunta['pregunta'].split()) < 5:
+                return False
+            if len(pregunta['explicacion'].split()) < 10:
                 return False
 
-            # Validación de longitud y contenido
-            if len(pregunta['pregunta'].split()) < 8:
-                return False
-                
-            if pregunta['tipo'] == 'alternativas':
-                # Verificar que las opciones son suficientemente diferentes
-                opciones = pregunta['opciones']
-                for i, opcion1 in enumerate(opciones):
-                    for opcion2 in opciones[i+1:]:
-                        if self._calcular_similitud(opcion1, opcion2) > 0.8:
-                            return False
-                            
-                # Verificar que la respuesta correcta es válida
-                if pregunta['respuesta_correcta'] not in opciones:
-                    return False
-                    
-            # Verificar que la explicación es relevante
-            if self._calcular_similitud(pregunta['pregunta'], pregunta['explicacion']) < 0.2:
-                return False
-                
             return True
-            
+
         except Exception:
             return False
 
@@ -1336,21 +1448,35 @@ class GeneradorCuestionarios:
 
             cuestionarios = []
             for item in datos['quiz']:
-                # Verificar campos requeridos en cada item
-                if not all(campo in item for campo in ['texto', 'materia', 'fuente']):
-                    print(f"Advertencia: item ignorado por falta de campos requeridos: {item}")
+                try:
+                    # Verificar campos requeridos en cada item
+                    if not all(campo in item for campo in ['texto', 'materia', 'fuente']):
+                        print(f"Advertencia: item ignorado por falta de campos requeridos: {item}")
+                        continue
+
+                    # Generar cuestionario
+                    cuestionario = self.generar_cuestionario(
+                        texto=item['texto'],
+                        materia=item['materia'],
+                        fuente=item['fuente']
+                    )
+                    
+                    # Verificar que el cuestionario tiene preguntas válidas
+                    if cuestionario and cuestionario['preguntas']:
+                        print(f"Cuestionario generado exitosamente para {item['materia']}")
+                        print(f"Preguntas generadas: {len(cuestionario['preguntas'])}")
+                        cuestionarios.append(cuestionario)
+                    else:
+                        print(f"No se pudieron generar preguntas para {item['materia']}")
+
+                except Exception as e:
+                    print(f"Error procesando item: {str(e)}")
                     continue
 
-                # Generar cuestionario
-                cuestionario = self.generar_cuestionario(
-                    texto=item['texto'],
-                    materia=item['materia'],
-                    fuente=item['fuente']
-                )
-                
-                # Verificar que el cuestionario tiene preguntas válidas
-                if cuestionario and cuestionario['preguntas']:
-                    cuestionarios.append(cuestionario)
+            if not cuestionarios:
+                print("Advertencia: No se generaron cuestionarios")
+            else:
+                print(f"Total de cuestionarios generados: {len(cuestionarios)}")
 
             return cuestionarios
 
