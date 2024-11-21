@@ -116,23 +116,35 @@ class GeneradorCuestionarios:
         return oracion
 
     def _es_distractor_valido(self, distractor: str, respuesta_correcta: str) -> bool:
-        """Verifica si un distractor es válido."""
+        """
+        Verifica si un distractor es válido y natural.
+        """
         if not distractor or not respuesta_correcta:
             return False
             
-        # Verificar longitud mínima
-        if len(distractor.split()) < 5:
+        # Verificar longitud mínima y máxima
+        palabras_distractor = distractor.split()
+        palabras_respuesta = respuesta_correcta.split()
+        if len(palabras_distractor) < 5 or len(palabras_distractor) > len(palabras_respuesta) * 1.5:
             return False
             
-        # Verificar que no sea muy similar a la respuesta correcta
-        if self._calcular_similitud(distractor, respuesta_correcta) > 0.8:
+        # Verificar similitud semántica
+        similitud = self._calcular_similitud_semantica(distractor, respuesta_correcta)
+        if similitud > 0.8 or similitud < 0.2:  # Evitar muy similar o muy diferente
             return False
             
-        # Verificar que no contenga patrones inválidos
+        # Verificar coherencia gramatical
+        doc = self.nlp(distractor)
+        if not any(token.pos_ == "VERB" for token in doc):  # Debe tener al menos un verbo
+            return False
+            
+        # Verificar que no contiene patrones problemáticos
         patrones_invalidos = [
             r'no\s+no',
             r'\b(el|la|los|las)\s+\1\b',
             r'\s{2,}',
+            r'(similar|diferente|específico|general|único)\s+\1',  # Evitar repeticiones de palabras problema
+            r'^(similar|diferente|específico|general|único)\b'  # Evitar inicios con estas palabras
         ]
         
         for patron in patrones_invalidos:
@@ -140,6 +152,32 @@ class GeneradorCuestionarios:
                 return False
                 
         return True
+    
+    def _extraer_fragmento_relevante(self, doc, concepto: str) -> str:
+        """
+        Extrae un fragmento relevante y coherente de una oración.
+        """
+        # Encontrar la parte principal relacionada con el concepto
+        inicio = None
+        fin = None
+        
+        for i, token in enumerate(doc):
+            if concepto.lower() in token.text.lower():
+                # Buscar hacia atrás hasta encontrar el inicio de la cláusula
+                inicio = i
+                while inicio > 0 and not doc[inicio-1].is_punct:
+                    inicio -= 1
+                    
+                # Buscar hacia adelante hasta encontrar el fin de la cláusula
+                fin = i
+                while fin < len(doc)-1 and not doc[fin+1].is_punct:
+                    fin += 1
+                
+                break
+        
+        if inicio is not None and fin is not None:
+            return doc[inicio:fin+1].text
+        return None
 
     def _es_oracion_valida(self, oracion: str) -> bool:
         """Verifica si una oración es válida."""
@@ -902,54 +940,41 @@ class GeneradorCuestionarios:
         return []
 
     def _generar_explicacion_detallada(self, concepto: str, respuesta: str, 
-                                 oracion: str, texto: str, es_correcta: bool = True) -> str:
-        """Genera una explicación más clara y variada."""
-        doc = self.nlp(texto)
-        evidencias = []
+                                 oracion: str, texto: str, 
+                                 es_correcta: bool = True) -> str:
+        """
+        Genera una explicación más elaborada y contextualizada.
+        """
+        # Resolver referencias pronominales
+        oracion = self._resolver_anaforas(oracion)
+        respuesta = self._resolver_anaforas(respuesta)
         
-        # Encontrar evidencias relevantes
-        for sent in doc.sents:
-            if concepto.lower() in sent.text.lower() and sent.text != oracion:
-                similitud = self._calcular_similitud_semantica(sent.text, respuesta)
-                if similitud > 0.3:
-                    evidencias.append((sent.text, similitud))
+        # Obtener contexto adicional
+        contexto = self._generar_contexto_explicacion(concepto, texto)
         
-        # Ordenar y seleccionar evidencias
-        evidencias.sort(key=lambda x: x[1], reverse=True)
-        evidencias = [ev[0] for ev in evidencias]
-        
-        # Construir explicación
         if es_correcta:
-            plantillas_inicio = [
-                f"Esta respuesta es correcta ya que {respuesta.lower()}.",
-                f"La afirmación es acertada porque {respuesta.lower()}.",
-                f"Es correcto dado que {respuesta.lower()}."
+            explicacion = [
+                f"Esta respuesta es correcta porque {respuesta.lower()}.",
+                contexto if contexto else "",
+                f"Esta afirmación se sustenta en que {oracion.lower()}."
             ]
-            explicacion = [random.choice(plantillas_inicio)]
-            
-            if evidencias:
-                plantillas_evidencia = [
-                    f"El texto lo confirma al mencionar que {evidencias[0].lower()}",
-                    f"Esto se respalda cuando se indica que {evidencias[0].lower()}",
-                    f"Se evidencia en el texto cuando señala que {evidencias[0].lower()}"
-                ]
-                explicacion.append(random.choice(plantillas_evidencia))
         else:
-            plantillas_inicio = [
-                f"Esta respuesta es incorrecta.",
-                f"La afirmación no es precisa.",
-                f"El planteamiento es erróneo."
+            # Para respuestas incorrectas, explicar por qué es incorrecta
+            explicacion = [
+                "Esta respuesta es incorrecta.",
+                f"La razón es que {oracion.lower()}.",
+                contexto if contexto else "",
+                f"Por lo tanto, la interpretación correcta sobre {concepto} es {respuesta.lower()}."
             ]
-            explicacion = [random.choice(plantillas_inicio)]
-            explicacion.append(f"Lo correcto es que {oracion.lower()}")
-            
-            if evidencias:
-                explicacion.append(f"Esto se demuestra cuando el texto menciona que {evidencias[0].lower()}")
         
+        # Filtrar elementos vacíos y unir
+        explicacion = [e for e in explicacion if e]
         return " ".join(explicacion)
 
     def _calcular_similitud_semantica(self, texto1: str, texto2: str) -> float:
-        """Calcula una similitud semántica más precisa entre textos."""
+        """
+        Calcula similitud semántica de manera más robusta, manejando casos sin vectores.
+        """
         doc1 = self.nlp(texto1.lower())
         doc2 = self.nlp(texto2.lower())
         
@@ -962,14 +987,19 @@ class GeneradorCuestionarios:
                             and not token.is_stop)
         
         # Calcular similitud de Jaccard de palabras clave
-        similitud_jaccard = len(palabras_clave1 & palabras_clave2) / len(palabras_clave1 | palabras_clave2) if palabras_clave1 | palabras_clave2 else 0
+        similitud_jaccard = (len(palabras_clave1 & palabras_clave2) / 
+                            len(palabras_clave1 | palabras_clave2) if palabras_clave1 | palabras_clave2 else 0)
         
-        # Combinar con similitud de spaCy si está disponible
+        # Intentar calcular similitud de spaCy solo si ambos documentos tienen vectores
         try:
-            similitud_spacy = doc1.similarity(doc2)
-            return (similitud_jaccard + similitud_spacy) / 2
-        except:
-            return similitud_jaccard
+            if doc1.has_vector and doc2.has_vector:
+                similitud_spacy = doc1.similarity(doc2)
+                return (similitud_jaccard + similitud_spacy) / 2
+        except (ValueError, UserWarning):
+            pass
+            
+        # Si no se puede calcular similitud vectorial, usar solo Jaccard
+        return similitud_jaccard
     
     def _modificar_argumento(self, oracion: str) -> str:
         """Modifica argumentos específicos en la oración."""
@@ -1021,49 +1051,226 @@ class GeneradorCuestionarios:
 
 
     def _generar_distractores_mejorados(self, texto: str, concepto: str, 
-                                  respuesta_correcta: str, 
-                                  oraciones_relacionadas: List[str]) -> List[str]:
-        """Genera distractores más naturales y coherentes."""
+                                   respuesta_correcta: str, 
+                                   oraciones_relacionadas: List[str]) -> List[str]:
+        """
+        Genera distractores más naturales y coherentes basados en el contexto.
+        """
         distractores = set()
         doc_respuesta = self.nlp(respuesta_correcta)
         
-        # 1. Modificación basada en contrarios semánticos
-        for token in doc_respuesta:
-            if token.pos_ in ['VERB', 'ADJ', 'ADV'] and token.text.lower() in self.contrarios:
-                nueva_oracion = respuesta_correcta.replace(
-                    token.text, 
-                    self.contrarios[token.text.lower()]
-                )
-                if self._es_distractor_valido(nueva_oracion, respuesta_correcta):
-                    distractores.add(self._limpiar_oracion(nueva_oracion))
-        
-        # 2. Uso de información relacionada pero incorrecta
+        # 1. Modificación por sustitución de conceptos clave
+        palabras_clave = [token.text for token in doc_respuesta 
+                        if token.pos_ in ['NOUN', 'VERB', 'ADJ'] 
+                        and len(token.text) > 3]
+                        
+        for palabra in palabras_clave:
+            # Buscar términos relacionados pero distintos
+            relacionados = self._obtener_terminos_relacionados(palabra, texto)
+            if relacionados:
+                nuevo_distractor = respuesta_correcta.replace(palabra, random.choice(relacionados))
+                if self._es_distractor_valido(nuevo_distractor, respuesta_correcta):
+                    distractores.add(self._limpiar_oracion(nuevo_distractor))
+
+        # 2. Modificación por cambio de enfoque
         for oracion in oraciones_relacionadas:
             if oracion != respuesta_correcta:
                 doc_oracion = self.nlp(oracion)
-                for chunk in doc_oracion.noun_chunks:
-                    if len(chunk.text.split()) > 2 and concepto.lower() not in chunk.text.lower():
-                        mod = self._modificar_chunk_semanticamente(chunk.text, oracion)
-                        if mod and self._es_distractor_valido(mod, respuesta_correcta):
-                            distractores.add(self._limpiar_oracion(mod))
-        
-        # 3. Modificación de estructura manteniendo significado similar
-        modificaciones = [
-            self._cambiar_orden_componentes(respuesta_correcta),
-            self._agregar_modificador(respuesta_correcta),
-            self._cambiar_tiempo_verbal(respuesta_correcta),
-            self._modificar_determinantes(respuesta_correcta)
+                # Extraer la parte relevante que mantiene coherencia
+                fragmento_relevante = self._extraer_fragmento_relevante(doc_oracion, concepto)
+                if fragmento_relevante and self._es_distractor_valido(fragmento_relevante, respuesta_correcta):
+                    distractores.add(self._limpiar_oracion(fragmento_relevante))
+
+        # 3. Modificación por transformación de significado
+        transformaciones = [
+            self._transformar_positivo_negativo,
+            self._transformar_causa_efecto,
+            self._transformar_general_especifico
         ]
         
-        for mod in modificaciones:
-            if mod and self._es_distractor_valido(mod, respuesta_correcta):
-                distractores.add(self._limpiar_oracion(mod))
-        
+        for transformacion in transformaciones:
+            distractor = transformacion(respuesta_correcta)
+            if distractor and self._es_distractor_valido(distractor, respuesta_correcta):
+                distractores.add(self._limpiar_oracion(distractor))
+
         # Filtrar y seleccionar los mejores distractores
         distractores = list(distractores)
         distractores.sort(key=lambda x: self._evaluar_calidad_distractor(x, respuesta_correcta))
         
         return [d for d in distractores[:3] if self._es_oracion_coherente(d)]
+    
+    def _obtener_terminos_relacionados(self, palabra: str, texto: str) -> List[str]:
+        """
+        Obtiene términos relacionados pero diferentes del texto original.
+        Usa un enfoque más robusto para manejar palabras sin vectores.
+        """
+        doc = self.nlp(texto)
+        relacionados = []
+        palabra_doc = self.nlp(palabra)[0]
+        
+        # Verificar si la palabra tiene vector
+        if not palabra_doc.has_vector:
+            # Si no tiene vector, usar enfoque alternativo basado en patrones léxicos
+            for token in doc:
+                if (token.pos_ == palabra_doc.pos_ and 
+                    token.text.lower() != palabra.lower() and
+                    len(token.text) > 3):
+                    # Usar criterios léxicos en lugar de similitud vectorial
+                    if (token.lemma_ != palabra_doc.lemma_ and  # Diferente lema
+                        token.dep_ == palabra_doc.dep_):        # Misma función sintáctica
+                        relacionados.append(token.text)
+        else:
+            # Si tiene vector, usar el enfoque original de similitud
+            for token in doc:
+                if (token.has_vector and                    # Asegurar que el token tiene vector
+                    token.pos_ == palabra_doc.pos_ and 
+                    token.text.lower() != palabra.lower() and
+                    len(token.text) > 3):
+                    try:
+                        similitud = token.similarity(palabra_doc)
+                        if 0.3 < similitud < 0.7:  # Lo suficientemente similar pero no idéntico
+                            relacionados.append(token.text)
+                    except ValueError:
+                        continue  # Ignorar tokens que den error en el cálculo de similitud
+        
+        return list(set(relacionados))
+    
+    def _transformar_positivo_negativo(self, oracion: str) -> str:
+        """
+        Transforma una oración positiva en negativa o viceversa manteniendo coherencia.
+        """
+        doc = self.nlp(oracion)
+        palabras = oracion.split()
+        
+        for token in doc:
+            if token.pos_ == 'VERB' and token.dep_ == 'ROOT':
+                # Identificar el verbo principal
+                idx = token.i
+                if 'no' in [t.text.lower() for t in token.children]:
+                    # Si es negativo, hacerlo positivo
+                    palabras = [p for p in palabras if p.lower() != 'no']
+                else:
+                    # Si es positivo, hacerlo negativo
+                    palabras.insert(idx, 'no')
+                break
+        
+        return ' '.join(palabras)
+    
+    def _transformar_causa_efecto(self, oracion: str) -> str:
+        """
+        Transforma una relación causa-efecto en la oración manteniendo coherencia.
+        """
+        doc = self.nlp(oracion)
+        marcadores_causa = ['porque', 'ya que', 'debido a', 'por', 'gracias a']
+        marcadores_efecto = ['por lo tanto', 'en consecuencia', 'así que', 'por eso']
+        
+        # Detectar si es una oración causal
+        es_causal = any(m in oracion.lower() for m in marcadores_causa)
+        
+        if es_causal:
+            # Separar causa y efecto
+            for marcador in marcadores_causa:
+                if marcador in oracion.lower():
+                    partes = oracion.lower().split(marcador)
+                    if len(partes) == 2:
+                        # Invertir la relación causal
+                        return f"{partes[1].strip()} por lo tanto {partes[0].strip()}."
+        return None
+
+    def _transformar_general_especifico(self, oracion: str) -> str:
+        """
+        Transforma una afirmación general en específica o viceversa.
+        """
+        doc = self.nlp(oracion)
+        palabras = oracion.split()
+        
+        # Patrones de generalización/especificación
+        patrones = {
+            'general': {
+                'todos': ['la mayoría de', 'algunos', 'ciertos'],
+                'siempre': ['frecuentemente', 'en ocasiones', 'regularmente'],
+                'nunca': ['raramente', 'pocas veces', 'ocasionalmente'],
+                'cualquier': ['algunos', 'ciertos', 'determinados'],
+                'cada': ['muchos', 'varios', 'diversos']
+            },
+            'especifico': {
+                'algunos': ['todos', 'cada', 'cualquier'],
+                'frecuentemente': ['siempre', 'constantemente', 'permanentemente'],
+                'raramente': ['nunca', 'jamás', 'en ningún caso'],
+                'varios': ['todos', 'cada uno', 'cualquiera']
+            }
+        }
+        
+        # Intentar transformar de general a específico primero
+        for palabra, alternativas in patrones['general'].items():
+            if palabra in oracion.lower():
+                return oracion.replace(palabra, random.choice(alternativas))
+        
+        # Si no se encontró patrón general, intentar específico a general
+        for palabra, alternativas in patrones['especifico'].items():
+            if palabra in oracion.lower():
+                return oracion.replace(palabra, random.choice(alternativas))
+        
+        return None
+
+    def _resolver_anaforas(self, texto: str) -> str:
+        """
+        Resuelve referencias pronominales para hacer las explicaciones más claras.
+        """
+        doc = self.nlp(texto)
+        texto_resuelto = texto
+        
+        # Mapeo de pronombres a sus posibles antecedentes
+        for token in doc:
+            if token.pos_ == "PRON":
+                # Buscar el antecedente más cercano
+                antecedente = None
+                for candidato in token.doc:
+                    if (candidato.i < token.i and  # Viene antes del pronombre
+                        candidato.pos_ in ["NOUN", "PROPN"] and  # Es un sustantivo
+                        candidato.morph.get("Gender") == token.morph.get("Gender") and  # Coincide en género
+                        candidato.morph.get("Number") == token.morph.get("Number")):  # Coincide en número
+                        antecedente = candidato
+                        break
+                
+                if antecedente:
+                    # Reemplazar el pronombre con su antecedente
+                    texto_resuelto = texto_resuelto.replace(f" {token.text} ", f" {antecedente.text} ")
+        
+        return texto_resuelto
+
+    def _generar_contexto_explicacion(self, concepto: str, texto: str) -> str:
+        """
+        Genera un contexto más rico para las explicaciones.
+        """
+        doc = self.nlp(texto)
+        contexto = []
+        
+        # Buscar oraciones relacionadas con el concepto
+        for sent in doc.sents:
+            if concepto.lower() in sent.text.lower():
+                # Verificar si la oración aporta información relevante
+                tokens_relevantes = [token for token in sent 
+                                if token.pos_ in ['NOUN', 'VERB', 'ADJ'] 
+                                and token.text.lower() not in self.stopwords]
+                
+                if len(tokens_relevantes) >= 3:  # Asegurar que la oración es informativa
+                    contexto.append(sent.text)
+        
+        if contexto:
+            # Seleccionar las oraciones más relevantes
+            if len(contexto) > 2:
+                contexto = contexto[:2]  # Limitar a 2 oraciones para no hacer la explicación muy larga
+            
+            # Construir explicación con contexto
+            return " ".join([
+                "En el contexto del texto,",
+                contexto[0].lower() + ".",
+                f"Esto es relevante para {concepto} porque",
+                contexto[1].lower() if len(contexto) > 1 else ""
+            ])
+        
+        return ""
 
     def _cambiar_tiempo_verbal(self, oracion: str) -> str:
         """Modifica el tiempo verbal de una oración de manera más robusta."""
