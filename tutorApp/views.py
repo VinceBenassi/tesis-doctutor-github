@@ -1,7 +1,7 @@
 from .modelos.chatbot import predecir_clase_frase, obtener_respuesta, intentos
 from .modelos.traductor import escuchar_microfono
 from .modelos.clasificadorPDF import obtener_datos_materias
-from .modelos.generador_cuestionarios import GeneradorVFNeuralQA
+from .modelos.generador_cuestionarios import GeneradorVF
 from .models import MateriaCuestionario, TextoCuestionario, FormularioMateriaCuestionario, FormularioTextoCuestionario, PerfilUsuario, ResultadoCuestionario, CambiarPerfil, FotoPerfil
 from django.db.models import Avg
 from django.contrib import messages
@@ -23,11 +23,13 @@ import os
 historial_chatbot = []
 
 # Carga los cuestionarios una sola vez al iniciar la aplicación
-generador = GeneradorVFNeuralQA()
+generador = GeneradorVF()
 cuestionarios = generador.procesar_json(
         'tutorApp/static/json/quiz.json',
         'tutorApp/static/json/cuestionarios.json'
     )
+print(f"Tipo de cuestionarios: {type(cuestionarios)}")
+print(f"Contenido de cuestionarios: {cuestionarios}")
 # Fin carga de los cuestionarios
 
 # Obtén la ruta de la carpeta de PDFs
@@ -62,7 +64,7 @@ class ScreenshotView(View):
 
 # Vistas al frontend del proyecto
 def landing_page(request):
-    return render(request, 'registration/login.html')
+    return render(request, 'landing.html')
 
 # Cerrar Sesión
 def salir(request):
@@ -312,16 +314,25 @@ def documentacion(request, materia):
 
 @login_required
 def evaluaciones(request):
-    categorias = obtener_materias_disponibles()
-    materias = cargar_materias(request)
-    perfil, creado = PerfilUsuario.objects.get_or_create(usuario=request.user)
+    try:
+        categorias = obtener_materias_disponibles()
+        if not categorias:
+            messages.warning(request, "No hay cuestionarios disponibles en este momento.")
+            categorias = {}  # Asegúrate de que no sea None
+        
+        materias = cargar_materias(request)
+        perfil, creado = PerfilUsuario.objects.get_or_create(usuario=request.user)
 
-    return render(request, 'pages/evaluaciones.html', {
-        'nombre_usuario': perfil.nombre_completo(),
-        'categorias': categorias,
-        'materias': materias,
-        'foto_perfil_url': perfil.obtener_foto_perfil_url(),
-    })
+        return render(request, 'pages/evaluaciones.html', {
+            'nombre_usuario': perfil.nombre_completo(),
+            'categorias': categorias,
+            'materias': materias,
+            'foto_perfil_url': perfil.obtener_foto_perfil_url(),
+        })
+    except Exception as e:
+        print(f"Error en la vista evaluaciones: {str(e)}")
+        messages.error(request, "Ocurrió un error al cargar las evaluaciones.")
+        return redirect('inicio')
 # Fin barra lateral
 
 
@@ -462,6 +473,9 @@ def actualizar_quiz_json():
 # Sección de vista y resolución de los cuestionarios
 def organizar_cuestionarios():
     """Organiza los cuestionarios por materia"""
+    if not cuestionarios:
+        return {}  # Si no hay cuestionarios, devuelve un diccionario vacío
+    
     cuestionarios_por_materia = {}
     for cuestionario in cuestionarios:
         materia = cuestionario['materia']
@@ -470,6 +484,7 @@ def organizar_cuestionarios():
             cuestionarios_por_materia[materia] = []
         
         cuestionarios_por_materia[materia].append(cuestionario)
+    
     return cuestionarios_por_materia
 
 

@@ -127,13 +127,17 @@ def reconocer(sonido):
     # mostrar el idioma detectado por el traductor
     # que se encuentra en la columna idioma_final
     # en color azul y tamaño 40
-    if len(resultado) > 0:
-        idioma_detectado = resultado['idioma_final'].values[0]
-        texto_original   = resultado['traductor_voz'].values[0]
-        
-        return idioma_detectado, texto_original
-    else:
-        return 'Nada', 'Nada'  # si el resultado está vacío
+    try:
+        if len(resultado) > 0:
+            idioma_detectado = resultado['idioma_final'].values[0]
+            texto_original   = resultado['traductor_voz'].values[0]
+            
+            return idioma_detectado, texto_original
+        else:
+            return 'Nada', 'Nada'  # si el resultado está vacío
+    except Exception as e:
+        print(f"Error en reconocer: {e}")
+        return 'Nada', 'Nada'  # en caso de error
 
 
 # Función para escuchar el microfono
@@ -146,24 +150,28 @@ def escuchar_microfono(voz):
             audio = grabador.record(source)
             print("Audio grabado correctamente")
 
-        idioma_detectado, mensaje = reconocer(audio)
-        print(f"Idioma detectado: {idioma_detectado}")
-        print(f"La persona dijo: {mensaje}")
+        try:
+            idioma_detectado, mensaje = reconocer(audio)
+            print(f"Idioma detectado: {idioma_detectado}")
+            print(f"La persona dijo: {mensaje}")
 
-        if mensaje is not None and mensaje != 'Nada':
-            texto_a_traducir = traductor_google.translate(mensaje, dest='es')
-            texto = texto_a_traducir.text 
+            if idioma_detectado != 'Nada' and mensaje != 'Nada' and mensaje is not None:
+                texto_a_traducir = traductor_google.translate(mensaje, dest='es')
+                texto = texto_a_traducir.text 
 
-            print(f'Traducción: {texto}')
-            print("\n")
+                print(f'Traducción: {texto}')
+                print("\n")
 
-            convertidor_voz = gTTS(text=texto, lang='es')
-            convertidor_voz.save("respuesta.mp3")
+                convertidor_voz = gTTS(text=texto, lang='es')
+                convertidor_voz.save("respuesta.mp3")
 
-            print(f"Tiempo de procesamiento: {time.time() - start_time} segundos")
-            return idioma_detectado, mensaje, texto
-        else:
-            print("No se detectó ningún mensaje")
+                print(f"Tiempo de procesamiento: {time.time() - start_time} segundos")
+                return idioma_detectado, mensaje, texto
+            else:
+                print("No se detectó ningún mensaje")
+                return None, None, None
+        except Exception as e:
+            print(f"Error en el procesamiento del audio: {e}")
             return None, None, None
     except Exception as e:
         print(f"Error en escuchar_microfono: {e}")

@@ -1,4 +1,4 @@
-# Generador de Cuestionarios
+# Generador de Cuestionarios de verdadero o falso
 # Por Franco Benassi
 import torch
 from transformers import (
@@ -293,6 +293,9 @@ class GeneradorVF:
                 json.dump(salida, f, ensure_ascii=False, indent=4)
                 
             print(f"Se generaron {len(cuestionarios)} cuestionarios")
+
+            return cuestionarios
             
         except Exception as e:
             print(f"Error procesando JSON: {str(e)}")
+            return []  # Devuelve una lista vacía en caso de error

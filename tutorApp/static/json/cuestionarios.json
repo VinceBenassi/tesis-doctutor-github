@@ -1,0 +1,537 @@
+{
+    "fecha_generacion": "2025-03-19",
+    "total_cuestionarios": 8,
+    "cuestionarios": [
+        {
+            "materia": "derecho",
+            "fuente": "https://www.bcn.cl/formacioncivica/detalle_guia?h=10221.3/45670#:~:text=El%20Derecho%20es%20un%20sistema,relevancia%20jur%C3%ADdica%2C%20pudiendo%20imponerse%20coactivamente.",
+            "preguntas": [
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "Es aquel que establece los principios y reglas que regulan la forma del Estado, los derechos constitucionales, las atribuciones y potestades de los poderes públicos.",
+                    "respuesta_correcta": "Verdadero",
+                    "explicacion": "La afirmación es VERDADERA. \nEsto se evidencia en el texto cuando menciona: 'Es aquel que establece los principios y reglas que regulan la forma del Estado, los derechos constitucionales, las atribuciones y potestades de los poderes públicos.'",
+                    "opciones": null
+                },
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "Sintéticamente , el Derecho Civil se no define como el Derecho Privado común ( aplicable a la generalidad de las relaciones ) y general ( aplicable a todas las personas , salvo que exista una disposición especial ) ; en forma descriptiva , como el conjunto de principios y preceptos jurídicos sobre la personalidad y las relaciones patrimoniales y de familia .",
+                    "respuesta_correcta": "Falso",
+                    "explicacion": "La afirmación es FALSA. \nLa versión correcta según el texto es: 'Sintéticamente, el Derecho Civil se define como el Derecho Privado común (aplicable a la generalidad de las relaciones) y general (aplicable a todas las personas, salvo que exista una disposición especial); en forma descriptiva, como el conjunto de principios y preceptos jurídicos sobre la personalidad y las relaciones patrimoniales y de familia.'",
+                    "opciones": null
+                },
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "Esta afirmación puede ser no cuestionada a la luz del surgimiento de diversos sistemas especiales , sin embargo , en líneas generales , es una afirmación correcta , pues a todos quienes se encuentran en una situación similar o análoga se deben aplicar las mismas reglas , ya que si bien existe una multiplicidad de normas , teóricamente existe la idea de que estas forman un “ ordenamiento jurídico ” , vale decir , que ellas no están anárquicamente yuxtapuestas , sino que en forma coordinada forman un conjunto unitario y coherente1 . \r\n\r\n",
+                    "respuesta_correcta": "Falso",
+                    "explicacion": "La afirmación es FALSA. \nLa versión correcta según el texto es: 'Esta afirmación puede ser cuestionada a la luz del surgimiento de diversos sistemas especiales, sin embargo, en líneas generales, es una afirmación correcta, pues a todos quienes se encuentran en una situación similar o análoga se deben aplicar las mismas reglas, ya que si bien existe una multiplicidad de normas, teóricamente existe la idea de que estas forman un “ordenamiento jurídico”, vale decir, que ellas no están anárquicamente yuxtapuestas, sino que en forma coordinada forman un conjunto unitario y coherente1 .\r\n\r\n'",
+                    "opciones": null
+                },
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "La primera pregunta se no refiere a todos los antecedentes que explican la existencia de una norma y reciben la denominación de “ fuentes materiales ” ( pudiendo ser la consciencia de un pueblo , las necesidades políticas o económicas , un hecho que haya conmocionado a la opinión pública , etc. ) .",
+                    "respuesta_correcta": "Falso",
+                    "explicacion": "La afirmación es FALSA. \nLa versión correcta según el texto es: 'La primera pregunta se refiere a todos los antecedentes que explican la existencia de una norma y reciben la denominación de “fuentes materiales” (pudiendo ser la consciencia de un pueblo, las necesidades políticas o económicas, un hecho que haya conmocionado a la opinión pública, etc.).'",
+                    "opciones": null
+                },
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "Dentro de la Constitución se no distingue una parte orgánica , que es el estatuto de los poderes del Estado , estableciendo normas y competencias , así como procedimientos .",
+                    "respuesta_correcta": "Falso",
+                    "explicacion": "La afirmación es FALSA. \nLa versión correcta según el texto es: 'Dentro de la Constitución se distingue una parte orgánica, que es el estatuto de los poderes del Estado, estableciendo normas y competencias, así como procedimientos.'",
+                    "opciones": null
+                },
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "Rama del Derecho que establece las conductas constitutivas de crímenes contra el Derecho Internacional (como el genocidio, los crímenes de lesa humanidad, los crímenes de guerra y el crimen de agresión), los tribunales competentes y las condiciones para conocer de casos en que los individuos incurran en responsabilidad penal individual.",
+                    "respuesta_correcta": "Verdadero",
+                    "explicacion": "La afirmación es VERDADERA. \nEsto se evidencia en el texto cuando menciona: 'Rama del Derecho que establece las conductas constitutivas de crímenes contra el Derecho Internacional (como el genocidio, los crímenes de lesa humanidad, los crímenes de guerra y el crimen de agresión), los tribunales competentes y las condiciones para conocer de casos en que los individuos incurran en responsabilidad penal individual.'",
+                    "opciones": null
+                },
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "En materia civil , en cambio , los juicios no tienen un carácter predominantemente privado , pues aun ante los tribunales estatales , las partes tienen el control del procedimiento , su iniciativa y consecución . \r\n\r\n\r\n",
+                    "respuesta_correcta": "Falso",
+                    "explicacion": "La afirmación es FALSA. \nLa versión correcta según el texto es: 'En materia civil, en cambio, los juicios tienen un carácter predominantemente privado, pues aun ante los tribunales estatales, las partes tienen el control del procedimiento, su iniciativa y consecución.\r\n\r\n\r\n'",
+                    "opciones": null
+                },
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "Posteriormente , ha no dado paso a una naturaleza más objetiva , los llamados “ actos de comercio ” , además de regular las actividades de los comerciantes , incluyendo actividades de transportes , seguros y títulos de crédito ( letras , cheques , pagarés , etc. ) . \r\n",
+                    "respuesta_correcta": "Falso",
+                    "explicacion": "La afirmación es FALSA. \nLa versión correcta según el texto es: 'Posteriormente, ha dado paso a una naturaleza más objetiva, los llamados “actos de comercio”, además de regular las actividades de los comerciantes, incluyendo actividades de transportes, seguros y títulos de crédito (letras, cheques, pagarés, etc.).\r\n'",
+                    "opciones": null
+                },
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "Conjunto de normas jurídicas que no rigen las relaciones entre los Estados , señalando sus deberes y derechos , también establece las organizaciones internacionales , y por último determina ciertos derechos que pueden , hacerse valer contra cualquier Estado .",
+                    "respuesta_correcta": "Falso",
+                    "explicacion": "La afirmación es FALSA. \nLa versión correcta según el texto es: 'Conjunto de normas jurídicas que rigen las relaciones entre los Estados, señalando sus deberes y derechos, también establece las organizaciones internacionales, y por último determina ciertos derechos que pueden,hacerse valer contra cualquier Estado.'",
+                    "opciones": null
+                },
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "Entendido el Derecho como un sistema jerarquizado de normas, la Constitución Política es la de mayor jerarquía y, por tanto, ninguna norma inferior debe entrar en contradicción con ella, lo que se conoce como “supremacía constitucional”.",
+                    "respuesta_correcta": "Verdadero",
+                    "explicacion": "La afirmación es VERDADERA. \nEsto se evidencia en el texto cuando menciona: 'Entendido el Derecho como un sistema jerarquizado de normas, la Constitución Política es la de mayor jerarquía y, por tanto, ninguna norma inferior debe entrar en contradicción con ella, lo que se conoce como “supremacía constitucional”.'",
+                    "opciones": null
+                }
+            ]
+        },
+        {
+            "materia": "medicina",
+            "fuente": "https://www.unbosque.edu.co/blog-universidad-el-bosque/que-es-la-medicina",
+            "preguntas": [
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "La vocación viene con nosotros desde que llegamos al mundo y, con el paso de los años, vamos desarrollándola cada vez más.",
+                    "respuesta_correcta": "Verdadero",
+                    "explicacion": "La afirmación es VERDADERA. \nEsto se evidencia en el texto cuando menciona: 'La vocación viene con nosotros desde que llegamos al mundo y, con el paso de los años, vamos desarrollándola cada vez más.'",
+                    "opciones": null
+                },
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "Durante el parto: se atiende a la madre y su hijo, bien sea por cesárea o parto natural.",
+                    "respuesta_correcta": "Verdadero",
+                    "explicacion": "La afirmación es VERDADERA. \nEsto se evidencia en el texto cuando menciona: 'Durante el parto: se atiende a la madre y su hijo, bien sea por cesárea o parto natural.'",
+                    "opciones": null
+                },
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "Durante la infancia y adolescencia : se no hacen seguimientos periódicos que permitan tener una vida saludable , también se pueden descubrir enfermedades genéticas y tratarlas a tiempo .",
+                    "respuesta_correcta": "Falso",
+                    "explicacion": "La afirmación es FALSA. \nLa versión correcta según el texto es: 'Durante la infancia y adolescencia: se hacen seguimientos periódicos que permitan tener una vida saludable, también se pueden descubrir enfermedades genéticas y tratarlas a tiempo.'",
+                    "opciones": null
+                },
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "En la concepción : en el caso de una pareja con esterilidad , la medicina les no ofrece a ambos la oportunidad de tener hijos propios .",
+                    "respuesta_correcta": "Falso",
+                    "explicacion": "La afirmación es FALSA. \nLa versión correcta según el texto es: 'En la concepción: en el caso de una pareja con esterilidad, la medicina les ofrece a ambos la oportunidad de tener hijos propios.'",
+                    "opciones": null
+                },
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "Después del parto: se practican múltiples exámenes al recién nacido, para diagnosticar en él su correcto desarrollo y condiciones de salud.",
+                    "respuesta_correcta": "Verdadero",
+                    "explicacion": "La afirmación es VERDADERA. \nEsto se evidencia en el texto cuando menciona: 'Después del parto: se practican múltiples exámenes al recién nacido, para diagnosticar en él su correcto desarrollo y condiciones de salud.'",
+                    "opciones": null
+                },
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "Alrededor de la medicina hay múltiples mitos y verdades sobre esta carrera, conócelos y aclara todas tus dudas para que puedas sumergirte en el mágico mundo de la salud",
+                    "respuesta_correcta": "Verdadero",
+                    "explicacion": "La afirmación es VERDADERA. \nEsto se evidencia en el texto cuando menciona: 'Alrededor de la medicina hay múltiples mitos y verdades sobre esta carrera, conócelos y aclara todas tus dudas para que puedas sumergirte en el mágico mundo de la salud'",
+                    "opciones": null
+                },
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "Como puedes no ver , la medicina es una ciencia que está presente a lo largo de la vida y estudia los orígenes de las enfermedades de forma que puedan atenderse efectivamente a través del diagnóstico , prevención y tratamiento de las enfermedades que presenta el cuerpo humano .",
+                    "respuesta_correcta": "Falso",
+                    "explicacion": "La afirmación es FALSA. \nLa versión correcta según el texto es: 'Como puedes ver, la medicina es una ciencia que está presente a lo largo de la vida y estudia los orígenes de las enfermedades de forma que puedan atenderse efectivamente a través del diagnóstico, prevención y tratamiento de las enfermedades que presenta el cuerpo humano.'",
+                    "opciones": null
+                },
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "Al no crecer : los niños , desde su nacimiento y hasta los 6 años , son atendidos por médicos pediatras , quienes explican cómo alimentarlos , cuidarlos y controlar y chequear su salud .",
+                    "respuesta_correcta": "Falso",
+                    "explicacion": "La afirmación es FALSA. \nLa versión correcta según el texto es: 'Al crecer: los niños, desde su nacimiento y hasta los 6 años, son atendidos por médicos pediatras, quienes explican cómo alimentarlos, cuidarlos y controlar y chequear su salud.'",
+                    "opciones": null
+                },
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "Para algunos es más clara que para otros , por lo que si todavía no no sabes cuál es tu vocación , solo es necesario que la descubras y conozcas de cerca tu pasión para que puedas dedicar los mejores años de tu vida en hacer lo que amas .  ",
+                    "respuesta_correcta": "Falso",
+                    "explicacion": "La afirmación es FALSA. \nLa versión correcta según el texto es: 'Para algunos es más clara que para otros, por lo que si todavía no sabes cuál es tu vocación, solo es necesario que la descubras y conozcas de cerca tu pasión para que puedas dedicar los mejores años de tu vida en hacer lo que amas.  '",
+                    "opciones": null
+                },
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "Durante el embarazo: con la Medicina se protege tanto a la madre como  al embrión y al feto, dándole a conocer a la futura madre los cuidados que debe tener, la dieta y los ejercicios que deberá manejar luego de convertirse en mamá.",
+                    "respuesta_correcta": "Verdadero",
+                    "explicacion": "La afirmación es VERDADERA. \nEsto se evidencia en el texto cuando menciona: 'Durante el embarazo: con la Medicina se protege tanto a la madre como  al embrión y al feto, dándole a conocer a la futura madre los cuidados que debe tener, la dieta y los ejercicios que deberá manejar luego de convertirse en mamá.'",
+                    "opciones": null
+                }
+            ]
+        },
+        {
+            "materia": "medicina",
+            "fuente": "https://www.hopkinsmedicine.org/health/treatment-tests-and-therapies/types-of-surgery",
+            "preguntas": [
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "Durante la residencia, los médicos reciben capacitación intensiva en técnicas quirúrgicas, cuidados pre y postoperatorios, y manejo de complicaciones.",
+                    "respuesta_correcta": "Verdadero",
+                    "explicacion": "La afirmación es VERDADERA.  \nEsto se evidencia en el texto cuando menciona: 'Durante la residencia, los médicos reciben capacitación intensiva en técnicas quirúrgicas, cuidados pre y postoperatorios, y manejo de complicaciones.'",
+                    "opciones": null
+                },
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "Las innovaciones en técnicas quirúrgicas, anestesia y tecnología médica han mejorado la seguridad y la eficacia de los procedimientos quirúrgicos, permitiendo tratar una amplia gama de enfermedades y condiciones de manera más efectiva",
+                    "respuesta_correcta": "Verdadero",
+                    "explicacion": "La afirmación es VERDADERA.  \nEsto se evidencia en el texto cuando menciona: 'Las innovaciones en técnicas quirúrgicas, anestesia y tecnología médica han mejorado la seguridad y la eficacia de los procedimientos quirúrgicos, permitiendo tratar una amplia gama de enfermedades y condiciones de manera más efectiva'",
+                    "opciones": null
+                },
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "La cirugía es una especialidad médica que implica la intervención física para diagnosticar, tratar o prevenir enfermedades y condiciones.",
+                    "respuesta_correcta": "Verdadero",
+                    "explicacion": "La afirmación es VERDADERA.  \nEsto se evidencia en el texto cuando menciona: 'La cirugía es una especialidad médica que implica la intervención física para diagnosticar, tratar o prevenir enfermedades y condiciones.'",
+                    "opciones": null
+                },
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "La cirugía robótica es una evolución de la cirugía mínimamente invasiva, donde los cirujanos utilizan brazos robóticos controlados por computadora para realizar procedimientos con alta precisión.",
+                    "respuesta_correcta": "Verdadero",
+                    "explicacion": "La afirmación es VERDADERA.  \nEsto se evidencia en el texto cuando menciona: 'La cirugía robótica es una evolución de la cirugía mínimamente invasiva, donde los cirujanos utilizan brazos robóticos controlados por computadora para realizar procedimientos con alta precisión.'",
+                    "opciones": null
+                },
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "Algunos cirujanos optan por subespecializarse en áreas específicas como la neurocirugía, la cirugía cardiovascular, la cirugía ortopédica, la cirugía plástica, entre otras.",
+                    "respuesta_correcta": "Verdadero",
+                    "explicacion": "La afirmación es VERDADERA.  \nEsto se evidencia en el texto cuando menciona: 'Algunos cirujanos optan por subespecializarse en áreas específicas como la neurocirugía, la cirugía cardiovascular, la cirugía ortopédica, la cirugía plástica, entre otras.'",
+                    "opciones": null
+                },
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "La cirugía electiva, por otro lado, se planifica con antelación y no es de urgencia, como una cirugía estética o una reparación de hernia.",
+                    "respuesta_correcta": "Verdadero",
+                    "explicacion": "La afirmación es VERDADERA.  \nEsto se evidencia en el texto cuando menciona: 'La cirugía electiva, por otro lado, se planifica con antelación y no es de urgencia, como una cirugía estética o una reparación de hernia.'",
+                    "opciones": null
+                },
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "La cirugía se puede clasificar en diferentes tipos, dependiendo de la urgencia, el propósito y la técnica utilizada.",
+                    "respuesta_correcta": "Verdadero",
+                    "explicacion": "La afirmación es VERDADERA.  \nEsto se evidencia en el texto cuando menciona: 'La cirugía se puede clasificar en diferentes tipos, dependiendo de la urgencia, el propósito y la técnica utilizada.'",
+                    "opciones": null
+                },
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "La cirugía de emergencia se realiza inmediatamente para salvar la vida del paciente, como en el caso de un trauma grave o una apendicitis aguda.",
+                    "respuesta_correcta": "Verdadero",
+                    "explicacion": "La afirmación es VERDADERA.  \nEsto se evidencia en el texto cuando menciona: 'La cirugía de emergencia se realiza inmediatamente para salvar la vida del paciente, como en el caso de un trauma grave o una apendicitis aguda.'",
+                    "opciones": null
+                }
+            ]
+        },
+        {
+            "materia": "pedagogía en inglés",
+            "fuente": "https://educacion.udp.cl/carreras/pedagogia-en-ingles/",
+            "preguntas": [
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "Se no fomenta la exposición permanente a la lengua inglesa tanto en clases formales como en lectura de bibliografía en inglés , ayudantías , medios audiovisuales , programas en internet , participación en actividades con profesores invitados extranjeros , presentaciones y congresos de interés para los estudiantes , entre otros .",
+                    "respuesta_correcta": "Falso",
+                    "explicacion": "La afirmación es FALSA.  \nLa versión correcta según el texto es: 'Se fomenta la exposición permanente a la lengua inglesa tanto en clases formales como en lectura de bibliografía en inglés, ayudantías, medios audiovisuales, programas en internet, participación en actividades con profesores invitados extranjeros, presentaciones y congresos de interés para los estudiantes, entre otros.'",
+                    "opciones": null
+                },
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "Formación General: Aborda el conocimiento, comprensión y aplicación de valores como el respecto a los derechos humanos, ejercicio de la ciudadanía, temas relacionados a la diversidad, a la inclusión y a la equidad, que son claves para la formación de un docente con altas expectativas de todos sus estudiantes.",
+                    "respuesta_correcta": "Verdadero",
+                    "explicacion": "La afirmación es VERDADERA.  \nEsto se evidencia en el texto cuando menciona: 'Formación General: Aborda el conocimiento, comprensión y aplicación de valores como el respecto a los derechos humanos, ejercicio de la ciudadanía, temas relacionados a la diversidad, a la inclusión y a la equidad, que son claves para la formación de un docente con altas expectativas de todos sus estudiantes.'",
+                    "opciones": null
+                },
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "Indagación : Este eje de formación está orientado a no desarrollar competencias para la recolección de evidencia relevante sobre los estudiantes y su aprendizaje de inglés .",
+                    "respuesta_correcta": "Falso",
+                    "explicacion": "La afirmación es FALSA.  \nLa versión correcta según el texto es: 'Indagación: Este eje de formación está orientado a desarrollar competencias para la recolección de evidencia relevante sobre los estudiantes y su aprendizaje de inglés.'",
+                    "opciones": null
+                },
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "Esto no tiene como propósito ofrecer variadas oportunidades , algunas desarrolladas en la universidad y otras en los centros escolares , que permitirán al estudiante aprender a enseñar , logrando sinergia e integración entre teoría y práctica a través de la evaluación y planificación de unidades de aprendizaje en inglés .",
+                    "respuesta_correcta": "Falso",
+                    "explicacion": "La afirmación es FALSA.  \nLa versión correcta según el texto es: 'Esto tiene como propósito ofrecer variadas oportunidades, algunas desarrolladas en la universidad y otras en los centros escolares, que permitirán al estudiante aprender a enseñar, logrando sinergia e integración entre teoría y práctica a través de la evaluación y planificación de unidades de aprendizaje en inglés.'",
+                    "opciones": null
+                },
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "Su foco no radica en el aprendizaje y enseñanza de la lengua inglesa en el contexto escolar nacional y de acuerdo con el Marco Curricular del Mineduc .",
+                    "respuesta_correcta": "Falso",
+                    "explicacion": "La afirmación es FALSA.  \nLa versión correcta según el texto es: 'Su foco radica en el aprendizaje y enseñanza de la lengua inglesa en el contexto escolar nacional y de acuerdo con el Marco Curricular del Mineduc.'",
+                    "opciones": null
+                },
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "La malla curricular se estructura de acuerdo a 5 ejes o líneas de formación : Aprendizaje de la Lengua : no Tiene como propósito desarrollar las competencias de la comunicación en inglés avanzado ( nivel C1 , del Common European Framework ) , su conocimiento formal y los aspectos culturales asociados a la lengua .",
+                    "respuesta_correcta": "Falso",
+                    "explicacion": "La afirmación es FALSA.  \nLa versión correcta según el texto es: 'La malla curricular se estructura de acuerdo a 5 ejes o líneas de formación: Aprendizaje de la Lengua: Tiene como propósito desarrollar las competencias de la comunicación en inglés avanzado (nivel C1, del Common European Framework), su conocimiento formal y los aspectos culturales asociados a la lengua.'",
+                    "opciones": null
+                },
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "Formación Profesional y Práctica: La carrera desarrolla competencias para la formación práctica a través de toda la carrera.",
+                    "respuesta_correcta": "Verdadero",
+                    "explicacion": "La afirmación es VERDADERA.  \nEsto se evidencia en el texto cuando menciona: 'Formación Profesional y Práctica: La carrera desarrolla competencias para la formación práctica a través de toda la carrera.'",
+                    "opciones": null
+                },
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "Esta línea de aprendizaje no tiene una duración de nueve semestres de la carrera y también incluye asignaturas de fundamentos léxicos y gramaticales de la lengua , lingüística y cultura de los países angloparlantes .",
+                    "respuesta_correcta": "Falso",
+                    "explicacion": "La afirmación es FALSA.  \nLa versión correcta según el texto es: 'Esta línea de aprendizaje tiene una duración de nueve semestres de la carrera y también incluye asignaturas de fundamentos léxicos y gramaticales de la lengua, lingüística y cultura de los países angloparlantes.'",
+                    "opciones": null
+                },
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "Ámbitos de dominio y certificación de competencias Dominio del inglés equivalente al estándar C1 del Common European Framework of Reference for Language (CEF), demostrado a través de exámenes internacionales en el noveno semestre y mediante aplicación de mediciones referenciales intermedias durante la carrera.",
+                    "respuesta_correcta": "Verdadero",
+                    "explicacion": "La afirmación es VERDADERA.  \nEsto se evidencia en el texto cuando menciona: 'Ámbitos de dominio y certificación de competencias Dominio del inglés equivalente al estándar C1 del Common European Framework of Reference for Language (CEF), demostrado a través de exámenes internacionales en el noveno semestre y mediante aplicación de mediciones referenciales intermedias durante la carrera.'",
+                    "opciones": null
+                },
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "En esta línea formativa se no aborda el desarrollo de competencias para formular problemas y preguntas de investigación aplicada y relevante al contexto escolar y a la enseñanza-aprendizaje de inglés , para diseñar instrumentos de recolección de datos y su análisis , para revisar literatura y elaborar marcos teóricos sobre el problema de estudio .",
+                    "respuesta_correcta": "Falso",
+                    "explicacion": "La afirmación es FALSA.  \nLa versión correcta según el texto es: 'En esta línea formativa se aborda el desarrollo de competencias para formular problemas y preguntas de investigación aplicada y relevante al contexto escolar y a la enseñanza-aprendizaje de inglés, para diseñar instrumentos de recolección de datos y su análisis, para revisar literatura y elaborar marcos teóricos sobre el problema de estudio.'",
+                    "opciones": null
+                }
+            ]
+        },
+        {
+            "materia": "pedagogía en inglés",
+            "fuente": "https://www.teachingenglish.org.uk/article/digital-literacy",
+            "preguntas": [
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "La alfabetización digital en la enseñanza del inglés como lengua extranjera se refiere al uso de tecnologías digitales, como computadoras, tabletas y teléfonos inteligentes, para enseñar y aprender inglés.",
+                    "respuesta_correcta": "Verdadero",
+                    "explicacion": "La afirmación es VERDADERA.  \nEsto se evidencia en el texto cuando menciona: 'La alfabetización digital en la enseñanza del inglés como lengua extranjera se refiere al uso de tecnologías digitales, como computadoras, tabletas y teléfonos inteligentes, para enseñar y aprender inglés.'",
+                    "opciones": null
+                },
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "Esto puede no incluir la creación de contenido digital , la colaboración en línea y la comunicación a través de redes sociales",
+                    "respuesta_correcta": "Falso",
+                    "explicacion": "La afirmación es FALSA.  \nLa versión correcta según el texto es: 'Esto puede incluir la creación de contenido digital, la colaboración en línea y la comunicación a través de redes sociales'",
+                    "opciones": null
+                }
+            ]
+        },
+        {
+            "materia": "programación",
+            "fuente": "https://planderecuperacion.gob.es/noticias/que-es-inteligencia-artificial-ia-prtr#:~:text=La%20inteligencia%20artificial%20(IA)%20es,el%20razonamiento%20y%20la%20percepci%C3%B3n.",
+            "preguntas": [
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "Los chatbots y sistemas de recomendación impulsados por IA no mejoran las experiencias de los clientes , mientras que los asistentes virtuales como Siri y Alexa ayudan con las tareas diarias .",
+                    "respuesta_correcta": "Falso",
+                    "explicacion": "La afirmación es FALSA.  \nLa versión correcta según el texto es: 'Los chatbots y sistemas de recomendación impulsados por IA mejoran las experiencias de los clientes, mientras que los asistentes virtuales como Siri y Alexa ayudan con las tareas diarias.'",
+                    "opciones": null
+                },
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "La IA ha encontrado aplicaciones en numerosos dominios, incluyendo la salud, las finanzas, el transporte, la fabricación y el entretenimiento.",
+                    "respuesta_correcta": "Verdadero",
+                    "explicacion": "La afirmación es VERDADERA.  \nEsto se evidencia en el texto cuando menciona: 'La IA ha encontrado aplicaciones en numerosos dominios, incluyendo la salud, las finanzas, el transporte, la fabricación y el entretenimiento.'",
+                    "opciones": null
+                },
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "Las discusiones sobre la ética de la IA se no centran en cuestiones como el sesgo en los algoritmos , las preocupaciones de privacidad , el desplazamiento laboral y el impacto general de la IA en la sociedad .",
+                    "respuesta_correcta": "Falso",
+                    "explicacion": "La afirmación es FALSA.  \nLa versión correcta según el texto es: 'Las discusiones sobre la ética de la IA se centran en cuestiones como el sesgo en los algoritmos, las preocupaciones de privacidad, el desplazamiento laboral y el impacto general de la IA en la sociedad.'",
+                    "opciones": null
+                },
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "Implica el desarrollo de sistemas informáticos y algoritmos capaces de realizar tareas que típicamente requieren inteligencia humana, como el reconocimiento de voz, la resolución de problemas, el aprendizaje, la toma de decisiones y el reconocimiento de patrones.",
+                    "respuesta_correcta": "Verdadero",
+                    "explicacion": "La afirmación es VERDADERA.  \nEsto se evidencia en el texto cuando menciona: 'Implica el desarrollo de sistemas informáticos y algoritmos capaces de realizar tareas que típicamente requieren inteligencia humana, como el reconocimiento de voz, la resolución de problemas, el aprendizaje, la toma de decisiones y el reconocimiento de patrones.'",
+                    "opciones": null
+                },
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "La robótica combina la IA con la ingeniería mecánica para crear máquinas inteligentes capaces de realizar tareas físicas e interacción humana.",
+                    "respuesta_correcta": "Verdadero",
+                    "explicacion": "La afirmación es VERDADERA.  \nEsto se evidencia en el texto cuando menciona: 'La robótica combina la IA con la ingeniería mecánica para crear máquinas inteligentes capaces de realizar tareas físicas e interacción humana.'",
+                    "opciones": null
+                },
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "La Inteligencia Artificial ( IA ) es un campo de estudio y tecnología que se no enfoca en crear máquinas inteligentes que puedan simular habilidades cognitivas humanas .",
+                    "respuesta_correcta": "Falso",
+                    "explicacion": "La afirmación es FALSA.  \nLa versión correcta según el texto es: 'La Inteligencia Artificial (IA) es un campo de estudio y tecnología que se enfoca en crear máquinas inteligentes que puedan simular habilidades cognitivas humanas.'",
+                    "opciones": null
+                },
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "La IA abarca varios subcampos, incluyendo el aprendizaje automático, el procesamiento del lenguaje natural, la visión por computadora y la robótica.",
+                    "respuesta_correcta": "Verdadero",
+                    "explicacion": "La afirmación es VERDADERA.  \nEsto se evidencia en el texto cuando menciona: 'La IA abarca varios subcampos, incluyendo el aprendizaje automático, el procesamiento del lenguaje natural, la visión por computadora y la robótica.'",
+                    "opciones": null
+                },
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "El aprendizaje automático es un componente clave de la IA, donde los algoritmos permiten a las computadoras aprender de los datos y mejorar su rendimiento con el tiempo sin programación explícita.",
+                    "respuesta_correcta": "Verdadero",
+                    "explicacion": "La afirmación es VERDADERA.  \nEsto se evidencia en el texto cuando menciona: 'El aprendizaje automático es un componente clave de la IA, donde los algoritmos permiten a las computadoras aprender de los datos y mejorar su rendimiento con el tiempo sin programación explícita.'",
+                    "opciones": null
+                },
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "El procesamiento del lenguaje natural permite que las máquinas comprendan e interpreten el lenguaje humano, lo que permite aplicaciones como asistentes virtuales y traducción de idiomas.",
+                    "respuesta_correcta": "Verdadero",
+                    "explicacion": "La afirmación es VERDADERA.  \nEsto se evidencia en el texto cuando menciona: 'El procesamiento del lenguaje natural permite que las máquinas comprendan e interpreten el lenguaje humano, lo que permite aplicaciones como asistentes virtuales y traducción de idiomas.'",
+                    "opciones": null
+                },
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "En la salud , la IA se no utiliza para el diagnóstico médico , el descubrimiento de medicamentos y los planes de tratamiento personalizados .",
+                    "respuesta_correcta": "Falso",
+                    "explicacion": "La afirmación es FALSA.  \nLa versión correcta según el texto es: 'En la salud, la IA se utiliza para el diagnóstico médico, el descubrimiento de medicamentos y los planes de tratamiento personalizados.'",
+                    "opciones": null
+                }
+            ]
+        },
+        {
+            "materia": "programación",
+            "fuente": "https://www.ibm.com/cloud/learn/machine-learning",
+            "preguntas": [
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "La investigación en este campo continúa avanzando rápidamente, con el objetivo de desarrollar algoritmos más eficientes, robustos y transparentes",
+                    "respuesta_correcta": "Verdadero",
+                    "explicacion": "La afirmación es VERDADERA.  \nEsto se evidencia en el texto cuando menciona: 'La investigación en este campo continúa avanzando rápidamente, con el objetivo de desarrollar algoritmos más eficientes, robustos y transparentes'",
+                    "opciones": null
+                },
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "Sin embargo, también plantea desafíos éticos y técnicos, como la interpretabilidad de los modelos, la equidad y el sesgo en los datos, y la privacidad de la información.",
+                    "respuesta_correcta": "Verdadero",
+                    "explicacion": "La afirmación es VERDADERA.  \nEsto se evidencia en el texto cuando menciona: 'Sin embargo, también plantea desafíos éticos y técnicos, como la interpretabilidad de los modelos, la equidad y el sesgo en los datos, y la privacidad de la información.'",
+                    "opciones": null
+                },
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "El aprendizaje automático no tiene una amplia gama de aplicaciones , desde la detección de fraudes en finanzas hasta el reconocimiento de imágenes en visión por computadora , pasando por el diagnóstico médico y la recomendación de contenido en plataformas de streaming .",
+                    "respuesta_correcta": "Falso",
+                    "explicacion": "La afirmación es FALSA.  \nLa versión correcta según el texto es: 'El aprendizaje automático tiene una amplia gama de aplicaciones, desde la detección de fraudes en finanzas hasta el reconocimiento de imágenes en visión por computadora, pasando por el diagnóstico médico y la recomendación de contenido en plataformas de streaming.'",
+                    "opciones": null
+                },
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "El aprendizaje por refuerzo se basa en el principio de aprendizaje a través de la interacción con un entorno.",
+                    "respuesta_correcta": "Verdadero",
+                    "explicacion": "La afirmación es VERDADERA.  \nEsto se evidencia en el texto cuando menciona: 'El aprendizaje por refuerzo se basa en el principio de aprendizaje a través de la interacción con un entorno.'",
+                    "opciones": null
+                },
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "El agente no recibe recompensas o penalizaciones en función de sus acciones y ajusta su comportamiento para maximizar la recompensa acumulada .",
+                    "respuesta_correcta": "Falso",
+                    "explicacion": "La afirmación es FALSA.  \nLa versión correcta según el texto es: 'El agente recibe recompensas o penalizaciones en función de sus acciones y ajusta su comportamiento para maximizar la recompensa acumulada.'",
+                    "opciones": null
+                },
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "El objetivo es que el modelo no aprenda a mapear las entradas a las salidas correctas y pueda generalizar este conocimiento a nuevos datos .",
+                    "respuesta_correcta": "Falso",
+                    "explicacion": "La afirmación es FALSA.  \nLa versión correcta según el texto es: 'El objetivo es que el modelo aprenda a mapear las entradas a las salidas correctas y pueda generalizar este conocimiento a nuevos datos.'",
+                    "opciones": null
+                },
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "El aprendizaje supervisado es el más común y consiste en entrenar un modelo con un conjunto de datos etiquetados, donde cada entrada tiene una salida correspondiente.",
+                    "respuesta_correcta": "Verdadero",
+                    "explicacion": "La afirmación es VERDADERA.  \nEsto se evidencia en el texto cuando menciona: 'El aprendizaje supervisado es el más común y consiste en entrenar un modelo con un conjunto de datos etiquetados, donde cada entrada tiene una salida correspondiente.'",
+                    "opciones": null
+                },
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "A diferencia de los enfoques tradicionales de programación, donde se definen reglas explícitas para cada tarea, el aprendizaje automático permite que los sistemas informáticos identifiquen patrones y relaciones en los datos, y hagan predicciones o tomen decisiones basadas en esos hallazgos.",
+                    "respuesta_correcta": "Verdadero",
+                    "explicacion": "La afirmación es VERDADERA.  \nEsto se evidencia en el texto cuando menciona: 'A diferencia de los enfoques tradicionales de programación, donde se definen reglas explícitas para cada tarea, el aprendizaje automático permite que los sistemas informáticos identifiquen patrones y relaciones en los datos, y hagan predicciones o tomen decisiones basadas en esos hallazgos.'",
+                    "opciones": null
+                },
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "El aprendizaje automático se puede no dividir en tres tipos principales : aprendizaje supervisado , aprendizaje no supervisado y aprendizaje por refuerzo .",
+                    "respuesta_correcta": "Falso",
+                    "explicacion": "La afirmación es FALSA.  \nLa versión correcta según el texto es: 'El aprendizaje automático se puede dividir en tres tipos principales: aprendizaje supervisado, aprendizaje no supervisado y aprendizaje por refuerzo.'",
+                    "opciones": null
+                },
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "El aprendizaje automático, también conocido como machine learning, es una rama de la inteligencia artificial que se centra en el desarrollo de algoritmos y modelos que permiten a las computadoras aprender de los datos.",
+                    "respuesta_correcta": "Verdadero",
+                    "explicacion": "La afirmación es VERDADERA.  \nEsto se evidencia en el texto cuando menciona: 'El aprendizaje automático, también conocido como machine learning, es una rama de la inteligencia artificial que se centra en el desarrollo de algoritmos y modelos que permiten a las computadoras aprender de los datos.'",
+                    "opciones": null
+                }
+            ]
+        },
+        {
+            "materia": "programación",
+            "fuente": "https://www.python.org/doc/essays/blurb/",
+            "preguntas": [
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "La comunidad de Python es grande y activa , lo que no significa que hay una abundancia de recursos , tutoriales y soporte disponible para los desarrolladores de todos los niveles .",
+                    "respuesta_correcta": "Falso",
+                    "explicacion": "La afirmación es FALSA.  \nLa versión correcta según el texto es: 'La comunidad de Python es grande y activa, lo que significa que hay una abundancia de recursos, tutoriales y soporte disponible para los desarrolladores de todos los niveles.'",
+                    "opciones": null
+                },
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "Una de las principales ventajas de Python es su amplia biblioteca estándar, que incluye módulos y paquetes para una variedad de tareas, desde el procesamiento de datos y la visualización hasta el desarrollo web y la inteligencia artificial.",
+                    "respuesta_correcta": "Verdadero",
+                    "explicacion": "La afirmación es VERDADERA.  \nEsto se evidencia en el texto cuando menciona: 'Una de las principales ventajas de Python es su amplia biblioteca estándar, que incluye módulos y paquetes para una variedad de tareas, desde el procesamiento de datos y la visualización hasta el desarrollo web y la inteligencia artificial.'",
+                    "opciones": null
+                },
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "La programación en Python se ha convertido en una de las habilidades más buscadas en la industria de la tecnología debido a su versatilidad y facilidad de aprendizaje.",
+                    "respuesta_correcta": "Verdadero",
+                    "explicacion": "La afirmación es VERDADERA.  \nEsto se evidencia en el texto cuando menciona: 'La programación en Python se ha convertido en una de las habilidades más buscadas en la industria de la tecnología debido a su versatilidad y facilidad de aprendizaje.'",
+                    "opciones": null
+                },
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "Herramientas como Pandas, NumPy, y Matplotlib facilitan el análisis de datos y la creación de visualizaciones, mientras que bibliotecas como TensorFlow y PyTorch permiten el desarrollo de modelos de aprendizaje automático y redes neuronales.",
+                    "respuesta_correcta": "Verdadero",
+                    "explicacion": "La afirmación es VERDADERA.  \nEsto se evidencia en el texto cuando menciona: 'Herramientas como Pandas, NumPy, y Matplotlib facilitan el análisis de datos y la creación de visualizaciones, mientras que bibliotecas como TensorFlow y PyTorch permiten el desarrollo de modelos de aprendizaje automático y redes neuronales.'",
+                    "opciones": null
+                },
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "Los programadores pueden colaborar en proyectos de código abierto, participar en conferencias y acceder a una amplia gama de documentación y foros en línea.",
+                    "respuesta_correcta": "Verdadero",
+                    "explicacion": "La afirmación es VERDADERA.  \nEsto se evidencia en el texto cuando menciona: 'Los programadores pueden colaborar en proyectos de código abierto, participar en conferencias y acceder a una amplia gama de documentación y foros en línea.'",
+                    "opciones": null
+                },
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "Además, frameworks como Django y Flask se utilizan para el desarrollo de aplicaciones web, proporcionando estructuras robustas y escalables.",
+                    "respuesta_correcta": "Verdadero",
+                    "explicacion": "La afirmación es VERDADERA.  \nEsto se evidencia en el texto cuando menciona: 'Además, frameworks como Django y Flask se utilizan para el desarrollo de aplicaciones web, proporcionando estructuras robustas y escalables.'",
+                    "opciones": null
+                },
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "no Aprender Python no solo es beneficioso para aquellos que desean una carrera en tecnología , sino también para profesionales de otras áreas que buscan automatizar tareas , analizar datos o desarrollar herramientas personalizadas .",
+                    "respuesta_correcta": "Falso",
+                    "explicacion": "La afirmación es FALSA.  \nLa versión correcta según el texto es: 'Aprender Python no solo es beneficioso para aquellos que desean una carrera en tecnología, sino también para profesionales de otras áreas que buscan automatizar tareas, analizar datos o desarrollar herramientas personalizadas.'",
+                    "opciones": null
+                },
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "Python es un lenguaje de programación de alto nivel , interpretado y orientado a objetos , conocido por su sintaxis simple y clara , lo que no facilita su lectura y escritura .",
+                    "respuesta_correcta": "Falso",
+                    "explicacion": "La afirmación es FALSA.  \nLa versión correcta según el texto es: 'Python es un lenguaje de programación de alto nivel, interpretado y orientado a objetos, conocido por su sintaxis simple y clara, lo que facilita su lectura y escritura.'",
+                    "opciones": null
+                },
+                {
+                    "tipo": "verdadero_falso",
+                    "pregunta": "Esto permite a los desarrolladores realizar una amplia gama de proyectos sin necesidad de escribir mucho código desde cero.",
+                    "respuesta_correcta": "Verdadero",
+                    "explicacion": "La afirmación es VERDADERA.  \nEsto se evidencia en el texto cuando menciona: 'Esto permite a los desarrolladores realizar una amplia gama de proyectos sin necesidad de escribir mucho código desde cero.'",
+                    "opciones": null
+                }
+            ]
+        }
+    ]
+}
