@@ -386,3 +386,19 @@ footer{
     text-align: right;
 }
 /* Fin estilos pages/evaluaciones.html */
+
+
+
+
+/* Estilos pages/quiz.html */
+.tooltip-preview {
+    position: absolute;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    max-width: 300px;
+    display: none;
+}
+/* Fin estilos pages/quiz.html */

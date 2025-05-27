@@ -26,6 +26,10 @@ urlpatterns = [
     path('categoria/<str:category>/', views.categoria, name='categoria'),
     path('quiz/<str:category>/<int:quiz_index>/', views.quiz, name='quiz'),
     # Fin evaluaciones Tutor
+
+    # Vista previa
+    path('api/capture-screenshot/', views.ScreenshotView.as_view(), name='capture_screenshot'),
+    # Fin vista previa
 ]
 
 if settings.DEBUG:

@@ -38,7 +38,7 @@ class FormularioTextoCuestionario(forms.ModelForm):
             }),
             'texto': forms.Textarea(attrs={
                 'class': 'form-control', 
-                'rows': 5,
+                'rows': 20,
                 'placeholder': 'Ingresa el texto de la materia para generar un cuestionario',
             }),
             'fuente': forms.URLInput(attrs={

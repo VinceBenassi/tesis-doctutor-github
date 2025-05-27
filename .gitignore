@@ -1,3 +1,4 @@
 .venv
 media/fotos_perfil
 modelos/traductor.ipynb
+node_modules

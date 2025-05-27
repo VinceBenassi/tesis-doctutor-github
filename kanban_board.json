@@ -1,0 +1,328 @@
+{
+    "2023-06-20": [
+        {
+            "task": "docs: codigos de prueba",
+            "commit": "073f852",
+            "source": "GitLab"
+        },
+        {
+            "task": "Initial commit",
+            "commit": "80dd591",
+            "source": "GitLab"
+        }
+    ],
+    "2023-07-29": [
+        {
+            "task": "mini proyectos",
+            "commit": "2220ca7",
+            "source": "GitLab"
+        }
+    ],
+    "2023-09-19": [
+        {
+            "task": "base tutor",
+            "commit": "7ccee15",
+            "source": "GitLab"
+        }
+    ],
+    "2024-03-18": [
+        {
+            "task": "chatbot de prueba",
+            "commit": "5f1331a",
+            "source": "GitLab"
+        }
+    ],
+    "2024-07-28": [
+        {
+            "task": "Tesis Doctutor",
+            "commit": "97fcbb5",
+            "source": "GitHub"
+        },
+        {
+            "task": "Initial commit",
+            "commit": "e583ba3",
+            "source": "GitHub"
+        }
+    ],
+    "2024-07-31": [
+        {
+            "task": "feat: Actualizaci\u00c3\u00b3n modelo para crear cuestionarios",
+            "commit": "3841ad1",
+            "source": "GitHub"
+        }
+    ],
+    "2024-08-07": [
+        {
+            "task": "fix: traducci\u00c3\u00b3n c\u00c3\u00b3digo clasificador pdf",
+            "commit": "993ab3f",
+            "source": "GitHub"
+        }
+    ],
+    "2024-08-08": [
+        {
+            "task": "feat: configuraci\u00c3\u00b3n settings.py para usar el vps",
+            "commit": "ccdc03a",
+            "source": "GitHub"
+        },
+        {
+            "task": "fix: mejora generador_quizzes.py",
+            "commit": "838d5e5",
+            "source": "GitHub"
+        }
+    ],
+    "2024-08-09": [
+        {
+            "task": "arreglo requirements.txt y generador_quizzes.py",
+            "commit": "f8ffb5a",
+            "source": "GitHub"
+        }
+    ],
+    "2024-08-10": [
+        {
+            "task": "fix: views.py corregido",
+            "commit": "90a846d",
+            "source": "GitHub"
+        },
+        {
+            "task": "cambio requirements.txt",
+            "commit": "50774ea",
+            "source": "GitHub"
+        },
+        {
+            "task": "fix: nuevo generador_quizzes.py y requirements.txt modificado",
+            "commit": "36d1057",
+            "source": "GitHub"
+        },
+        {
+            "task": "fix: views.py y generador_quizzes.py mejorado",
+            "commit": "f9ff0b5",
+            "source": "GitHub"
+        }
+    ],
+    "2024-08-11": [
+        {
+            "task": "fix: agregar url del vps para el proyecto django",
+            "commit": "632b9ee",
+            "source": "GitHub"
+        }
+    ],
+    "2024-09-01": [
+        {
+            "task": "fix: correcci\u00c3\u00b3n modelo de cuestionarios",
+            "commit": "09ed56a",
+            "source": "GitHub"
+        }
+    ],
+    "2024-09-08": [
+        {
+            "task": "fix: modelo de preguntas y explicaciones",
+            "commit": "3f46214",
+            "source": "GitHub"
+        }
+    ],
+    "2024-09-24": [
+        {
+            "task": "fix: quiz.html y views.py",
+            "commit": "a890c4e",
+            "source": "GitHub"
+        }
+    ],
+    "2024-10-13": [
+        {
+            "task": "versi\u00c3\u00b3n 2 generador_quizzes.py",
+            "commit": "93ecfb1",
+            "source": "GitHub"
+        }
+    ],
+    "2024-10-14": [
+        {
+            "task": "versi\u00c3\u00b3n 3 generador_quizzes.py",
+            "commit": "b3aeaaa",
+            "source": "GitHub"
+        }
+    ],
+    "2024-10-17": [
+        {
+            "task": "versi\u00c3\u00b3n 5 generador_quizzes.py",
+            "commit": "39966f0",
+            "source": "GitHub"
+        },
+        {
+            "task": "versi\u00c3\u00b3n 4 generador_quizzes.py",
+            "commit": "5911432",
+            "source": "GitHub"
+        },
+        {
+            "task": "fix: conexi\u00c3\u00b3n portales a eodd posgrado refinado 36",
+            "commit": "c480e51",
+            "source": "GitHub"
+        }
+    ],
+    "2024-10-20": [
+        {
+            "task": "versi\u00c3\u00b3n 6 generador_quizzes.py",
+            "commit": "40b8813",
+            "source": "GitHub"
+        }
+    ],
+    "2024-10-21": [
+        {
+            "task": "versi\u00c3\u00b3n 7 generador_quizzes.py",
+            "commit": "500d43c",
+            "source": "GitHub"
+        }
+    ],
+    "2024-10-22": [
+        {
+            "task": "versi\u00c3\u00b3n 9  generador_quizzes.py",
+            "commit": "6ffa1a2",
+            "source": "GitHub"
+        },
+        {
+            "task": "generador_quizzes.py 8 version",
+            "commit": "879b000",
+            "source": "GitHub"
+        }
+    ],
+    "2024-10-23": [
+        {
+            "task": "fix: versi\u00c3\u00b3n 9 generador_quizzes.py",
+            "commit": "1fd87f2",
+            "source": "GitHub"
+        }
+    ],
+    "2024-10-24": [
+        {
+            "task": "fix: versi\u00c3\u00b3n 10 generador_quizzes.py",
+            "commit": "9462923",
+            "source": "GitHub"
+        }
+    ],
+    "2024-10-25": [
+        {
+            "task": "fix: versi\u00c3\u00b3n 11 generador_quizzes.py",
+            "commit": "51c7a1c",
+            "source": "GitHub"
+        }
+    ],
+    "2024-10-27": [
+        {
+            "task": "versi\u00c3\u00b3n 11 generador_quizzes.py",
+            "commit": "f0cccb2",
+            "source": "GitHub"
+        }
+    ],
+    "2024-10-28": [
+        {
+            "task": "versi\u00c3\u00b3n 11 generador_quizzes.py",
+            "commit": "2a87531",
+            "source": "GitHub"
+        }
+    ],
+    "2024-10-29": [
+        {
+            "task": "versi\u00c3\u00b3n 12 generador_quizzes.py",
+            "commit": "b4ea109",
+            "source": "GitHub"
+        }
+    ],
+    "2024-11-03": [
+        {
+            "task": "versi\u00c3\u00b3n 13 generador_quizzes.py",
+            "commit": "1c9a583",
+            "source": "GitHub"
+        }
+    ],
+    "2024-11-05": [
+        {
+            "task": "versi\u00c3\u00b3n 14 generador_quizzes.py",
+            "commit": "e05bcf9",
+            "source": "GitHub"
+        }
+    ],
+    "2024-11-06": [
+        {
+            "task": "versi\u00c3\u00b3n 15 generador_quizzes.py",
+            "commit": "240a247",
+            "source": "GitHub"
+        }
+    ],
+    "2024-11-07": [
+        {
+            "task": "versi\u00c3\u00b3n 17 generador_quizzes.py",
+            "commit": "a5e60ab",
+            "source": "GitHub"
+        },
+        {
+            "task": "feat: generador_quizzes.py 16 version",
+            "commit": "0d3083c",
+            "source": "GitHub"
+        }
+    ],
+    "2024-11-10": [
+        {
+            "task": "versi\u00c3\u00b3n 19 generador_quizzes.py",
+            "commit": "61a9bf4",
+            "source": "GitHub"
+        }
+    ],
+    "2024-11-12": [
+        {
+            "task": "versi\u00c3\u00b3n 20 generador_quizzes.py",
+            "commit": "0f1211b",
+            "source": "GitHub"
+        }
+    ],
+    "2024-11-17": [
+        {
+            "task": "versi\u00c3\u00b3n 21 generador_quizzes.py",
+            "commit": "52f6d5d",
+            "source": "GitHub"
+        }
+    ],
+    "2024-11-18": [
+        {
+            "task": "versi\u00c3\u00b3n 22 generador_quizzes.py",
+            "commit": "f5ebb07",
+            "source": "GitHub"
+        }
+    ],
+    "2024-11-19": [
+        {
+            "task": "versi\u00c3\u00b3n 23 generador_quizzes.py",
+            "commit": "7d71842",
+            "source": "GitHub"
+        }
+    ],
+    "2024-11-20": [
+        {
+            "task": "versi\u00c3\u00b3n 24 generador_quizzes.py",
+            "commit": "07dba33",
+            "source": "GitHub"
+        },
+        {
+            "task": "fix: version 23 generador_quizzes.py",
+            "commit": "fcbbcfd",
+            "source": "GitHub"
+        }
+    ],
+    "2024-11-21": [
+        {
+            "task": "fix: version 25 generador_quizzes.py",
+            "commit": "1d637db",
+            "source": "GitHub"
+        },
+        {
+            "task": "versi\u00c3\u00b3n 26 generador_quizzes.py",
+            "commit": "9c8d63e",
+            "source": "GitHub"
+        }
+    ],
+    "2024-11-24": [
+        {
+            "task": "versi\u00c3\u00b3n 27 generador_quizzes.py",
+            "commit": "d859d43",
+            "source": "GitHub"
+        }
+    ]
+}
